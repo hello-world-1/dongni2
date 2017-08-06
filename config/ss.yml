@@ -1,0 +1,17 @@
+type: s
+empty: false
+
+appwatch:
+   address: 127.0.0.1:6070
+
+server:
+   address: 127.0.0.1:5000
+
+manager:
+   address: 127.0.0.1:6001
+   password: 'YOURPASSWD'
+db:
+   host: '127.0.0.1'
+   user: 'root'
+   password: 'appwatch2017'
+   database: 'appwatch'

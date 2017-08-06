@@ -1,0 +1,35 @@
+type: m
+empty: false
+
+shadowsocks:
+  address: 127.0.0.1:6001
+
+manager:
+  address: 0.0.0.0:6002
+  password: '123456'
+
+
+
+plugins:
+  email:
+      use: true
+      username: '417067153@qq.com'
+      password: 'jsuhcpyathowbhcd'
+      host: 'smtp.qq.com'
+  webgui:
+      use: true
+      host: '173.255.214.130'
+      port: '80'
+      site: 'http://173.255.214.130/'
+      gcmSenderId: '456102641793'
+      gcmAPIKey: 'AAAAGzzdqrE:XXXXXXXXXXXXXX'
+
+db:
+  user: 'root'
+  password: 'appwatch2017'
+  host: 'localhost'
+  port: '27017'
+  database: 'appwatch'
+  maxPoolSize : '10'
+  minPoolSize : '0'
+  idleTimeoutMillis: '30000'
