@@ -2,8 +2,9 @@ const config = appRequire('services/config').get('db');
 
 var mongoose;
 if(typeof config === 'object') {
-    const { host, user, password, database } = config;
-    let uri = `mongodb://${host}/${database}`;
+    const { host, user, port, password, database } = config;
+
+    let uri = `mongodb://${host}:${port}/${database}`;
     mongoose =require('mongoose').connect(uri);
     /**
      * 连接成功

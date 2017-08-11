@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>try</title>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("button").click(function(){
+                var type = $("#provSelect1").val();
+                console.log(type);
+                $.post("/api/home/sendtcp",
+                    {
+                        type:type
+                    },
+                    function(data,status){
+                        console.log("Data: " + data + "\nStatus: " + status);
+                        $("p").prepend("<b>"+data+"</b>. ");
+                    });
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+
+<input type="text" id="provSelect1"/>
+<button>fasong</button>
+<p></p>
+</body>
+
+</html>

@@ -12,7 +12,7 @@ const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const store = new MongoStore({
-    url: `mongodb://${config.db.host}/${config.db.database}`
+    url: `mongodb://${config.db.host}:${config.db.port}/${config.db.database}`
 });
 
 
@@ -23,6 +23,8 @@ const sessionParser = session({
   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 3600 * 1000 },
   store:store
 });
+
+
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const expressValidator = require('express-validator');
@@ -67,7 +69,7 @@ app.listen(port, host, () => {
 
 exports.app = app;
 // exports.wss = wss;
-exports.sessionParser = sessionParser;
+//exports.sessionParser = sessionParser;
 
 appRequire('plugins/watch/server/route');
 console.log('watch');

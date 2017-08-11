@@ -28,6 +28,7 @@ app.post('/api/home/code', home.sendCode);
 app.post('/api/home/signup', home.signup);
 app.post('/api/home/login', home.login);
 app.post('/api/home/logout', home.logout);
+app.post('/api/home/sendtcp',home.sendtcp);
 // app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);
 // app.get('/api/home/password/reset', home.checkResetPasswordToken);
 // app.post('/api/home/password/reset', home.resetPassword);
@@ -42,9 +43,9 @@ app.post('/api/home/logout', home.logout);
 
 
 const version = appRequire('package').version;
-// const homePage = (req, res) => res.render('index', { version });
-// app.get('/', homePage);
-// app.get(/^\/home\//, homePage);
+const homePage = (req, res) => res.render('index', { version });
+app.get('/', homePage);
+app.get(/^\/home\//, homePage);
 
 
 // wss.on('connection', function connection(ws) {

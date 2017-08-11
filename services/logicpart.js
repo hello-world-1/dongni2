@@ -1,23 +1,273 @@
-/**
- * Created by root on 7/31/17.
- */
+require('date-utils')
+const iconv=require('iconv-lite');
+const watchinfo=appRequire('models/watchinfo');
 
 const IWAP00 = async (params) => {
     try {
-        if(params.length!=4) {
-            return Promise.reject('error');
-        }
-        //await cha mongodb  1390001|1380002,1370001|1360002
-        //const Account = await mongodb.findOne()
+        const imei=params[1];
+        //await 根据imei查出sos和主控号码
         const phone="1390001|1380002";
         const sos="1370001|1360002";
-        const time=(new Date()).toFormat("YYYY-MM-DD HH:MI:SS")
-        const rep="IWBP00,"+time+",8,zh_CN, Asia/chongqing,"+phone+","+sos+"#";
-        return Promise.resolve(rep);
-        //return rep;
+        const time=(new Date()).toFormat("YYYYMMDDHHMISS");
+        await watchinfo.updateWatchInfo({'imei':imei},{'imei':imei,'status':true});
+        return await `IWBP00,${time},8,zh_CN,Asia/beijing,${phone},${sos}`;
     } catch(err) {
-        return Promise.reject('error');
+        throw new Error(err);
+    }
+};
+
+const IWAP01 = async (imei,params) => {
+    try {
+        //AP01消息调用 中间件向手机发送位置信息，也许需要保存地理位置数据
+        //await
+        return await "IWBP01";
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+
+const IWAP02 = async (imei,params) => {
+    try {
+        //AP01消息调用 中间件向手机发送位置信息，也许需要保存地理位置数据
+        //await
+        if(params[2]==0)
+        {
+            return await "IWBP02";
+        }
+        else if(params[2]==1)
+        {
+            //此处需要调动地理位置解析插件，得到的地址返回
+            const loc='深圳市南山区南海大道1079号';
+            const location=iconv.encode(loc,'UTF16-BE').toString('hex');
+            console.log(location);
+            return await `IWBP02${location}`;
+        }
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP03 = async (imei,params) => {
+    try {
+
+        return await "IWBP03";
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP04 = async (imei,params) => {
+    try {
+        //AP04收到低电量报警上报数据包需要推送消息给app
+        //await
+        return await "IWBP04";
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP05 = async (imei,params) => {
+    try {
+        if(params[1]==0)
+        {
+            //await
+            return await "IWBP05,6";
+        }
+        else if(params[1]==1)
+        {
+            //await
+            return await "IWBP05,6";
+        }
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP06 = async (imei,params) => {
+    try {
+        //此处需要调动地理位置解析插件，得到的地址返回 (需要经纬度)23.11333,113.12333:纬度,经度
+        //await
+        const location="23.11333,113.12333";
+        return await `IWBP06,${location}`;
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP07 = async (imei,params) => {
+    try {
+
+        //await
+
+        return await "IWBP07";
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+//2.4报警与地址回复包 (上行协议号：AP10，响应：BP10)
+const IWAP10 = async (imei,params) => {
+    try {
+        //AP01消息调用 中间件向手机发送位置信息，也许需要保存地理位置数据
+        //await
+        const flag=params[2];
+        //此处需要调动地理位置解析插件，得到的地址返回
+        const loc='深圳市南山区南海大道1079号';
+        const location=iconv.encode(loc,'UTF16-BE').toString('hex');
+        console.log(location);
+        return await `IWBP10,${location}`;
+
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP39 = async (imei,params) => {
+    try {
+        //同步天气，空气，老黄历信息(拓展)
+        //首先根据IMEI查找地理位置，然后把地理位置传给地图接口查询天气情况
+        //await
+        const loc="深圳,2016-1-19|星期二|晴转多云|11|6|7|0|北风|微风,2016-1-20|星期三|晴转多云|11|6|7|0|北风|微风";
+        const location=iconv.encode(loc,'UTF16-BE').toString('hex');
+        console.log(location);
+        return await `IWBP39,${location}`;
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP42 = async (imei,params) => {
+    try {
+
+        return await `IWBP42`;
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+//2.12上报心率/血氧（上行协议号：AP51，响应：BP51）
+const IWAP51= async (imei,params) => {
+    try {
+        const time=params[1];
+        const xx=params[2].split("|");
+        const heartRate=xx[0];
+        const bloodOxygen=xx[1];
+        if(params[3]==1)
+        {
+            await watchinfo.pushXX({'imei':imei},{ $push: { "scores": { "time":time,"heartRate":heartRate,"bloodOxygen":bloodOxygen} } });
+        }
+        else if(params[3]==0)
+        {
+
+        }
+        return await "IWBP51";
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+const IWAP52= async (imei,params) => {
+    try {
+        const startTime=params[1];
+        const endTime=params[2];
+        const stepNumber=params[3];
+        const startxx=params[4].split("|");
+        const startHeartRate=startxx[0];
+        const startBloodOxygen=startxx[1];
+        const endxx=params[5].split("|");
+        const endHeartRate=endxx[0];
+        const endBloodOxygen=endxx[1];
+
+        await watchinfo.pushXX({'imei':imei},{ $push: { "sportScores": {
+            "startTime":startTime,"endTIme":endTime,
+            "stepNumber":stepNumber,
+            "startHeartRate":startHeartRate,"startBloodOxygen":startBloodOxygen,
+            "endHeartRate":endHeartRate,"endBloodOxygen":startBloodOxygen
+        } } });
+        return await "IWBP52";
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+//2.14上报通话记录：（上行协议号：AP53，响应：BP53）
+const IWAP53= async (imei,params) => {
+    try {
+        const callLog=params.slice(1);
+        const callScores=[];
+        for (let i=0;i<callLog.length;i++)
+        {
+            const callArray=callLog[i].split("|");
+            const startTime=callArray[0];
+            const endTime=callArray[1];
+            const peer=callArray[2];
+            const flag=callArray[3];
+            const local=callArray[4];
+            callScores.push({"startTime":startTime,"endTime":endTime,"peer":peer,"flag":flag,"local":local})
+        }
+        await watchinfo.pushXX({'imei':imei},{ $push: { "callScores": {
+            $each: callScores
+        } } });
+
+        return await "IWBP53";
+
+    } catch(err) {
+        throw new Error(err);
+    }
+};
+
+//2.15 上报连续测试心率/血氧结果（上行协议号：AP54，响应：BP54）
+const IWAP54= async (imei,params) => {
+    try {
+
+        var pattern = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
+        var date = new Date(params[1].replace(pattern,'$1-$2-$3 $4:$5:$6'));
+        var startTime = date.getTime()/1000;
+        const frequency=params[2];
+        const xxArray=params.slice(3);
+        const scores=[];
+        for(let i=0;i<xxArray.length;i++)
+        {
+            const timeSec=startTime+(i*frequency);
+            const time=(new Date(timeSec*1000)).toFormat("YYYYMMDDHHMISS");
+            const heartRate=xxArray[i].split("|")[0];
+            const bloodOxygen=xxArray[i].split("|")[1];
+            scores.push({"time":time,"heartRate":heartRate,"bloodOxygen":bloodOxygen})
+        }
+        await watchinfo.pushXX({'imei':imei},{ $push: { "scores": {
+            $each: scores
+        } } });
+
+        return await "IWBP54";
+
+    } catch(err) {
+        throw new Error(err);
     }
 };
 
 exports.IWAP00=IWAP00;
+exports.IWAP01=IWAP01;
+exports.IWAP02=IWAP02;
+exports.IWAP03=IWAP03;
+exports.IWAP04=IWAP04;
+exports.IWAP05=IWAP05;
+exports.IWAP06=IWAP06;
+exports.IWAP07=IWAP07;
+exports.IWAP10=IWAP10;
+exports.IWAP39=IWAP39;
+exports.IWAP42=IWAP42;
+exports.IWAP51=IWAP51;
+exports.IWAP52=IWAP52;
+exports.IWAP53=IWAP53;
+exports.IWAP54=IWAP54;

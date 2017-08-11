@@ -5,8 +5,8 @@ const path = require('path');
 const appwatchPath = path.resolve(os.homedir() + '/.appwatch/');
 
 const configFiles = [
-  'default.yml',
-  'ss.yml',
+  //'default.yml',
+  //'ss.yml',
   'webgui.yml'
 ];
 

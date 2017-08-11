@@ -9,7 +9,7 @@ const host = config.appwatch.address.split(':')[0];
 const port = config.appwatch.address.split(':')[1];
 
 const logicpart = appRequire('services/logicpart');
-
+const watchinfo=appRequire('models/watchinfo');
 
 const net = require('net');
 
@@ -25,46 +25,68 @@ const receiveDatawatch = (receive, data) => {
 
 const receiveCommandwatch = async (data,receive) => {
     try {
-        const message = data.toString()
-        logger.info(message);
+        const message = data.toString();
         const params=message.split(",");
-        /*switch (params[0]){
+        switch (params[0]){
             case 'IWAP00':
-                let imei=params[1];
-                map.put(imei,receive.socket)
-                logicpart.IWAP00(params);
-            // case 'IWAP01':
-            //     logicpart.IWAP01(params);
-            // case 'IWAP02':
-            //     logicpart.IWAP02(params);
-            // case 'IWAP03':
-            //     logicpart.IWAP03(params);
-            // case 'IWAP04':
-            //     logicpart.IWAP04(params);
-            // case 'IWAP05':
-            //     logicpart.IWAP05(params);
-            // case 'IWAP06':
-            //     logicpart.IWAP06(params);
-            // case 'IWAP07':
-            //     logicpart.IWAP07(params);
-            // case 'IWAP08':
-            //     logicpart.IWAP08(params);
-
+                receive.imei=params[1];
+                map.set(params[1],receive.socket);
+                return await logicpart.IWAP00(params);
+                break;
+            case 'IWAP01':
+                //imei=map.search(receive.socket);
+                return await logicpart.IWAP01(receive.imei,params);
+                break;
+            case 'IWAP02':
+                return await logicpart.IWAP02(receive.imei,params);
+                break;
+            case 'IWAP03':
+                return await logicpart.IWAP03(receive.imei,params);
+                break;
+            case 'IWAP04':
+                return await logicpart.IWAP04(receive.imei,params);
+                break;
+            case 'IWAP05':
+                return await logicpart.IWAP05(receive.imei,params);
+                break;
+            case 'IWAP06':
+                return await logicpart.IWAP06(receive.imei,params);
+                break;
+            case 'IWAP07':
+                return await logicpart.IWAP07(receive.imei,params);
+                break;
+            case 'IWAP10':
+                return await logicpart.IWAP10(receive.imei,params);
+                break;
+            case 'IWAP39':
+                return await logicpart.IWAP39(receive.imei,params);
+                break;
+            case 'IWAP42':
+                return await logicpart.IWAP42(receive.imei,params);
+                break;
+            case 'IWAP51':
+                return await logicpart.IWAP51(receive.imei,params);
+                break;
+            case 'IWAP52':
+                return await logicpart.IWAP52(receive.imei,params);
+                break;
+            case 'IWAP53':
+                return await logicpart.IWAP53(receive.imei,params);
+                break;
+            case 'IWAP54':
+                return await logicpart.IWAP54(receive.imei,params);
+                break;
             default:
-                return Promise.reject('error');
-        }*/
-
-        // if(message.command === 'add') {
-        //     return appwatch.addAccount(message);
-        // } else {
-        //     return Promise.reject();
-        // }
+                return '';
+                break;
+        }
     } catch(err) {
         throw err;
     }
 };
 
 const packwatch = (message) => {
+    console.log("message="+message);
     const dataBuffer = Buffer.from(message);
     const endBuffer = Buffer.from("#");
     const pack = Buffer.concat([dataBuffer, endBuffer]);
@@ -85,13 +107,14 @@ const checkDatawatch = (receive) => {
         data = buffer.slice(start,endpos);
         receive.pos=endpos+1;
         receiveCommandwatch(data,receive).then(s => {
-            //receive.socket.write(packwatch(s));
+            console.log("s="+s);
+            receive.socket.write(packwatch(s));
             // receive.socket.close();
-        }, e => {
+        }).catch(e => {
             logger.error(e);
             //receive.socket.end(pack({}));
             // receive.socket.close();
-        });
+        })
     }
 };
 
@@ -99,38 +122,50 @@ const serverwatch = net.createServer(socket => {
     const receive = {
         data: Buffer.from(''),
         socket: socket,
+        imei:'',
         pos:0
     };
-
     socket.on('data', data => {
-        console.log("socket 1");
+        console.log(data.toString());
         receiveDatawatch(receive, data);
     });
-    socket.on('end', () => {
+    socket.on('end', async () => {
         const imei=map.search(socket)
-        map.remove(imei)
-        console.log(imei+'end');
+        if(imei)
+        {
+            logger.error(imei+"socket end");
+            await watchinfo.updateWatchInfo({'imei':imei},{'imei':imei,'status':false});
+            map.remove(imei)
+        }
+
     });
-    socket.on('close', () => {
+    socket.on('close', async () => {
         const imei=map.search(socket)
-        map.remove(imei)
-        console.log(imei+'close');
+        if(imei)
+        {
+            await watchinfo.updateWatchInfo({'imei':imei},{'imei':imei,'status':false});
+            map.remove(imei)
+        }
+
     });
 }).on('error', (err) => {
     logger.error(`socket error: `, err);
 });
 
-serverwatch.listen({
-    port,
-    host,
-}, () => {
+serverwatch.listen(port, () => {
     logger.info(`server listen on ${ host }:${ port }`);
 });
 
+// serverwatch.listen({
+//     port,
+//     host,
+// }, () => {
+//     logger.info(`server listen on ${ host }:${ port }`);
+// });
+
 const sendCommandwatch = async (message) => {
     try {
-        await sendMessagewatch(message);
-        return ;
+        return await sendMessagewatch(message);
     } catch(err) {
         return Promise.reject('error');
     }
@@ -144,31 +179,22 @@ const sendMessagewatch =  (message) => {
             socket: client,
         };
         client.write(message,"utf8");
-        client.on('data', data => {
-            console.log("client 2")
-            receiveDatawatch(receive, data).then(message => {
-                if(!message) {
-                    // reject(new Error(`empty message from ssmgr[s] [${ options.host || host }:${ options.port || port }]`));
-                } else if(message.code === 0) {
-                    resolve(message.data);
-                } else {
-                    logger.error(message);
-                    reject(new Error("client2 error"));
-                }
-                //client.end();
-            }).catch(err => {
-                logger.error(err);
-                //client.end();
-            });
+        client.once('data', data => {
+            const aptype=data.toString();
+            //if(aptype.includes("AP11")||aptype.includes("AP12"))
+            console.log("aptype="+aptype);
+            resolve(data.toString());
         });
-        client.on('close', () => {
+        client.once('close', () => {
             reject(new Error("client connection close"));
         });
-        client.on('error', err => {
+        client.once('error', err => {
             logger.error(err);
             reject(new Error("client connection close"));
         });
     })
+
+    return promise;
 
 
 };
