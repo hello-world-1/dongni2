@@ -12,8 +12,8 @@ function server(cityid,callback) {
 
     const content = qs.stringify(data)
 
-    const result = ''
-    const body = []
+    let result = ''
+    let body = []
 
     const options = {
         hostname: 'restapi.amap.com',
