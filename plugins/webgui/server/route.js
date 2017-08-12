@@ -4,31 +4,32 @@ const sessionParser = appRequire('plugins/webgui/index').sessionParser;
 const home = appRequire('plugins/webgui/server/home');
 const path = require('path');
 const config = appRequire('services/config').all();
+const Teacher = appRequire('plugins/webgui/server/teachers')
+/*const Book = require('/root/watch/app-watch/plugins/webgui/server/books')*/
 
 const isUser = (req, res, next) => {
-  if(req.session.type === 'normal') {
-    knex('user').update({
-      lastLogin: Date.now(),
-    }).where({ id: req.session.user }).then();
-    return next();
-  } else {
-    return res.status(401).end();
-  }
+    if(req.session.type === 'normal') {
+        knex('user').update({
+            lastLogin: Date.now(),
+        }).where({ id: req.session.user }).then();
+        return next();
+    } else {
+        return res.status(401).end();
+    }
 };
 const isAdmin = (req, res, next) => {
-  if(req.session.type === 'admin') {
-    return next();
-  } else {
-    return res.status(401).end();
-  }
+    if(req.session.type === 'admin') {
+        return next();
+    } else {
+        return res.status(401).end();
+    }
 };
 
-app.get('/api/home/login', home.status);
+app.get('/api/home/login', Teacher.showSignin);
 app.post('/api/home/code', home.sendCode);
-app.post('/api/home/signup', home.signup);
+app.post('/api/home/signin', Teacher.signin);
 app.post('/api/home/login', home.login);
 app.post('/api/home/logout', home.logout);
-app.post('/api/home/sendtcp',home.sendtcp);
 // app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);
 // app.get('/api/home/password/reset', home.checkResetPasswordToken);
 // app.post('/api/home/password/reset', home.resetPassword);
@@ -39,9 +40,7 @@ app.post('/api/home/sendtcp',home.sendtcp);
 // app.get('/api/admin/flow/:serverId(\\d+)/:port(\\d+)/lastConnect', isAdmin, adminFlow.getServerPortLastConnect);
 
 
-
-
-
+app.post('/api/home/sendtcp',home.sendtcp);
 const version = appRequire('package').version;
 const homePage = (req, res) => res.render('index', { version });
 app.get('/', homePage);

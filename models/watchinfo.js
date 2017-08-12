@@ -31,9 +31,25 @@ const pushXX = (filter,pushdata) => {
     })
 }
 
+const findXX = (filter,finddata) => {
+    return new Promise((resolve,reject)=>{
+        mongodb.find(tableName,filter,finddata,function(err,doc){
+            if(err)
+            {
+                reject(err)
+            }
+            else
+            {
+                resolve(doc)
+            }
+        })
+    })
+}
+
 
 
 
 
 exports.updateWatchInfo=updateWatchInfo;
 exports.pushXX=pushXX;
+exports.findXX=findXX;

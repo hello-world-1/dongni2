@@ -1,6 +1,7 @@
 require('date-utils')
 const iconv=require('iconv-lite');
 const watchinfo=appRequire('models/watchinfo');
+const locationtransefer=appRequire('services/locationtransefer')
 
 const IWAP00 = async (params) => {
     try {
@@ -20,6 +21,13 @@ const IWAP01 = async (imei,params) => {
     try {
         //AP01消息调用 中间件向手机发送位置信息，也许需要保存地理位置数据
         //await
+        console.log(imei)
+        console.log(params[2].toString());
+        let location="116.371499,39.955875"
+        const weizhi=await locationtransefer.locationService(location);
+        //await watchinfo.pushXX({"imei":imei},{ $push: { "locations":weizhi } });
+        //await
+        console.log(weizhi);
         return await "IWBP01";
     } catch(err) {
         throw new Error(err);
@@ -41,7 +49,7 @@ const IWAP02 = async (imei,params) => {
             const loc='深圳市南山区南海大道1079号';
             const location=iconv.encode(loc,'UTF16-BE').toString('hex');
             console.log(location);
-            return await `IWBP02${location}`;
+            return await `IWBP02,${location}`;
         }
 
     } catch(err) {

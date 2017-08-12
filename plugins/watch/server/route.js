@@ -1,34 +1,44 @@
 const app = appRequire('plugins/watch/index').app;
 // const wss = appRequire('plugins/webgui/index').wss;
 //const sessionParser = appRequire('plugins/watch/index').sessionParser;
-const home = appRequire('plugins/watch/server/home');
 const path = require('path');
 const config = appRequire('services/config').all();
 
-const isUser = (req, res, next) => {
-  if(req.session.type === 'normal') {
-    // knex('user').update({
-    //   lastLogin: Date.now(),
-    // }).where({ id: req.session.user }).then();
-      // db operation
-    return next();
-  } else {
-    return res.status(401).end();
-  }
-};
-const isAdmin = (req, res, next) => {
-  if(req.session.type === 'admin') {
-    return next();
-  } else {
-    return res.status(401).end();
-  }
-};
+const home = appRequire('plugins/watch/server/home');
+const question = appRequire('plugins/watch/server/question');
+const emotion = appRequire('plugins/watch/server/emotion');
+const watch = appRequire('plugins/watch/server/watch');
+const lesson = appRequire('plugins/webgui/server/lessons');
+const bill = appRequire('plugins/watch/server/bill');
+const book = appRequire('plugins/watch/server/book');
+const User = appRequire('plugins/watch/db/user');
 
 
-app.post('/api/home/code', home.sendCode);
-app.post('/api/home/signup', home.signup);
-app.post('/api/home/login', isUser,home.login);
-app.post('/api/home/logout', home.logout);
+// const isUser = (req, res, next) => {
+//   if(req.session.type === 'normal') {
+//     // knex('user').update({
+//     //   lastLogin: Date.now(),
+//     // }).where({ id: req.session.user }).then();
+//       // db operation
+//     return next();
+//   } else {
+//     return res.status(401).end();
+//   }
+// };
+// const isAdmin = (req, res, next) => {
+//   if(req.session.type === 'admin') {
+//     return next();
+//   } else {
+//     return res.status(401).end();
+//   }
+// };
+
+
+// app.post('/api/home/code', home.sendCode);
+// app.post('/api/home/signup', home.signup);
+// app.post('/api/home/login', isUser,home.login);
+// app.post('/api/home/logout', home.logout);
+
 // app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);
 // app.get('/api/home/password/reset', home.checkResetPasswordToken);
 // app.post('/api/home/password/reset', home.resetPassword);
@@ -38,10 +48,79 @@ app.post('/api/home/logout', home.logout);
 // app.put('/api/admin/account/:accountId(\\d+)/data', isAdmin, admin.changeAccountData);
 // app.get('/api/admin/flow/:serverId(\\d+)/:port(\\d+)/lastConnect', isAdmin, adminFlow.getServerPortLastConnect);
 
-app.post('/api/home/logout', home.sendtcp);
+//home
+//获取验证码
+app.post('/api/home/sendCode', home.sendCode);
+//注册
+app.post('/api/user/signup', home.signup);
+//登录
+app.post('/api/user/signin', home.signin);
+//登出
+app.post('/api/user/logout', home.signinRequired, home.logout);
+//修改密码
+app.post('/api/user/resetPassword', home.signinRequired, home.resetPassword);
 
+//question
+//获取相关提问列表(一期为获取全部提问)
+app.post('/api/user/question/similar', home.signinRequired, question.similar);
+//根据用户id获取提问列表
+app.post('/api/user/question/list', home.signinRequired, question.list);
+//用户添加新提问
+app.post('/api/user/question/new', home.signinRequired, question.add);
+//根据提问id获取提问详情
+app.post('/api/user/question/detail', home.signinRequired, question.detail);
 
+//emotion
+//根据家长id获取最新情绪详情详情
+app.post('/api/user/emotion/latest', home.signinRequired, emotion.latest);
+// //根据I家长id获取情绪详情列表--成长
+// app.post('/api/user/emotion/list', home.signinRequired, emotion.list);
 
+//lesson
+//根据课程id查看课程详情
+app.post('/api/user/lesson/detail', home.signinRequired, lesson.detail);
+// //用户报名课程
+app.post('/api/user/bill/add', home.signinRequired, bill.add);
+
+//book
+//根据id查看某一本书籍
+app.post('/api/user/book/detail', home.signinRequired, book.detail);
+
+//teacher
+// //根据老师id查看此老师的详细信息
+// app.post('/api/teacher/detail', teacher.detail);
+
+//user_information
+// //获取用户个人信息--对应app侧滑栏用户信息设置
+// app.post('/api/user/information/detail', user.parentDetail);
+// //用户填写信息--对应app侧滑栏用户信息设置
+// app.post('/api/user/information/modify', user.modify);
+// //获取孩子个人信息
+// app.get('/api/user/information/child', user.childDetail);
+
+//watch
+// //获取手表信息
+// app.post('/api/user/watch/detail', watch.detail);
+//绑定手表和主控号码
+app.post('/api/user/watch/bind', home.signinRequired, watch.bind);
+// //为手表添加联系人
+app.post('/api/user/watch/contact/add', watch.addContact);
+
+//message
+// //获取消息列表
+// app.post('/api/user/message/list', message.list);
+// //根据id获取具体某一消息
+// app.post('/api/user/message/detail', message.detail);
+
+//warning
+// //获取预警信息
+// app.post('/api/user/warnning/list', warning.list);
+
+//test
+// //获取问答卷
+// app.post('/api/user/test/detail', test.detail);
+// //添加回答
+// app.post('/api/user/test/result/add', test.addResult);
 
 
 const version = appRequire('package').version;

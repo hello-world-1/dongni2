@@ -53,7 +53,7 @@ app.use('/public', express.static(path.resolve('./plugins/webgui/public')));
 
 const port = config.plugins.webgui.port || 8080;
 const host = config.plugins.webgui.host || '0.0.0.0';
-app.listen(port, host, () => {
+app.listen(port,() => {
   logger.info(`server start at ${ host }:${ port }`);
 }).on('error', err => {
   logger.error('express server error: ' + err);

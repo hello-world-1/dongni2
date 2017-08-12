@@ -23,8 +23,6 @@ const sessionParser = session({
   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 3600 * 1000 },
   store:store
 });
-
-
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const expressValidator = require('express-validator');
@@ -45,7 +43,7 @@ app.use(sessionParser);
 
 const port = config.plugins.watch.port || 90;
 const host = config.plugins.watch.host || '0.0.0.0';
-app.listen(port, host, () => {
+app.listen(port,() => {
   logger.info(`server start at ${ host }:${ port }`);
 }).on('error', err => {
   logger.error('express server error: ' + err);
@@ -69,7 +67,7 @@ app.listen(port, host, () => {
 
 exports.app = app;
 // exports.wss = wss;
-//exports.sessionParser = sessionParser;
+exports.sessionParser = sessionParser;
 
 appRequire('plugins/watch/server/route');
 console.log('watch');
