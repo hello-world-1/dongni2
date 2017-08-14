@@ -1,10 +1,10 @@
 /**
  * 书籍信息
  */
-var mongoose = appRequire('init/mongoose')
-var Schema = mongoose.Schema;
+const mongoose = appRequire('init/mongoose');
+const Schema = mongoose.Schema;
 
-var BookSchema = new Schema({
+const BookSchema = new Schema({
 
 	teacherID: {
 		type: Schema.Types.ObjectId,

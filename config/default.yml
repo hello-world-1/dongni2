@@ -28,7 +28,7 @@ db:
   user: 'root'
   password: 'appwatch2017'
   host: 'localhost'
-  port: '27019'
+  port: '27017'
   database: 'appwatch'
   maxPoolSize : '10'
   minPoolSize : '0'

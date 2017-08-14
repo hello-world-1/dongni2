@@ -1,12 +1,12 @@
 /**
  * 消息信息
  */
-var mongoose = appRequire('init/mongoose');
-var Schema = mongoose.Schema;
-var User = appRequire('plugins/watch/db/user');
-var Teacher = require('./teacer');
+const mongoose = appRequire('init/mongoose');
+const Schema = mongoose.Schema;
+const User = appRequire('plugins/watch/db/user');
+const Teacher = require('./teacer');
 
-var MessageSchema = new Schema({
+const MessageSchema = new Schema({
 
 	parentID: {
 		type: Schema.Types.ObjectId,
