@@ -47,14 +47,14 @@ client.on('data',function(data) {
         case "IWBP41":
         case "IWBP43":
         case "IWBP61":
-        case "IWBP62":
-            const pp=`IWAP62,${params[2]},${params[3]}`
-            client.write(Buffer.from(pp,"utf8"));
-            break;
         case "IWBP63":
         case "IWBP64":
             client.write(Buffer.from(data.toString(),"utf8"));
             //client.write(Buffer.from(`${params[0]},${params[2]},${params[3]}}`,"utf8"));
+            break;
+        case "IWBP62":
+            const pp=`IWAP62,${params[2]},${params[3]}`
+            client.write(Buffer.from(pp,"utf8"));
             break;
         default:
             break;

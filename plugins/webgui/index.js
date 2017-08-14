@@ -10,20 +10,20 @@ const express = require('express');
 // const WebSocketServer = require('ws').Server;
 
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const store = new MongoStore({
-    url: `mongodb://${config.db.host}:${config.db.port}/${config.db.database}`
-});
+// const session = require('express-session');
+// const MongoStore = require('connect-mongo')(session);
+// const store = new MongoStore({
+//     url: `mongodb://${config.db.user}:${config.db.password}@${config.db.host}:${config.db.port}/${config.db.database}?authMechanism=DEFAULT`
+// });
 
 
-const sessionParser = session({
-  secret: '5E14cd8749A',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 3600 * 1000 },
-  store:store
-});
+// const sessionParser = session({
+//   secret: '5E14cd8749A',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 3600 * 1000 },
+//   store:store
+// });
 
 
 
@@ -42,7 +42,7 @@ app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(sessionParser);
+//app.use(sessionParser);
 
 app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
