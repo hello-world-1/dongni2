@@ -4,12 +4,14 @@
 /**
  * 用户信息
  */
-var mongoose = appRequire('init/mongoose');
+const mongoose = appRequire('init/mongoose');
     Schema = mongoose.Schema;
-var bcrypt = require('bcryptjs');
-var SALT_WORK_FACTOR = 10;
+const bcrypt = require('bcryptjs');
+const SALT_WORK_FACTOR = 10;
 
-var UserSchema = new Schema({
+const Child = require('./child');
+
+let UserSchema = new Schema({
 
     telephone: {type: String, required: true, index: {unique: true}},   //用户手机号
     password: {type: String, required: true},                           //用户密码
@@ -21,6 +23,7 @@ var UserSchema = new Schema({
     relationship: {type: String, default: "father"},                    //用户与孩子关系
     childrenTelephone: {type:String,default: ""},                       //孩子手机号
     device_token: {type:String},                                        //消息推送手机id
+    childID: {type: Schema.Types.ObjectId, ref: 'Child'},               //孩子id
     meta: {
         createAt: {type: Date, default: Date.now()},
         updateAT: {type: Date, default: Date.now()}
@@ -29,7 +32,7 @@ var UserSchema = new Schema({
 
 //更新登录时间，密码改动后hash新密码
 UserSchema.pre('save',function (next) {
-    var user = this;
+    let user = this;
 
     if (this.isNew) {
         this.meta.updateAt = this.meta.createAt = Date.now();
@@ -65,6 +68,6 @@ UserSchema.methods = {
             cb(null, isMatch);
         })
     }
-}
+};
 
 module.exports = mongoose.model('User',UserSchema);

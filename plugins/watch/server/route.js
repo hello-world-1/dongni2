@@ -8,9 +8,11 @@ const home = appRequire('plugins/watch/server/home');
 const question = appRequire('plugins/watch/server/question');
 const emotion = appRequire('plugins/watch/server/emotion');
 const watch = appRequire('plugins/watch/server/watch');
-const lesson = appRequire('plugins/webgui/server/lessons');
+const lesson = appRequire('plugins/watch/server/lesson');
 const bill = appRequire('plugins/watch/server/bill');
 const book = appRequire('plugins/watch/server/book');
+const teacher = appRequire('plugins/watch/server/teacher');
+const user = appRequire('plugins/watch/server/user');
 const User = appRequire('plugins/watch/db/user');
 
 
@@ -50,7 +52,7 @@ const User = appRequire('plugins/watch/db/user');
 
 //home
 //获取验证码
-app.post('/api/home/sendCode', home.sendCode);
+app.post('/api/user/sendCode', home.sendCode);
 //注册
 app.post('/api/user/signup', home.signup);
 //登录
@@ -87,24 +89,25 @@ app.post('/api/user/bill/add', home.signinRequired, bill.add);
 app.post('/api/user/book/detail', home.signinRequired, book.detail);
 
 //teacher
-// //根据老师id查看此老师的详细信息
-// app.post('/api/teacher/detail', teacher.detail);
+//根据老师id查看此老师的详细信息
+app.post('/api/user/teacher/detail', home.signinRequired, teacher.detail);
 
 //user_information
-// //获取用户个人信息--对应app侧滑栏用户信息设置
-// app.post('/api/user/information/detail', user.parentDetail);
-// //用户填写信息--对应app侧滑栏用户信息设置
-// app.post('/api/user/information/modify', user.modify);
+//获取用户个人信息--对应app侧滑栏用户信息设置
+app.post('/api/user/information/detail', home.signinRequired, user.detail);
+//用户填写信息--对应app侧滑栏用户信息设置
+app.post('/api/user/information/modify', home.signinRequired, user.modify);
+
 // //获取孩子个人信息
 // app.get('/api/user/information/child', user.childDetail);
 
 //watch
 // //获取手表信息
 // app.post('/api/user/watch/detail', watch.detail);
-//绑定手表和主控号码
+//绑定手表和主控号码XX
 app.post('/api/user/watch/bind', home.signinRequired, watch.bind);
-// //为手表添加联系人
-app.post('/api/user/watch/contact/add', watch.addContact);
+// //为手表添加联系人XX
+app.post('/api/user/watch/contact/add', home.signinRequired, watch.addContact);
 
 //message
 // //获取消息列表
