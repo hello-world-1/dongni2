@@ -31,7 +31,7 @@ exports.detail = (req, res) => {
         console.log("user.detail:");
         console.log(_user);
         res.json({status: 'success', user:_user});
-    });;
+    });
 
     // res.send('This is not implemented now');
 };
