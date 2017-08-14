@@ -17,6 +17,22 @@ var ChildSchema = new Schema({
     grade: {type: String, default: ""},                     //孩子年级
     character: {type: String, default: ""},                 //孩子性格特点
     parentID: {type: Schema.Types.ObjectId, ref: 'User'},   //家长id
+    meta: {
+        createAt: {type: Date, default: Date.now()},
+        updateAT: {type: Date, default: Date.now()}
+    }
+});
+
+ChildSchema.pre('save',function (next) {
+    let child = this;
+
+    if (this.isNew) {
+        this.meta.updateAt = this.meta.createAt = Date.now();
+    }
+    else {
+        this.meta.updateAT = Date.now();
+    }
+    next();
 });
 
 module.exports = mongoose.model('Child',ChildSchema);
