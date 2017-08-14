@@ -1,6 +1,6 @@
 const app = appRequire('plugins/webgui/index').app;
 // const wss = appRequire('plugins/webgui/index').wss;
-const sessionParser = appRequire('plugins/webgui/index').sessionParser;
+//const sessionParser = appRequire('plugins/webgui/index').sessionParser;
 const home = appRequire('plugins/webgui/server/home');
 const path = require('path');
 const config = appRequire('services/config').all();

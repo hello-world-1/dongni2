@@ -4,17 +4,17 @@ const util = require('util');
 const config = appRequire('services/config').get('db');
 
 
-const mongodbUrl = 'mongodb://%s:%s/%s';
-//var mongodbUrl ='mongodb://%s:%s@%s:%s/%s?authMechanism=DEFAULT';
+//const mongodbUrl = 'mongodb://%s:%s/%s';
+const mongodbUrl ='mongodb://%s:%s@%s:%s/%s?authMechanism=DEFAULT';
 
 function createPool() {
     const { host, user, port, password, database} = config;
-    //const url = util.format(mongodbUrl, user, password, host, port, database);
+    const connectionUrl = util.format(mongodbUrl, user, password, host, port, database);
     //var connectionUrl = util.format( mongodbUrl, host, port, database);
     //const connectionUrl ='mongodb://localhost:28010,localhost:28011,localhost:28012/test?replicaSet=replset1'
     //var url = 'mongodb://localhost:27019/appwatch';
-    console.log("port="+port);
-    var connectionUrl = util.format( mongodbUrl, host, port, database);
+    //console.log("port="+port);
+    //const connectionUrl = util.format( mongodbUrl, host, port, database);
     console.log(connectionUrl)
     //var url ='mongodb://root:appwatch2017@localhost:27017/appwatch?authMechanism=DEFAULT';
     var factory = {

@@ -9,20 +9,20 @@ const path = require('path');
 const express = require('express');
 // const WebSocketServer = require('ws').Server;
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const store = new MongoStore({
-    url: `mongodb://${config.db.host}:${config.db.port}/${config.db.database}`
-});
+// const session = require('express-session');
+// const MongoStore = require('connect-mongo')(session);
+// const store = new MongoStore({
+//     url: `mongodb://${config.db.user}:${config.db.password}@${config.db.host}:${config.db.port}/${config.db.database}?authMechanism=DEFAULT`
+// });
 
 
-const sessionParser = session({
-  secret: '5E14cd8749B',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 3600 * 1000 },
-  store:store
-});
+// const sessionParser = session({
+//   secret: '5E14cd8749B',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 3600 * 1000 },
+//   store:store
+// });
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const expressValidator = require('express-validator');
@@ -38,9 +38,8 @@ app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(sessionParser);
-//设置静态文件目录
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(sessionParser);
+
 
 const port = config.plugins.watch.port || 90;
 const host = config.plugins.watch.host || '0.0.0.0';
@@ -68,7 +67,7 @@ app.listen(port,() => {
 
 exports.app = app;
 // exports.wss = wss;
-exports.sessionParser = sessionParser;
+//exports.sessionParser = sessionParser;
 
 appRequire('plugins/watch/server/route');
 console.log('watch');
