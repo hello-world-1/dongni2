@@ -39,7 +39,8 @@ app.use(expressValidator());
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(sessionParser);
-
+//设置静态文件目录
+app.use(express.static(path.join(__dirname, 'public')));
 
 const port = config.plugins.watch.port || 90;
 const host = config.plugins.watch.host || '0.0.0.0';
