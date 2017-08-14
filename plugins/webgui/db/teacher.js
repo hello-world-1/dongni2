@@ -19,7 +19,7 @@ var TeacherSchema = new Schema({
 		type: String,
 		required: true
 	}, //用户密码
-	/*token: {
+	token: {
 		type: String
 	}, //用户登录使用的token
 	avatar: {
@@ -51,15 +51,15 @@ var TeacherSchema = new Schema({
 			type: Date,
 			default: Date.now()
 		}
-	}*//*,
-	books: [{
-		type: ObjectId,
-		ref: 'Book'
-	}], //老师发布的书籍
-	lessons: [{
-		type: ObjectId,
-		ref: 'Lesson'
-	}] //老师发布的课程*/
+	},
+	// books: [{
+	// 	type: ObjectId,
+	// 	ref: 'Book'
+	// }], //老师发布的书籍
+	// lessons: [{
+	// 	type: ObjectId,
+	// 	ref: 'Lesson'
+	// }] //老师发布的课程*/
 });
 
 TeacherSchema.pre('save', function(next) {
