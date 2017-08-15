@@ -4,6 +4,9 @@ const app = appRequire('plugins/watch/index').app;
 const path = require('path');
 const config = appRequire('services/config').all();
 
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+
 const home = appRequire('plugins/watch/server/home');
 const question = appRequire('plugins/watch/server/question');
 const emotion = appRequire('plugins/watch/server/emotion');
@@ -97,7 +100,8 @@ app.post('/api/user/teacher/detail', home.signinRequired, teacher.detail);
 app.post('/api/user/information/detail', home.signinRequired, user.detail);
 //用户填写信息--对应app侧滑栏用户信息设置
 app.post('/api/user/information/modify', home.signinRequired, user.modify);
-
+//修改用户头像
+app.post('/api/user/information/avatar', multipartMiddleware, home.signinRequired, user.changeAvatar);
 // //获取孩子个人信息
 // app.get('/api/user/information/child', user.childDetail);
 

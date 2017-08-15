@@ -4,6 +4,9 @@
 const log4js = require('log4js');
 const logger = log4js.getLogger('donni');
 const config = appRequire('services/config').all();
+const uuid = require('node-uuid');
+const fs = require('fs');
+const path = require('path');
 
 const User = appRequire('plugins/watch/db/user');
 const Child = appRequire('plugins/watch/db/child');
@@ -93,6 +96,36 @@ exports.modify = (req, res) => {
             })
         })
     }
+};
+
+//修改用户头像
+exports.changeAvatar = (req, res) => {
+
+    user = req.body.user;
+
+    let filestr = uuid.v1();
+    console.log("Received file:\n" + JSON.stringify(req.files));
+    let fileext = req.files.file.name.split('.');
+    let fileExt = fileext[fileext.length-1];
+    let filename = filestr+"."+fileExt;
+    let location = path.join(__dirname,'../public')+"/images/avatars/"+filename;
+    let readStream = fs.createReadStream(req.files.file.path)
+    let writeStream = fs.createWriteStream(location);
+    let newavatar = "/images/avatars/"+filename;
+    readStream.pipe(writeStream);
+    readStream.on('end',function(err){
+        if(err){
+            res.json({status:'error','errcode':2});
+        } else {
+            fs.unlinkSync(req.files.file.path);
+            User.update({_id:userID},{avatar:newavatar},function(err,numberAffected, rawResponse) {
+                if (err) {
+                    return res.json({status:'error', 'errcode': 3});
+                }else {
+                    res.json({status: 'success', user: {'userID': user._id, 'avatar': newavatar}});}
+            });
+        }
+    })
 };
 
 exports.childrenDetails = (req, res) => {
