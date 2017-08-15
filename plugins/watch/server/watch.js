@@ -12,6 +12,7 @@ const Watch = appRequire('plugins/watch/db/watch');
 const Telephone = appRequire('plugins/watch/db/telephone');
 const manager = appRequire('services/manager');
 
+//添加手表联系人
 exports.addContact = (req, res) => {
 
     user = req.body.user;
@@ -53,7 +54,7 @@ exports.addContact = (req, res) => {
                     const username=iconv.encode(name,'UTF16-BE').toString('hex');
                     const IMEI = watch.IMEI;
                     const telephone = telephoneNum;
-                    const IWBP61=`IWBP61,${IMEI},${time},C|${username}|${telephone}#`
+                    const IWBP61=`IWBP61,${IMEI},${time},C|${username}|${telephone}#`;
 
                     let result = null;
                     let message=null;
@@ -100,6 +101,7 @@ exports.addContact = (req, res) => {
     // res.send('This is not implemented now');
 };
 
+//用户设置手表主控号码
 exports.bind = (req, res) => {
 
     user = req.body.user;
@@ -131,7 +133,7 @@ exports.bind = (req, res) => {
                     console.log("setControlTelephone:");
                     const time=new Date().getTime();
                     const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-                    const IWBP11=`IWBP11,${IMEI},${time},${controlTelephone}`;
+                    const IWBP11=`IWBP11,${IMEI},${time},${controlTelephone}#`;
 
                     let result = null;
                     let message=null;
