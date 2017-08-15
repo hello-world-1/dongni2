@@ -2,8 +2,8 @@ const log4js = require('log4js');
 const logger = log4js.getLogger('donni');
 
 const config = appRequire('services/config').all();
-const Book = require('../db/Book');
-const Teacher = require('../db/Teacher');
+const Book = require('../db/book');
+const Teacher = require('../db/teacher');
 
 // 书籍详细信息
 exports.detail = function(req, res) {

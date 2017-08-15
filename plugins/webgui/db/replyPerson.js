@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var Teacher = require('./teacher');
 var User = appRequire('plugins/watch/db/user');
 
-var ReplySchema = new Schema({
+var ReplyPersonSchema = new Schema({
 
 	teacherID: {
 		type: Schema.Types.ObjectId,
@@ -22,4 +22,4 @@ var ReplySchema = new Schema({
 	}, //回复内容
 });
 
-module.exports = mongoose.model('Reply', ReplySchema);
+module.exports = mongoose.model('ReplyPerson', ReplyPersonSchema);

@@ -2,7 +2,7 @@ const log4js = require('log4js');
 const logger = log4js.getLogger('donni');
 
 const config = appRequire('services/config').all();
-const ReplyPerson = require('../db/ReplyPerson');
+const ReplyPerson = require('../db/replyPerson');
 const Reply = require('../db/reply');
 
 // 跳转到问题回复的界面

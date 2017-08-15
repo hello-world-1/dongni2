@@ -37,7 +37,7 @@ const isAdmin = (req, res, next) => {
 
 app.post('/user/login', User.login);
 app.post('/teacher/changeavatar', multipartMiddleware, Home.signinRequired, Teacher.changeAvatar);
-app.post('/admin/addteacher', Home,signinRequired,Teacher.addTeacher);
+// app.post('/admin/addteacher', Home,signinRequired,Teacher.addTeacher);
 app.post('/api/home/signin', Teacher.signin);
 app.post('/api/home/login', home.login);
 app.post('/user/logout', User.logout);
