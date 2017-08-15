@@ -1,4 +1,4 @@
-## 用户接口
+## 接口
 ### 用户使用账号登录
 > * /user/login
 
@@ -110,6 +110,7 @@
 
 ```
 {"status":"success"}
+```
 ### 老师修改头像
 > * /teacher/changeavatar
 
@@ -127,6 +128,7 @@
 >> * errcode = 2: 函数调用异常
 
 > * example
+```
 跳转到老师个人信息界面传送的数据为:
 {
   "status": "success",

@@ -5,6 +5,7 @@ const home = appRequire('plugins/webgui/server/home');
 const path = require('path');
 const config = appRequire('services/config').all();
 const User = appRequire('plugins/webgui/server/user')
+const Teacher = appRequire('plugins/webgui/server/teachers')
 /*const Book = require('/root/watch/app-watch/plugins/webgui/server/books')*/
 
 const isUser = (req, res, next) => {
@@ -26,7 +27,7 @@ const isAdmin = (req, res, next) => {
 };
 
 app.post('/user/login', User.login);
-app.post('/api/home/code', home.sendCode);
+app.post('/admin/addteacher', home.sendCode);
 app.post('/api/home/signin', Teacher.signin);
 app.post('/api/home/login', home.login);
 app.post('/user/logout', User.logout);
