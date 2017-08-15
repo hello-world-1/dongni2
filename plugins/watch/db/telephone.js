@@ -19,6 +19,11 @@ var TelephoneSchema = new Schema({
     createAt: {type: Date, default: Date.now}
 });
 
+TelephoneSchema.pre('save', function (next) {
+    if (this.isNew) {
+        this.createAt = Date.now();
+    }
+    next();
+});
 
-
-module.exports = mongoose.model('Watch',TelephoneSchema);
+module.exports = mongoose.model('Telephone',TelephoneSchema);
