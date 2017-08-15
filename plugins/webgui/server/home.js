@@ -5,6 +5,17 @@ const config = appRequire('services/config').all();
 const appwatch = appRequire('services/appwatch');
 const iconv=require('iconv-lite');
 
+//检测用户登录状态
+exports.signinRequired = (req, res, next) => {
+
+    if (!req.session.user) {
+        // if not login
+        return res.json({status: 'error', 'errcode': 2});
+    }else{
+        next();
+    }
+};
+
 exports.signup = (req,res) => {
   req.checkBody('password','Invalid password').notEmpty();
   let type = 'normal';

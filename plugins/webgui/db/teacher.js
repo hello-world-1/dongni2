@@ -3,7 +3,7 @@
  */
 const mongoose = appRequire('init/mongoose')
 const Schema = mongoose.Schema
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const SALT_WORK_FACTOR = 10
 
 const TeacherSchema = new Schema({
@@ -37,7 +37,7 @@ const TeacherSchema = new Schema({
 	introduction: {
 		type: String,
 		default: ""
-	}, //老师个人介绍
+	}, //老师个人介绍bcryptjs
 	age: {
 		type: Number,
 		default: 30

@@ -1,4 +1,4 @@
-## 用户接口
+## 接口
 ### 用户使用账号登录
 > * /user/login
 
@@ -97,25 +97,27 @@
 > * /user/logout
 
 > * Input Parameters
->> * token:requested
+>> * sessionid:requested
 
 > * Successful Return
 跳转到登录界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 用户not登录
 
 > * example
 
 ```
 {"status":"success"}
+{'status': 'error', 'errcode': 2}
+```
 ### 老师修改头像
 > * /teacher/changeavatar
 
 > * Input Parameters
 >> * userID:requested
->> * token:requested
+>> * session:requested
 >> * file.name:requested
 >> * file.path:requested
 
@@ -127,6 +129,7 @@
 >> * errcode = 2: 函数调用异常
 
 > * example
+```
 跳转到老师个人信息界面传送的数据为:
 {
   "status": "success",
