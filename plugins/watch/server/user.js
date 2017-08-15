@@ -118,7 +118,7 @@ exports.changeAvatar = (req, res) => {
             res.json({status:'error','errcode':2});
         } else {
             fs.unlinkSync(req.files.file.path);
-            User.update({_id:userID},{avatar:newavatar},function(err,numberAffected, rawResponse) {
+            User.update({_id: user._id},{avatar:newavatar},function(err,numberAffected, rawResponse) {
                 if (err) {
                     return res.json({status:'error', 'errcode': 3});
                 }else {
