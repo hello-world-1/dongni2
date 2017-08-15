@@ -23,6 +23,6 @@ plugins:
 db:
   host: '127.0.0.1'
   user: 'root'
-  port: '27019'
+  port: '27017'
   password: 'appwatch2017'
   database: 'appwatch'

@@ -1,12 +1,12 @@
 /**
  * 老师信息
  */
-var mongoose = appRequire('init/mongoose')
-var Schema = mongoose.Schema
-// var bcrypt = require('bcrypt')
-var SALT_WORK_FACTOR = 10
+const mongoose = appRequire('init/mongoose')
+const Schema = mongoose.Schema
+const bcrypt = require('bcrypt')
+const SALT_WORK_FACTOR = 10
 
-var TeacherSchema = new Schema({
+const TeacherSchema = new Schema({
 
 	username: {
 		type: String,
@@ -51,15 +51,15 @@ var TeacherSchema = new Schema({
 			type: Date,
 			default: Date.now()
 		}
-	},
-	// books: [{
-	// 	type: ObjectId,
-	// 	ref: 'Book'
-	// }], //老师发布的书籍
-	// lessons: [{
-	// 	type: ObjectId,
-	// 	ref: 'Lesson'
-	// }] //老师发布的课程*/
+	}/*,
+	books: [{
+		type: ObjectId,
+		ref: 'Book'
+	}], //老师发布的书籍
+	lessons: [{
+		type: ObjectId,
+		ref: 'Lesson'
+	}] //老师发布的课程*/
 });
 
 TeacherSchema.pre('save', function(next) {
@@ -71,25 +71,25 @@ TeacherSchema.pre('save', function(next) {
 		this.meta.updateAt = Date.now()
 	}
 
-	// bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-	// 	if (err) return next(err)
-    //
-	// 	bcrypt.hash(user.password, salt, function(err, hash) {
-	// 		if (err) return next(err)
-    //
-	// 		user.password = hash
-	// 		next()
-	// 	})
-	// })
+	bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+		if (err) return next(err)
+
+		bcrypt.hash(user.password, salt, function(err, hash) {
+			if (err) return next(err)
+
+			user.password = hash
+			next()
+		})
+	})
 })
 
 TeacherSchema.methods = {
 	comparePassword: function(_password, cb) {
-		// bcrypt.compare(_password, this.password, function(err, isMatch) {
-		// 	if (err) return cb(err)
-        //
+		bcrypt.compare(_password, this.password, function(err, isMatch) {
+			if (err) return cb(err)
+
 			cb(null, isMatch)
-		// })
+		})
 	}
 }
 
@@ -122,13 +122,6 @@ TeacherSchema.statics = {
 		return this
 			.find({})
 			.sort('meta.updateAt')
-			.exec(cb)
-	},
-	findById: function(id, cb) {
-		return this
-			.findOne({
-				_id: id
-			})
 			.exec(cb)
 	}
 }

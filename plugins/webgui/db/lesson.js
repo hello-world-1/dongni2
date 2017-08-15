@@ -1,11 +1,11 @@
 /**
  * 课程信息
  */
-var mongoose = appRequire('init/mongoose')
-var Schema = mongoose.Schema;
-var Teacher = require('./teacher');
+const mongoose = appRequire('init/mongoose');
+const Schema = mongoose.Schema;
+const Teacher = require('./teacher');
 
-var LessonSchema = new Schema({
+const LessonSchema = new Schema({
 
     teacherID: {
         type: Schema.Types.ObjectId,

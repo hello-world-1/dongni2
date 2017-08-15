@@ -4,7 +4,7 @@ const sessionParser = appRequire('plugins/webgui/index').sessionParser;
 const home = appRequire('plugins/webgui/server/home');
 const path = require('path');
 const config = appRequire('services/config').all();
-const Teacher = appRequire('plugins/webgui/server/teachers')
+const User = appRequire('plugins/webgui/server/user')
 /*const Book = require('/root/watch/app-watch/plugins/webgui/server/books')*/
 
 const isUser = (req, res, next) => {
@@ -25,11 +25,11 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-app.get('/api/home/login', Teacher.showSignin);
+app.post('/user/login', User.login);
 app.post('/api/home/code', home.sendCode);
 app.post('/api/home/signin', Teacher.signin);
 app.post('/api/home/login', home.login);
-app.post('/api/home/logout', home.logout);
+app.post('/user/logout', User.logout);
 // app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);
 // app.get('/api/home/password/reset', home.checkResetPasswordToken);
 // app.post('/api/home/password/reset', home.resetPassword);
