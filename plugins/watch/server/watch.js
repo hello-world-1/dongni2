@@ -9,23 +9,95 @@ const appwatch = appRequire('services/appwatch');
 const iconv=require('iconv-lite');
 
 const Watch = appRequire('plugins/watch/db/watch');
+const Telephone = appRequire('plugins/watch/db/telephone');
 const manager = appRequire('services/manager');
 
 exports.addContact = (req, res) => {
 
     user = req.body.user;
-    name = req.body.name;
-    telephone = req.body.telephone;
-    type = req.body.type;
+    contactName = req.body.name;
+    telephoneNum = req.body.telephone;
+    // type = req.body.type;
 
     //判空
-    if (!name || !telephone || !type) {
+    if (!contactName || !telephoneNum) {
         return res.json({status: 'error', 'errcode': 3});
     }
 
+    //判断该用户手机号是否绑定过
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            //判断该联系人手机号是否已添加
+            Telephone.findOne({IMEI: watch.IMEI, telephone: telephoneNum, type: '1'}, function (err, telephone) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 5});   //数据库查询出错
+                }
+                if (telephone) {
+                    //该联系人已存在
+                    return res.json({status: 'error', 'errcode': 6});   //该手表该联系人已存在
+                }
+                else {
+                    //为手表添加该联系人
 
+                    console.log("watchAddContact:");
+                    const time=new Date().getTime();
+                    const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+                    const name=contactName;
+                    const username=iconv.encode(name,'UTF16-BE').toString('hex');
+                    const IMEI = watch.IMEI;
+                    const telephone = telephoneNum;
+                    const IWBP61=`IWBP61,${IMEI},${time},C|${username}|${telephone}#`
 
-    res.send('This is not implemented now');
+                    let result = null;
+                    let message=null;
+                    message=IWBP61;
+                    console.log('message: ' + message);
+                    appwatch.sendCommand(message).then(success=>{
+                        if(success){
+                            result=success;
+                            // res.send(result);
+
+                            //手表设置成功
+                            //数据库新建该联系人
+                            let _contact = {
+                                IMEI: watch.IMEI,
+                                telephone: telephoneNum,
+                                name: contactName,
+                                avatar: 'http://www.7xsnbz.com2.z0.glb.qiniucdn.com/NARUTO.jpg',
+                                type: '1',
+                                parentID: user._id
+                            };
+
+                            let contact = new Telephone(_contact);
+                            console.log('watch.addContact:');
+                            console.log(contact);
+                            contact.save(function (err) {
+                                if (err) {
+                                    return res.json({status: 'error', 'errcode': 7});   //数据库保存出错
+                                }
+                                else {
+                                    return res.json({status: 'add success', tcpcode: result});
+                                }
+                            })
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        // res.status(500).end();
+                        return res.json({status: 'error' , msg: 'sendCommand error'});
+                    });
+                }
+            })
+        }
+    });
+
+    // res.send('This is not implemented now');
 };
 
 exports.bind = (req, res) => {
