@@ -4,9 +4,18 @@ const sessionParser = appRequire('plugins/webgui/index').sessionParser;
 const home = appRequire('plugins/webgui/server/home');
 const path = require('path');
 const config = appRequire('services/config').all();
+
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
+
 const User = appRequire('plugins/webgui/server/user')
 const Teacher = appRequire('plugins/webgui/server/teachers')
-/*const Book = require('/root/watch/app-watch/plugins/webgui/server/books')*/
+const Book = appRequire('plugins/webgui/server/books');
+const question = appRequire('plugins/webgui/server/questions');
+const Home = appRequire('plugins/webgui/server/home');
+const Answer = appRequire('plugins/webgui/server/answers');
+const Lesson = appRequire('plugins/webgui/server/lessons');
+const Message = appRequire('plugins/webgui/server/messages');
 
 const isUser = (req, res, next) => {
     if(req.session.type === 'normal') {
@@ -27,7 +36,8 @@ const isAdmin = (req, res, next) => {
 };
 
 app.post('/user/login', User.login);
-app.post('/admin/addteacher', home.sendCode);
+app.post('/teacher/changeavatar', multipartMiddleware, Home.signinRequired, Teacher.changeAvatar);
+app.post('/admin/addteacher', Home,signinRequired,Teacher.addTeacher);
 app.post('/api/home/signin', Teacher.signin);
 app.post('/api/home/login', home.login);
 app.post('/user/logout', User.logout);
