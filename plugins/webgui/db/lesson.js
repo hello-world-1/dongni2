@@ -11,6 +11,10 @@ const LessonSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Teacher'
     }, //老师id
+    title: {
+        type: String,
+        default: ""
+    },
     description: {
         type: String,
         default: ""

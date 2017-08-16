@@ -2,22 +2,20 @@ const log4js = require('log4js');
 const logger = log4js.getLogger('donni');
 
 const config = appRequire('services/config').all();
+const _ = require('underscore')
 const Book = require('../db/book');
 const Teacher = require('../db/teacher');
 
 // 书籍详细信息
-exports.detail = function(req, res) {
-	var _book = req.body.book
-	var id = req.body.book.bookid
-	var teacherID = req.body.book.teacherID
+exports.bookdetail = function(req, res) {
+	const id = req.body.bookid
 
 	Book.findById(id, function(err, book) {
-		Teacher.findById(teacherID, function(err, teacher) {
-			res.render('detail', {
-				title: '书籍详情页',
-				book: book,
-				teacher: teacher
-			})
+		if(err){
+			return res.json({"status":"error","errcode":2});
+		}
+		Teacher.findById(book.teacherID, function(err, teacher) {
+			return res.json({"status":"success","book":book,"teacher":teacher});
 		})
 	})
 }
@@ -45,58 +43,36 @@ exports.savePoster = function(req, res, next) {
 	}
 }
 
-// 添加或者更新书籍
-exports.save = function(req, res) {
-	// 查看提交数据中是否已经有书籍的_id
-	var id = req.body.book._id
-	var bookObj = req.body.book
-	var _book
+// 添加书籍
+exports.addbook = function(req, res) {
+	const bookObj = req.body.book
+	let _book = new Book(bookObj)
 
-	if (req.poster) {
-		bookObj.poster = req.poster
-	}
+	// 保存书籍
+	_book.save(function(err, book) {
+		if (err) {
+			return res.json({"status":"error","errcode":2});
+		}
+        Book.findByTeacherId(bookObj.teacherID, function(err, books) {
+            if (err) {
+                return res.json({"status":"error","errcode":2});
+            }
+            return res.json({"status":"success","books":books});
+        })
+	})
 
-	// 如果已经存在该书籍
-	if (id) {
-		Book.findById(id, function(err, book) {
-			if (err) {
-				console.log(err)
-			}
-
-			// 更新书籍
-			_book = _.extend(book, bookObj)
-			_book.save(function(err, book) {
-				if (err) {
-					console.log(err)
-				}
-
-				res.redirect('/book/' + book._id)
-			})
-		})
-	} else { // 如果没有添加过该书籍
-		_book = new Book(bookObj)
-
-		// 保存书籍
-		_book.save(function(err, book) {
-			if (err) {
-				console.log(err)
-			}
-			// 跳转到老师的所有书籍列表
-			res.redirect('/teacher/' + teacher._id)
-		})
-	}
 }
 
 // 书籍列表界面
-exports.bookList = function(req, res) {
-	var teacherID = req.params.teacherID
+exports.booklist = function(req, res) {
+	const teacherID = req.session.user._id
 
 	if (teacherID) {
-		Book.findByTeacherId(teacherID, function(err, book) {
-			res.render('admin', {
-				title: '全部书籍',
-				book: book
-			})
+		Book.findByTeacherId(teacherID, function(err, books) {
+            if (err) {
+                return res.json({"status":"error","errcode":2});
+            }
+            return res.json({"status":"success","books":books});
 		})
 	}
 }

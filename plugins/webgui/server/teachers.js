@@ -1,8 +1,10 @@
 const log4js = require('log4js');
 const logger = log4js.getLogger('donni');
+const _ = require('underscore')
 
 const config = appRequire('services/config').all();
 const Teacher = require('../db/teacher');
+const uuid = require('node-uuid');
 
 // 跳转到登录界面
 exports.showSignin = function(req, res) {
@@ -21,7 +23,7 @@ exports.showAddTeacher = function(req, res) {
 //修改用户头像
 exports.changeAvatar = (req, res) => {
 
-    user = req.session.user;
+    let user = req.session.user;
 
     let filestr = uuid.v1();
     console.log("Received file:\n" + JSON.stringify(req.files));
@@ -42,7 +44,13 @@ exports.changeAvatar = (req, res) => {
                 if (err) {
                     return res.json({status:'error', 'errcode': 3});
                 }else {
-                    res.json({status: 'success', user: {'userID': user._id, 'avatar': newavatar}});}
+                	Teacher.findById(function(err, teacher) {
+                        if (err) {
+                            return res.json({status:'error','errcode':2});
+                        }
+                        return res.json({status: 'success', teacher: teacher});
+                    })
+                }
             });
         }
     })
@@ -58,26 +66,48 @@ exports.addTeacher = function(req, res) {
 	// 性别
 	// 老师的介绍
 	// 年龄
-	var _user = req.body.user
+
+	let _user = req.body.user
+
+    let filestr = uuid.v1();
+    console.log("Received file:\n" + JSON.stringify(req.files));
+    let fileext = req.files.file.name.split('.');
+    let fileExt = fileext[fileext.length-1];
+    let filename = filestr+"."+fileExt;
+    let location = path.join(__dirname,'../public')+"/images/avatars/"+filename;
+    let readStream = fs.createReadStream(req.files.file.path)
+    let writeStream = fs.createWriteStream(location);
+    let newavatar = "/images/avatars/"+filename;
+    _user.avatar = newavatar;
+    readStream.pipe(writeStream);
+    readStream.on('end',function(err){
+        if(err){
+            return res.json({status:'error','errcode':2});
+        } else {
+            fs.unlinkSync(req.files.file.path);
+        }
+    })
 
 	Teacher.findOne({
 		username: _user.username
 	}, function(err, user) {
 		if (err) {
-			console.log(err)
+            return res.json({status:'error','errcode':2});
 		}
-
-		if (user) { //如果为true说明存在该用户名的老师
-			// 已经存在该老师,跳转到添加老师界面
-			return res.redirect('/addTeacher')
+		if (user) {
+			return res.json({status:'error','errcode':1});
 		} else {
 			user = new Teacher(_user)
 			user.save(function(err, user) {
 				if (err) {
-					console.log(err)
+                    return res.json({status:'error','errcode':2});
 				}
-				// 添加老师成功,跳转到老师列表界面
-				res.redirect('/teacherList')
+                Teacher.fetch(function(err, teachers) {
+                    if (err) {
+                        return res.json({status: 'error', 'errcode': 2});
+                    }
+                    return res.json({status:'success','teachers':teachers});
+                })
 			})
 		}
 	})
@@ -170,31 +200,44 @@ exports.showUpdate = function(req, res) {
 }
 
 // 修改老师个人信息
-exports.update = function(req, res) {
-	var id = req.body.user._id
-	var userObj = req.body.user
-	var _user
+exports.changeinfo = function(req, res) {
 
-	if (req.poster) {
-		userObj.poster = req.poster
-	}
+    let _user = req.body.user
+	let _teacher;
 
-	if (id) { // 用户已存在,修改信息
-		user.findById(id, function(err, user) {
-			if (err) {
-				console.log(err)
-			}
+    let filestr = uuid.v1();
+    console.log("Received file:\n" + JSON.stringify(req.files));
+    let fileext = req.files.file.name.split('.');
+    let fileExt = fileext[fileext.length-1];
+    let filename = filestr+"."+fileExt;
+    let location = path.join(__dirname,'../public')+"/images/avatars/"+filename;
+    let readStream = fs.createReadStream(req.files.file.path)
+    let writeStream = fs.createWriteStream(location);
+    let newavatar = "/images/avatars/"+filename;
+    _user.avatar = newavatar;
+    readStream.pipe(writeStream);
+    readStream.on('end',function(err){
+        if(err){
+            return res.json({status:'error','errcode':2});
+        } else {
+            fs.unlinkSync(req.files.file.path);
+        }
+    })
 
-			_user = _.extend(user, userObj)
-			_user.save(function(err, user) {
-				if (err) {
-					console.log(err)
-				}
-				// 
-				res.redirect('/user/' + user._id)
-			})
-		})
-	}
+    Teacher.findById(_user._id, function(err, teacher) {
+        if (err) {
+            return res.json({status:'error','errcode':2});
+        }
+
+        _teacher = _.extend(teacher, _user)
+        _teacher.save(function(err, teacher) {
+            if (err) {
+                return res.json({status:'error','errcode':2});
+            }
+
+            return res.json({status:'error','teacher':teacher});
+        })
+    })
 }
 
 // 查看老师个人信息
