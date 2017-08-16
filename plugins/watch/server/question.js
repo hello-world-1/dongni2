@@ -17,7 +17,7 @@ exports.list = (req, res) => {
     if (!pagestart) pagestart = 0;
 
     //通过家长id获得该id下的所有提问
-    Question.find({parentID: user._id}).limit(pagestart*10,10).sort({updated:-1}).exec(function (err, questions) {
+    Question.find({parentID: user._id}).limit(pagestart*10,10).sort({createAt:-1}).exec(function (err, questions) {
         if (err) {
             return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
         }
@@ -118,7 +118,7 @@ exports.detail = (req, res) => {
                 createAt: question.createAt
             };
 
-            Reply.find({questionID: questionID}).sort({updated:-1}).populate('teacherID', 'name').exec(function (err, replys) {
+            Reply.find({questionID: questionID}).sort({createAt:-1}).populate('teacherID', 'name').exec(function (err, replys) {
                 if (err) {
                     return res.json({status: 'error', 'errcode': 5});   //数据库查询出错
                 }
