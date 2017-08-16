@@ -202,6 +202,25 @@ exports.bind = (req, res) => {
     // res.send('This is not implemented now');
 };
 
-exports.details = (req, res) => {
-    res.send('This is not implemented now');
+exports.detail = (req, res) => {
+
+    user = req.body.user;
+
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询错误
+        }
+        if (!watch) {
+            //该手机号码未绑定
+            return res.json({status: 'error', 'errcode': 4});   //该手机号码未绑定
+        }
+        else {
+            let _watch = {
+                IMEI: watch.IMEI,
+                watchTelephone: watch.watchTelephone
+            };
+            res.json({stauts: 'success', watch: _watch});
+        }
+    });
+    // res.send('This is not implemented now');
 };
