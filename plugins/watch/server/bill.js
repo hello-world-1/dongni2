@@ -61,10 +61,10 @@ exports.list = (req, res) => {
         else {
             console.log("bill.list:");
             console.log(bills);
-            var bills_serialize = [];
+            let bills_serialize = [];
             bills.forEach(function (bill) {
-                var tmp = {
-                    description: bill.lessonID.description,
+                let tmp = {
+                    title: bill.lessonID.title,
                     lessonID: bill.lessonID._id,
                     createAt: bill.createAt
                 };
@@ -73,5 +73,4 @@ exports.list = (req, res) => {
             res.json({status: 'success', 'bills': bills_serialize});
         }
     })
-
-}
+};
