@@ -41,3 +41,37 @@ exports.add = (req, res) => {
 
     // res.send('This is not implemented now');
 };
+
+exports.list = (req, res) => {
+
+    user = req.body.user;
+    pagestart = req.body.pagestart;
+
+    if (!pagestart) pagestart = 0;
+
+    Bill.find({parentID: user._id}).limit(pagestart*10,10).sort({createAt:-1}).populate('lessonID').exec(function (err, bills) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        //该用户没有提问
+        if (bills.length === 0) {
+            return res.json({status: 'error', 'errcode': 4});   //该用户没有提问
+        }
+        //该用户有提问
+        else {
+            console.log("bill.list:");
+            console.log(bills);
+            var bills_serialize = [];
+            bills.forEach(function (bill) {
+                var tmp = {
+                    description: bill.lessonID.description,
+                    lessonID: bill.lessonID._id,
+                    createAt: bill.createAt
+                };
+                bills_serialize.push(tmp);
+            });
+            res.json({status: 'success', 'bills': bills_serialize});
+        }
+    })
+
+}
