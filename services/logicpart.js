@@ -45,6 +45,13 @@ const IWAP02 = async (imei,params) => {
         }
         else if(params[2]==1)
         {
+            const MCC = params[4];
+            const MNC = params[5];
+            const message = params[6];
+            const jizhan=message.split("|");
+            const LAC = jizhan[0];
+            const CID = jizhan[1];
+            const qiangdu = jizhan[2];
             //此处需要调动地理位置解析插件，得到的地址返回
             const loc='深圳市南山区南海大道1079号';
             const location=iconv.encode(loc,'UTF16-BE').toString('hex');

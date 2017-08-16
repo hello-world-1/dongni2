@@ -88,3 +88,11 @@ exports.logout = function(req, res) {
 
     return res.json({"status":"success"})
 }
+
+exports.childinfo = function(req, res) {
+    delete req.session.user
+    delete req.session.type
+
+    return res.json({"status":"success"})
+}
+

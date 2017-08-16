@@ -11,7 +11,7 @@ const multipartMiddleware = multipart();
 const User = appRequire('plugins/webgui/server/user')
 const Teacher = appRequire('plugins/webgui/server/teachers')
 const Book = appRequire('plugins/webgui/server/books');
-const question = appRequire('plugins/webgui/server/questions');
+const Question = appRequire('plugins/webgui/server/questions');
 const Home = appRequire('plugins/webgui/server/home');
 const Answer = appRequire('plugins/webgui/server/answers');
 const Lesson = appRequire('plugins/webgui/server/lessons');
@@ -36,11 +36,25 @@ const isAdmin = (req, res, next) => {
 };
 
 app.post('/user/login', User.login);
+app.post('/user/logout', User.logout);
 app.post('/teacher/changeavatar', multipartMiddleware, Home.signinRequired, Teacher.changeAvatar);
 // app.post('/admin/addteacher', Home,signinRequired,Teacher.addTeacher);
-app.post('/api/home/signin', Teacher.signin);
+
+app.post('/admin/addteacher', multipartMiddleware, Home.signinRequired,Teacher.addTeacher);
+app.post('/teacher/changeinfo', Home.signinRequired,Teacher.changeinfo);
+app.post('/teacher/booklist', Home.signinRequired,Book.booklist);
+app.post('/teacher/bookdetail', Home.signinRequired,Book.bookdetail);
+app.post('/teacher/addbook', Home.signinRequired,Book.addbook);
+app.post('/teacher/lessondetail', Home.signinRequired,Lesson.lessondetail);
+app.post('/teacher/lessonlist', Home.signinRequired,Lesson.lessonlist);
+app.post('/teacher/addlesson', Home.signinRequired,Lesson.addlesson);
+app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
+app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
+app.post('/teacher/replyview', Home.signinRequired,Answer.replyview);
+app.post('/teacher/replycommit', Home.signinRequired,Answer.replycommit);
+app.post('/child/childinfo', Home.signinRequired,User.childinfo);
+
 app.post('/api/home/login', home.login);
-app.post('/user/logout', User.logout);
 // app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);
 // app.get('/api/home/password/reset', home.checkResetPasswordToken);
 // app.post('/api/home/password/reset', home.resetPassword);

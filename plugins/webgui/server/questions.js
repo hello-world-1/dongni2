@@ -3,27 +3,37 @@ const logger = log4js.getLogger('donni');
 
 const config = appRequire('services/config').all();
 const Question = appRequire('plugins/watch/db/question');
+const Parent = appRequire('plugins/watch/db/user');
 
 // 跳转到显示所有的问题列表
-exports.showAllQuestion = function(req, res) {
-	// resQuestion.findAllPublicQuestion(function(err, question) {
-	// 	title: '所有问题',
-	// 	question: question
-	// })
+exports.questionlist = function(req, res) {
+    //通过家长id获得该id下的所有提问
+    Question.find({replyFlag: 1}).sort({createAt:-1}).exec(function (err, questions) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 2});
+        }
+        if (questions.length === 0) {
+            return res.json({status: 'error', 'errcode': 3});
+        } else {
+            var questions_serialize = [];
+            questions.forEach(function (question) {
+            	let _parent
+
+				Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
+					if(err){
+                        return res.json({status: 'error', 'errcode': 2});
+					}
+                    _parent = parent
+                })
+
+
+                var tmp = {
+                    question: question,
+                    parent: _parent
+                };
+                questions_serialize.push(tmp);
+            });
+            res.json({status: 'success', 'questions': questions_serialize});
+        }
+    });
 }
-
-exports.list = (req, res) => {
-	res.send('This is not implemented now');
-};
-
-exports.userList = (req, res) => {
-	res.send('This is not implemented now');
-};
-
-exports.add = (req, res) => {
-	res.send('This is not implemented now');
-};
-
-exports.details = (req, res) => {
-	res.send('This is not implemented now');
-};

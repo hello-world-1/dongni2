@@ -26,5 +26,44 @@ var ReplySchema = new Schema({
 	}
 });
 
+ReplySchema.pre('save', function(next) {
+    if (this.isNew) {
+        this.createAt = Date.now()
+    }
+
+    next()
+})
+
+ReplySchema.statics = {
+    findByTeacherId: function(id, cb) {
+        return this
+            .find({
+                teacherID: id
+            })
+            .sort('createAt')
+            .exec(cb)
+    },
+    findByQuestionId: function(id, cb) {
+        return this
+            .find({
+                questionID: id
+            })
+            .sort('createAt')
+            .exec(cb)
+    },
+    findById: function(id, cb) {
+        return this
+            .findOne({
+                _id: id
+            })
+            .exec(cb)
+    },
+    fetch: function(cb) {
+        return this
+            .find({})
+            .sort('createAt')
+            .exec(cb)
+    }
+}
 
 module.exports = mongoose.model('Reply', ReplySchema);
