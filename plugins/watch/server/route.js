@@ -86,6 +86,8 @@ app.post('/api/user/emotion/latest', home.signinRequired, emotion.latest);
 app.post('/api/user/lesson/detail', home.signinRequired, lesson.detail);
 // //用户报名课程
 app.post('/api/user/bill/add', home.signinRequired, bill.add);
+//
+app.post('/api/user/lesson/list', home.signinRequired, bill.list);
 
 //book
 //根据id查看某一本书籍
@@ -106,12 +108,16 @@ app.post('/api/user/information/avatar', multipartMiddleware, home.signinRequire
 // app.get('/api/user/information/child', user.childDetail);
 
 //watch
-// //获取手表信息
-// app.post('/api/user/watch/detail', watch.detail);
+//获取手表信息
+app.post('/api/user/watch/detail', home.signinRequired, watch.detail);
 //绑定手表和主控号码XX
 app.post('/api/user/watch/bind', home.signinRequired, watch.bind);
 // //为手表添加联系人XX
 app.post('/api/user/watch/contact/add', home.signinRequired, watch.addContact);
+//获取手表电话号码--电话
+app.post('/api/user/watch/call', home.signinRequired, watch.call);
+//立即定位XXX
+app.post('/api/user/watch/locate', home.signinRequired, watch.locate);
 
 //message
 // //获取消息列表
