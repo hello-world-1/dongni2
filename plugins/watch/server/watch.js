@@ -10,6 +10,7 @@ const iconv=require('iconv-lite');
 
 const Watch = appRequire('plugins/watch/db/watch');
 const Telephone = appRequire('plugins/watch/db/telephone');
+const User = appRequire('plugins/watch/db/user');
 const manager = appRequire('services/manager');
 
 //添加手表联系人
@@ -202,6 +203,7 @@ exports.bind = (req, res) => {
     // res.send('This is not implemented now');
 };
 
+//获取手表信息--设备绑定
 exports.detail = (req, res) => {
 
     user = req.body.user;
@@ -223,4 +225,65 @@ exports.detail = (req, res) => {
         }
     });
     // res.send('This is not implemented now');
+};
+
+//获取手表电话号码
+exports.call = (req, res) => {
+
+    user = req.body.user;
+
+    User.findOne({_id: user._id}, function (err, user) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询错误
+        }
+        if (!user) {
+            return res.json({status: 'error', 'errcode': 4});   //该用户不存在
+        }
+        else {
+            res.json({status: 'success', childrenTelephone: user.childrenTelephone});
+        }
+    })
+
+};
+
+exports.locate = (req, res) => {
+
+    user = req.body.user;
+
+    //判断该用户手机号是否绑定过
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            //发送立即定位指令
+
+            console.log("locate:");
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP16,${IMEI},${time}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    // res.send(result);
+                    return res.json({status: 'locate success', tcpcode: result});
+                }
+            }).catch(err => {
+                console.log(err);
+                // res.status(500).end();
+                return res.json({status: 'error' , msg: 'sendCommand error'});
+            });
+        }
+    })
+
 };
