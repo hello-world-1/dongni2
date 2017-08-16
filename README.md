@@ -1,4 +1,4 @@
-## 接口
+## 后台接口
 ### 用户使用账号登录
 > * /user/login
 
@@ -21,13 +21,12 @@
   "status": "success",
   "teachers": [{
     "_id": "58184fe203775a8f0fd1b096",
-    "token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	"age": "30",
-	"sex": "male"
+	  "age": "30",
+	  "sex": "male"
   },......]
 }
 如果为老师登录跳转传送的数据为:
@@ -35,13 +34,12 @@
   "status": "success",
   "teacher": {
     "_id": "58184fe203775a8f0fd1b096",
-    "token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	"age": "30",
-	"sex": "male"
+	  "age": "30",
+	  "sex": "male"
   }
 }
 ```
@@ -62,7 +60,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户名已存在
-跳转到重新添加老师界面
+>> * errcode = 2: 服务器内部错误
 
 > * example
 
@@ -77,47 +75,33 @@
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	"age": "30",
-	"sex": "male"
+	  "age": "30",
+	  "sex": "male"
   },......]
 }
 跳转到重新添加老师界面传送的数据为:
-{
-  "status": "add_error",
-  "teacher": {
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	"age": "30",
-	"sex": "male"
-  }
-}
+{status:'error','errcode':1}
 ```
 ### 注销登录
 > * /user/logout
 
 > * Input Parameters
->> * sessionid:requested
 
 > * Successful Return
 跳转到登录界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 用户not登录
+>> * errcode = 2: 函数调用异常
 
 > * example
-
 ```
 {"status":"success"}
-{'status': 'error', 'errcode': 2}
 ```
 ### 老师修改头像
 > * /teacher/changeavatar
 
 > * Input Parameters
->> * userID:requested
->> * session:requested
 >> * file.name:requested
 >> * file.path:requested
 
@@ -126,7 +110,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -135,7 +119,6 @@
   "status": "success",
   "teacher": {
     "_id": "58184fe203775a8f0fd1b096",
-    "token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
@@ -144,8 +127,8 @@
 	"sex": "male"
   }
 }
+{status:'error','errcode':1}
 ```
-{"status":"success"}
 ### 修改老师个人信息
 > * /teacher/changeinfo
 
@@ -164,7 +147,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -173,29 +156,28 @@
   "status": "success",
   "teacher": {
    "_id": "58184fe203775a8f0fd1b096",
-    "token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	"age": "30",
-	"sex": "male"
+	  "age": "30",
+	  "sex": "male"
   }
 }
 ```
+
 ### 当前老师添加过的所有图书
 > * /teacher/booklist
 
 > * Input Parameters
->> * _id:requested
->> * token:requested
+>> * teacherID:requested
 
 > * Successful Return
 跳转到老师添加过的所有图书界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -204,28 +186,27 @@
   "status": "success",
   "books": [{
     "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
+	  "teacherID": "fsde4fe203775a8f0fd14323",
     "title": "标题",
-    "avatar": "/images/avatars/avatar_sample.jpg",
     "author": "作者张三",
     "publishHouse": "出版社",
     "introduction": "内容简介",
-	"purchaseLink": "购买链接"
+	  "purchaseLink": "购买链接"
   },......]
 }
+{status:'error','errcode':1}
 ```
 ### 图书的详细信息
 > * /teacher/bookdetail
 
 > * Input Parameters
->> * _id:requested
 
 > * Successful Return
 跳转到图书的详细信息界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -234,23 +215,22 @@
   "status": "success",
   "book": {
     "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
+	  "teacherID": "fsde4fe203775a8f0fd14323",
     "title": "标题",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "author": "作者张三",
     "publishHouse": "出版社",
     "introduction": "内容简介",
-	"purchaseLink": "购买链接"
+	  "purchaseLink": "购买链接"
   },
   "teacher": {
     "_id": "fsde4fe203775a8f0fd14323",
-	"token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	"age": "30",
-	"sex": "male"
+	  "age": "30",
+	  "sex": "male"
   }
 }
 ```
@@ -260,8 +240,6 @@
 > * Input Parameters
 >> * teacherID:requested
 >> * title:requested
->> * avatar:requested
->> * author:requested
 >> * publishHouse:requested
 >> * introduction:requested
 >> * purchaseLink:requested
@@ -271,7 +249,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -280,13 +258,13 @@
   "status": "success",
   "books": [{
     "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
+	  "teacherID": "fsde4fe203775a8f0fd14323",
     "title": "标题",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "author": "作者张三",
     "publishHouse": "出版社",
     "introduction": "内容简介",
-	"purchaseLink": "购买链接"
+	  "purchaseLink": "购买链接"
   },......]
 }
 ```
@@ -294,15 +272,13 @@
 > * /teacher/lessonlist
 
 > * Input Parameters
->> * _id:requested
->> * token:requested
 
 > * Successful Return
 跳转到老师添加过的所有课程界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -311,19 +287,19 @@
   "status": "success",
   "lessons": [{
     "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
+	  "teacherID": "fsde4fe203775a8f0fd14323",
     "description": "课程描述",
     "teacherName": "开课老师",
     "startDate": "课程开始时间",
     "endDate": "课程结束时间",
     "classTime": "上课时间",
-	"enrolldeadline": "报名截止日期",
-	"studentsLimit": "限制人数",
-	"classHours": "课程周期",
-	"telephone": "联系方式",
-	"price": "课程价格",
-	"enrollNum": "已报名人数",
-	"state": "课程状态"
+	  "enrolldeadline": "报名截止日期",
+	  "studentsLimit": "限制人数",
+	  "classHours": "课程周期",
+	  "telephone": "联系方式",
+	  "price": "课程价格",
+	  "enrollNum": "已报名人数",
+	  "state": "课程状态"
   },......]
 }
 ```
@@ -338,7 +314,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -347,29 +323,28 @@
   "status": "success",
   "lesson": {
     "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
+	  "teacherID": "fsde4fe203775a8f0fd14323",
     "description": "课程描述",
     "teacherName": "开课老师",
     "startDate": "课程开始时间",
     "endDate": "课程结束时间",
     "classTime": "上课时间",
-	"enrolldeadline": "报名截止日期",
-	"studentsLimit": "限制人数",
-	"classHours": "课程周期",
-	"telephone": "联系方式",
-	"price": "课程价格",
-	"enrollNum": "已报名人数",
-	"state": "课程状态"
+	  "enrolldeadline": "报名截止日期",
+	  "studentsLimit": "限制人数",
+	  "classHours": "课程周期",
+	  "telephone": "联系方式",
+	  "price": "课程价格",
+	  "enrollNum": "已报名人数",
+	  "state": "课程状态"
   },
   "teacher": {
     "_id": "fsde4fe203775a8f0fd14323",
-	"token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	"age": "30",
-	"sex": "male"
+	  "age": "30",
+	  "sex": "male"
   }
 }
 ```
@@ -394,7 +369,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -403,19 +378,19 @@
   "status": "success",
   "lessons": [{
     "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
+	  "teacherID": "fsde4fe203775a8f0fd14323",
     "description": "课程描述",
     "teacherName": "开课老师",
     "startDate": "课程开始时间",
     "endDate": "课程结束时间",
     "classTime": "上课时间",
-	"enrolldeadline": "报名截止日期",
-	"studentsLimit": "限制人数",
-	"classHours": "课程周期",
-	"telephone": "联系方式",
-	"price": "课程价格",
-	"enrollNum": "已报名人数",
-	"state": "课程状态"
+	  "enrolldeadline": "报名截止日期",
+	  "studentsLimit": "限制人数",
+	  "classHours": "课程周期",
+	  "telephone": "联系方式",
+	  "price": "课程价格",
+	  "enrollNum": "已报名人数",
+	  "state": "课程状态"
   },......]
 }
 ```
@@ -423,32 +398,32 @@
 > * /teacher/replylist
 
 > * Input Parameters
->> * _id:requested
 
 > * Successful Return
 跳转老师所有回复过的问题界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
+>> * errcode = 3: 该老师没有回复
 
 > * example
 ```
 跳转老师所有回复过的问题界面传送的数据为:
 {
   "status": "success",
-  "replys": [{
-	"parent": {
-		"_id": "58184fe203775a8f0fd1b096",
-		"avatar": "/images/avatars/avatar_sample.jpg"
-  },question:{
-		"_id": "58184fe203775a8f0fd10326",
-		"content": "我家的孩子为什么会叛逆"
-  },teacher:{
-		"_id": "fsde4fe203775a8f0fd14323",
-		"content": "你的孩子很健康",
-		"createAt": "2017-1-1 8:8:8"
-  }
+  "replys": [
+    {
+  	  "parent": {
+  		"_id": "58184fe203775a8f0fd1b096",
+  		"avatar": "/images/avatars/avatar_sample.jpg"
+    },question:{
+  		"_id": "58184fe203775a8f0fd10326",
+  		"content": "我家的孩子为什么会叛逆"
+    },teacher:{
+  		"_id": "fsde4fe203775a8f0fd14323",
+  		"createAt": "2017-1-1 8:8:8"
+    },"content": "你的孩子很健康"
   },......]
 }
 ```
@@ -462,7 +437,8 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部异常
+>> * errcode = 3: 没有公开的提问
 
 > * example
 ```
@@ -470,13 +446,13 @@
 {
   "status": "success",
   "questions": [{
-	"parent": {
-		"_id": "58184fe203775a8f0fd1b096",
-		"avatar": "/images/avatars/avatar_sample.jpg"
-	},question:{
-		"_id": "58184fe203775a8f0fd10326",
-		"content": "我家的孩子为什么会叛逆"
-	}
+  	"parent": {
+  		"_id": "58184fe203775a8f0fd1b096",
+  		"avatar": "/images/avatars/avatar_sample.jpg"
+  	},question:{
+  		"_id": "58184fe203775a8f0fd10326",
+  		"content": "我家的孩子为什么会叛逆"
+  	}
   },......]
 }
 ```
@@ -484,14 +460,14 @@
 > * /teacher/replyview
 
 > * Input Parameters
->> * _id:requested
+>> * id:requested
 
 > * Successful Return
 跳转到回复问题显示界面
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -499,25 +475,39 @@
 {
   "status": "success",
   "question": {
-	"parent": {
-		"_id": "58184fe203775a8f0fd1b096",
-		"avatar": "/images/avatars/avatar_sample.jpg"
-	},question:{
-		"_id": "58184fe203775a8f0fd10326",
-		"title": "标题",
-		"createAt", "2017-1-1 1:1:1"
-		"content": "我家的孩子为什么会叛逆"
-	}
-  }
+  	"parent": {
+  		"_id": "58184fe203775a8f0fd1b096",
+  		"avatar": "/images/avatars/avatar_sample.jpg"
+  	},question:{
+  		"_id": "58184fe203775a8f0fd10326",
+  		"title": "标题",
+  		"createAt", "2017-1-1 1:1:1"
+  		"content": "我家的孩子为什么会叛逆"
+  	}
+  },
+  "replys":[
+    {
+      "teacher":{
+        "_id": "58184fe203775a8f0fd1b096",
+        "avatar": "/images/avatars/avatar_sample.jpg",
+        "username": "老师",
+        "introduction": "这是个人简介",
+        "name": "张三",
+        "age": "30",
+        "sex": "male"
+      },
+      "content":"你的孩子很健康"
+    },......
+  ]
 }
 ```
 ### 提交回复问题
 > * /teacher/replycommit
 
 > * Input Parameters
->> * _id:requested
->> * parentid:requested
->> * teacherid:requested
+>> * questionID:requested
+>> * parentID:requested
+>> * teacherID:requested
 >> * content:requested
 
 > * Successful Return
@@ -525,7 +515,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -533,25 +523,33 @@
 {
   "status": "success",
   "question": {
-	"parent": {
-		"_id": "58184fe203775a8f0fd1b096",
-		"avatar": "/images/avatars/avatar_sample.jpg"
-	},question:{
-		"_id": "58184fe203775a8f0fd10326",
-		"title": "标题",
-		"createAt", "2017-1-1 1:1:1"
-		"content": "我家的孩子为什么会叛逆"
-	},replys:[
-		{
-			"teacherid": "58184fe203775a8f0fd1b096",
-			"name": "张三",
-			"content": "你的孩子很健康",
-			"createAt": "2017-1-1 1:1:1"
-		},
-	]
-  }
+  	"parent": {
+  		"_id": "58184fe203775a8f0fd1b096",
+  		"avatar": "/images/avatars/avatar_sample.jpg"
+  	},question:{
+  		"_id": "58184fe203775a8f0fd10326",
+  		"title": "标题",
+  		"createAt", "2017-1-1 1:1:1"
+  		"content": "我家的孩子为什么会叛逆"
+    }
+  },
+  "replys":[
+    {
+      "teacher":{
+        "_id": "58184fe203775a8f0fd1b096",
+        "avatar": "/images/avatars/avatar_sample.jpg",
+        "username": "老师",
+        "introduction": "这是个人简介",
+        "name": "张三",
+        "age": "30",
+        "sex": "male"
+      },
+      "content":"你的孩子很健康"
+    },......
+  ]
 }
 ```
+
 ### 孩子信息
 > * /child/childinfo
 
@@ -563,7 +561,7 @@
 
 > * Error Return
 >> * errcode = 1: 用户登录信息错误
->> * errcode = 2: 函数调用异常
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -571,38 +569,35 @@
 {
   "status": "success",
   "info": {
-	"age": "12",
-	"sex": "male",
-	"grade": "1",
-	"character": "开朗"
+  	"age": "12",
+  	"sex": "male",
+  	"grade": "1",
+  	"character": "开朗"
   },
   "parent":{
-	"age": "40",
-	"sex": "male",
-	"character": "开朗",
-	"relationship": "father"
+  	"age": "40",
+  	"sex": "male",
+  	"character": "开朗",
+  	"relationship": "father"
   },
-  "emotions":[{
-	"value": 88,
-	"average": 60,
-	"calm", 50,
-	"happy", 50,
-	"angry", 50,
-	"sad", 50,
-	"report", " 心情愉悦",
-	"questions": [
-	{
-		"questionid": "58184ffdsds775a8f0fd1b096",
-		"title": "标题",
-		"replys": [{
-			"teacherID": "58184fe203775a8f0fd1b096",
-			"content": "你的孩子很健康"
-			},...
-		]
-	},]
+  "emotions":[
+    {
+    	"emotion":{
+        "value": 88,
+        "average": 60,
+        "calm", 50,
+        "happy", 50,
+        "angry", 50,
+        "sad", 50,
+        "report", " 心情愉悦"
+      }
+    	"questions": [
+      	{
+      		"questionid": "58184ffdsds775a8f0fd1b096",
+      		"title": "标题"
+      	},......]
 
-  },{
-
-  }]
-
+    },......
+  ]
+}
 ```

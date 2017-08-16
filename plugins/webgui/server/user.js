@@ -4,8 +4,10 @@ const logger = log4js.getLogger('donni');
 const config = appRequire('services/config').all();
 const Teacher = require('../db/teacher');
 const Admin = require('../db/admin');
-const Question = appRequire('plugins/watch/db/question');
+const Child = appRequire('plugins/watch/db/child');
 const Parent = appRequire('plugins/watch/db/user');
+const Emotion = appRequire('plugins/watch/db/emotion');
+const Question = appRequire('plugins/watch/db/question');
 
 // 
 exports.login = function(req, res) {
@@ -92,56 +94,85 @@ exports.logout = function(req, res) {
 }
 
 exports.childinfo = function(req, res) {
-    var teacherID = req.body.parentID
+    const parentID = req.body.parentID
+
+    let _child
+    let _parent
 
     //通过家长id获得该id下的所有提问
-    Reply.find({teacherID: user._id}).sort({createAt:-1}).exec(function (err, replys) {
-        if (err) {
-            return res.json({status: 'error', 'errcode': 2});
-        }
-        if (replys.length === 0) {
-            return res.json({status: 'error', 'errcode': 3});   //该用户没有回复
-        } else {
-            console.log("question.list:");
-            console.log(questions);
-            var replys_serialize = [];
-            replys.forEach(function (reply) {
-
-                let _teacher
-                let _question
-                let _parent
-                const content = reply.content
-
-                Teacher.findById(reply.teacherID, function(err, teacher) {
-                    if (err) {
-                        return res.json({status:'error','errcode':2});
-                    }
-                    _teacher = teacher
-                })
-
-                Question.findOne({_id:reply.questionID}, function(err, question) {
-                    if (err) {
-                        return res.json({status:'error','errcode':2});
-                    }
-                    _question = question
-                    Parent.findOne({_id:question.parentID}, function(err, parent) {
+    Parent.findOne({_id: parentID})
+        .exec(function (err, parent) {
+            if (err) {
+                return res.json({status: 'error', 'errcode': 2});
+            }
+            if (parent.length === 0) {
+                return res.json({status: 'error', 'errcode': 2});
+            } else {
+                _parent = parent
+                Child.findOne({_id: parent.childID})
+                    .exec(function (err, child) {
                         if (err) {
                             return res.json({status: 'error', 'errcode': 2});
                         }
-                        _parent = parent
+                        _child = child
+                    })
+
+
+                let _today_emotion
+                let _today_questions
+                let _yesterday_emotion
+                let _yesterday_questions
+
+                Question.find({}).exec(function (err, questions) {
+                    if (err) {
+                        return res.json({status: 'error', 'errcode': 2});
+                    }
+                    _today_questions = questions
+                })
+                Question.find({}).exec(function (err, questions) {
+                    if (err) {
+                        return res.json({status: 'error', 'errcode': 2});
+                    }
+                    _yesterday_questions = questions
+                })
+                // find today emtion
+                Emotion.find({}).exec(function (err, emotions) {
+                    if (err) {
+                        return res.json({status: 'error', 'errcode': 2});
+                    }
+                    // today emotion list
+                    emotions.forEach(function (emotion) {
+                        // TODO caculate
+                        _today_emotion = emotion
+                    })
+                })
+                Emotion.find({}).exec(function (err, emotions) {
+                    if (err) {
+                        return res.json({status: 'error', 'errcode': 2});
+                    }
+                    // yesterday emotion list
+                    emotions.forEach(function (emotion) {
+                        // TODO caculate
+                        _yesterday_emotion = emotion
                     })
                 })
 
-                var tmp = {
-                    parent: _parent,
-                    question: _question,
-                    teacher: _teacher,
-                    content: content
-                };
-                replys_serialize.push(tmp);
-            });
-            res.json({status: 'success', 'replys': replys_serialize});
-        }
+                res.json({status: 'success',
+                    info: _child,
+                    parent:_parent,
+                    emotions:[
+                        {
+                            emotion:_yesterday_emotion,
+                            questions:_yesterday_questions
+                        },
+                        {
+                            emotion:_today_emotion,
+                            questions:_today_questions
+                        }
+
+                    ]
+                });
+            }
     });
 }
 
