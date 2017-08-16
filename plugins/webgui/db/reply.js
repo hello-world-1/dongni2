@@ -28,6 +28,7 @@ var ReplySchema = new Schema({
 
 ReplySchema.pre('save', function(next) {
     if (this.isNew) {
+        //1502879149135
         this.createAt = Date.now()
     }
 
@@ -46,7 +47,7 @@ ReplySchema.statics = {
     findByQuestionId: function(id, cb) {
         return this
             .find({
-                questionID: id
+                teacherID: id
             })
             .sort('createAt')
             .exec(cb)
