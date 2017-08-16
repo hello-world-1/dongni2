@@ -84,9 +84,9 @@ app.post('/api/user/emotion/latest', home.signinRequired, emotion.latest);
 //lesson
 //根据课程id查看课程详情
 app.post('/api/user/lesson/detail', home.signinRequired, lesson.detail);
-// //用户报名课程
+//用户报名课程
 app.post('/api/user/bill/add', home.signinRequired, bill.add);
-//
+//获取该用户报名的课程
 app.post('/api/user/lesson/list', home.signinRequired, bill.list);
 
 //book
@@ -106,6 +106,8 @@ app.post('/api/user/information/modify', home.signinRequired, user.modify);
 app.post('/api/user/information/avatar', multipartMiddleware, home.signinRequired, user.changeAvatar);
 // //获取孩子个人信息
 // app.get('/api/user/information/child', user.childDetail);
+//用户添加孩子以及自己的信息--第一次提问
+app.post('/api/user/information/add', home.signinRequired, user.infoAdd);
 
 //watch
 //获取手表信息
