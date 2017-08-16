@@ -128,6 +128,76 @@ exports.changeAvatar = (req, res) => {
     })
 };
 
+//用户填写孩子以及个人信息
+exports.infoAdd = (req, res) => {
+
+    user = req.body.user;
+
+    childAge = req.body.childAge;
+    childSex = req.body.childSex;
+    childGrade = req.body.childGrade;
+    childCharacter = req.body.childCharacter;
+
+    parentAge = req.body.parentAge;
+    parentSex = req.body.parentSex;
+    parentCharacter = req.body.parentCharacter;
+    relationship = req.body.relationship;
+
+    // console.log(req.body);
+
+    //判空
+    if (!childAge || !childSex || !childGrade || !childCharacter || !parentAge || !parentSex || !parentCharacter || !relationship) {
+        return res.json({status: 'error', 'errcode': 3})
+    }
+
+    User.findOne({_id: user._id}, function (err, user) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 4});   //数据库查询出错
+        }
+        if (!user) {
+            //未查询到该用户
+            return res.json({status: 'error', 'errcode': 5});
+        }
+        else {
+            user.age = parentAge;
+            user.sex = parentSex;
+            user.character = parentCharacter;
+            user.relationship = relationship;
+            console.log('user.infoAdd');
+            console.log(user);
+            user.save(function (err) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 6});   //数据库保存出错
+                }
+            });
+
+            Child.findOne({parentID: user._id}, function (err, child) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 7});   //数据库查询出错
+                }
+                if (!child) {
+                    //未查询到该孩子
+                    return res.json({status: 'error', 'errcode': 8});
+                }
+                else {
+                    child.age = childAge;
+                    child.sex = childSex;
+                    child.grade = childGrade;
+                    child.character = childCharacter;
+                    console.log('child.infoAdd');
+                    console.log(child);
+                    child.save(function (err) {
+                        if (err) {
+                            return res.json({status: 'error', 'errcode': 9});   //数据库保存出错
+                        }
+                    })
+                }
+            });
+            res.json({status: 'success'});
+        }
+    })
+};
+
 exports.childrenDetails = (req, res) => {
     res.send('This is not implemented now');
 };
