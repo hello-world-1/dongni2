@@ -7,6 +7,7 @@ if(process.env.NODE_ENV !== 'production') {
 }
 
 require('./init/log');
+// process.env.TZ = "Asia/Shanghai";
 
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
