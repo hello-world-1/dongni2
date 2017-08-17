@@ -98,7 +98,7 @@
 ```
 {"status":"success"}
 ```
-### 老师修改头像
+### 老师修改头像:只有登录的老师自己可以修改
 > * /teacher/changeavatar
 
 > * Input Parameters
@@ -129,18 +129,17 @@
 }
 {status:'error','errcode':1}
 ```
-### 修改老师个人信息
+### 修改老师个人信息:只有登录的老师自己可以修改
 > * /teacher/changeinfo
 
 > * Input Parameters
->> * _id:requested
->> * token:requested
 >> * description:requested
->> * username:requested
+>> * password:requested
 >> * sex:requested
 >> * introduction:requested
 >> * name:requested
 >> * age:requested
+>> * avatar:requested
 
 > * Successful Return
 跳转到老师个人信息界面
@@ -287,19 +286,19 @@
   "status": "success",
   "lessons": [{
     "_id": "58184fe203775a8f0fd1b096",
-	  "teacherID": "fsde4fe203775a8f0fd14323",
+    "teacherID": "fsde4fe203775a8f0fd14323",
     "description": "课程描述",
     "teacherName": "开课老师",
-    "startDate": "课程开始时间",
+    "startDate": "课程开始时间",//日期的格式为2010-10-20 4:30:00
     "endDate": "课程结束时间",
     "classTime": "上课时间",
-	  "enrolldeadline": "报名截止日期",
-	  "studentsLimit": "限制人数",
-	  "classHours": "课程周期",
-	  "telephone": "联系方式",
-	  "price": "课程价格",
-	  "enrollNum": "已报名人数",
-	  "state": "课程状态"
+    "enrolldeadline": "报名截止日期",
+    "studentsLimit": "限制人数",
+    "classHours": "课程周期",
+    "telephone": "联系方式",
+    "price": "课程价格",
+    "enrollNum": "已报名人数",
+    "state": "课程状态"
   },......]
 }
 ```
