@@ -68,7 +68,8 @@
     "webpack-stream": "^3.2.0",
     "webpack-uglify-js-plugin": "^1.1.9",
     "jpush-sdk": "*",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "moment": "^2.18.1"
   },
   "repository": {
     "type": "git",
