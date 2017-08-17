@@ -8,6 +8,38 @@ const Child = appRequire('plugins/watch/db/child');
 const Parent = appRequire('plugins/watch/db/user');
 const Emotion = appRequire('plugins/watch/db/emotion');
 const Question = appRequire('plugins/watch/db/question');
+const moment = require('moment');
+
+exports.signin = function(req, res) {
+
+    const username = req.body.username
+    const password = req.body.password
+
+    Admin.findOne({
+        username: username
+    }, function(err, user) {
+        if (err) {
+            console.log(err)
+        }
+        if (user){
+            // if admin contain this username,return username exist
+            return res.json({status: 'error', 'errcode': 1});
+        }else{
+            let user = new Admin()
+            user.username = username
+            user.password = password
+            // user = new Admin(_user)
+            user.save(function(err, user) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 2});
+                }
+
+                return res.json({status: 'success', 'user': user});
+            })
+        }
+
+    })
+}
 
 // 
 exports.login = function(req, res) {
@@ -22,9 +54,7 @@ exports.login = function(req, res) {
         username: username
     }, function(err, user) {
         if (err) {
-            logger.error(err)
-            // return
-            return res.json({errcode:'500'})
+            return res.json({status: 'error', 'errcode': 2});
         }
 
         if (!user) {
@@ -34,22 +64,21 @@ exports.login = function(req, res) {
                 username: username
             }, function(err, user) {
                 if (err) {
-                    console.log(err)
+                    res.json({status: 'error', 'errcode': 2});
                 }
                 if (!user){
                     // if admin not contain this username,return username not exist
-                    return res.json({errcode:'1'})
+                    res.json({status: 'error', 'errcode': 1});
                 }else{
                     user.comparePassword(password, function(err, isMatch) {
                         if (err) {
-                            logger.error(err)
-                            return res.json({errcode:'500'})
+                            return res.json({status: 'error', 'errcode': 2});
                         }
                         if (isMatch) {
                             // if admin match
                             req.session.user = user
                             req.session.type = 'admin'
-                            Admin.fetch(function(err, teachers) {
+                            Teacher.fetch(function(err, teachers) {
                                 return res.json({
                                         "status": "success",
                                         teachers:teachers
@@ -57,7 +86,7 @@ exports.login = function(req, res) {
                             })
 
                         } else {
-                            return res.json({errcode:'2'});
+                            return res.json({status: 'error', 'errcode': 2});
                         }
                     })
                 }
@@ -66,20 +95,18 @@ exports.login = function(req, res) {
         }else{
             user.comparePassword(password, function(err, isMatch) {
                 if (err) {
-                    console.log(err)
+                    return res.json({status: 'error', 'errcode': 2});
                 }
 
                 if (isMatch) {
                     req.session.user = user
-                    req.session.type = 'admin'
-                    Admin.fetch(function(err, teachers) {
-                        return res.json({
-                            "status": "success",
-                            teachers:teachers
-                        });
-                    })
+                    req.session.type = 'teacher'
+                    return res.json({
+                        "status": "success",
+                        teacher:user
+                    });
                 } else {
-                    return res.json({errcode:'2'});
+                    return res.json({status: 'error', 'errcode': 2});
                 }
             })
         }
@@ -94,6 +121,8 @@ exports.logout = function(req, res) {
 }
 
 exports.childinfo = function(req, res) {
+
+    //var s1 = moment().format("YYYY-MM-DD HH:mm:ss");
     const parentID = req.body.parentID
 
     let _child
@@ -109,6 +138,13 @@ exports.childinfo = function(req, res) {
                 return res.json({status: 'error', 'errcode': 2});
             } else {
                 _parent = parent
+                //https://jingyan.baidu.com/article/6079ad0ea56db628fe86db61.html
+                //判断两个时间差是否为一天
+                // var str1 = "2017-02-27 13:00:00";
+                // var str2 = "2017-03-05 13:00:00";
+                // var t1 = new Date(str1).getTime();
+                // var t2 = new Date(str2).getTime();
+                //if((t2-t1)>24*3600*1000)
                 Child.findOne({_id: parent.childID})
                     .exec(function (err, child) {
                         if (err) {

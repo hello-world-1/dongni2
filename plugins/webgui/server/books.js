@@ -45,15 +45,26 @@ exports.savePoster = function(req, res, next) {
 
 // 添加书籍
 exports.addbook = function(req, res) {
-	const bookObj = req.body.book
-	let _book = new Book(bookObj)
+	const teacherID = req.session.user._id
+	const title = req.body.title
+    const author = req.body.author
+    const publishHouse = req.body.publishHouse
+    const introduction = req.body.introduction
+    const purchaseLink = req.body.purchaseLink
+	let _book = new Book()
+	_book.teacherID = teacherID
+    _book.title = title
+    _book.author = author
+    _book.publishHouse = publishHouse
+    _book.introduction = introduction
+    _book.purchaseLink = purchaseLink
 
 	// 保存书籍
 	_book.save(function(err, book) {
 		if (err) {
 			return res.json({"status":"error","errcode":2});
 		}
-        Book.findByTeacherId(bookObj.teacherID, function(err, books) {
+        Book.findByTeacherId(teacherID, function(err, books) {
             if (err) {
                 return res.json({"status":"error","errcode":2});
             }

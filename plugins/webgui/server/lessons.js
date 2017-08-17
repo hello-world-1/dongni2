@@ -4,6 +4,7 @@ const logger = log4js.getLogger('donni');
 const config = appRequire('services/config').all();
 const Lesson = require('../db/lesson');
 const Teacher = require('../db/teacher');
+const moment = require('moment');
 
 // 课程详细信息
 exports.lessondetail = function(req, res) {
@@ -44,15 +45,46 @@ exports.savePoster = function(req, res, next) {
 
 // 添加课程
 exports.addlesson = function(req, res) {
-	var lessonObj = req.body.lesson
-	var _lesson = new lesson(lessonObj)
+    //https://jingyan.baidu.com/article/6079ad0ea56db628fe86db61.html
+    const teacherID = req.session.user._id
+    const title = req.body.title
+    const description = req.body.description
+    const teacherName = req.body.teacherName
+    const startDate = req.body.startDate + ''
 
-	// 保存书籍
+    const start = new Date(startDate).getTime();
+    console.log("start"+start)
+    // a.valueOf(); // 1360002924000
+    // const endDate = req.body.endDate
+    // const classTime = req.body.classTime
+    // const enrolldeadline = req.body.enrolldeadline
+    // const studentsLimit = req.body.studentsLimit
+    // const classHours = req.body.classHours
+    // const telephone = req.body.telephone
+    // const price = req.body.price
+    // const enrollNum = req.body.enrollNum
+    // const state = req.body.state
+    let _lesson = new Lesson()
+    _lesson.teacherID = teacherID
+    // _lesson.title = title
+    // _lesson.description = description
+    // _lesson.teacherName = teacherName
+    // _lesson.endDate = endDate
+    _lesson.startDate = start
+    // _lesson.classTime = classTime
+    // _lesson.enrolldeadline = enrolldeadline
+    // _lesson.studentsLimit = studentsLimit
+    // _lesson.classHours = classHours
+    // _lesson.telephone = telephone
+    // _lesson.price = price
+    // _lesson.enrollNum = enrollNum
+    // _lesson.state = state
+
 	_lesson.save(function(err, lesson) {
         if (err) {
             return res.json({"status":"error","errcode":2});
         }
-        Lesson.findByTeacherId(lessonObj.teacherID, function(err, lessons) {
+        Lesson.findByTeacherId(teacherID, function(err, lessons) {
             if (err) {
                 return res.json({"status":"error","errcode":2});
             }
