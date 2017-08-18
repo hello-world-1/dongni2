@@ -16,7 +16,6 @@ const jizhanService=  (location) => {
   }
   const content = qs.stringify(data)
 
-
   let result = ''
 
   const options = {
@@ -46,7 +45,7 @@ const jizhanService=  (location) => {
         });
         req.end();
   }).catch((err) => console.log(err))
-    return  promise;
+  return  promise;
 }
 
 exports.jizhanService = jizhanService

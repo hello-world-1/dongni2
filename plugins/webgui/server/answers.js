@@ -24,39 +24,45 @@ exports.replyview = function(req, res) {
             _question = question
             Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
                 _parent = parent
+                if (questionID) {
+                    Reply.findById(questionID, function(err, replys) {
+
+                        if (replys.length === 0) {
+                            return res.json({status: 'error', 'errcode': 3});
+                        } else {
+                            // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                            let teachers_serialize = [];
+                            async.map(replys, function(reply, callback) {
+                                let _teacher
+
+                                Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                    if(err){
+                                        return res.json({status: 'error', 'errcode': 2});
+                                    }
+                                    _teacher = teacher
+                                    var tmp = {
+                                        teacher: _teacher,
+                                        content:reply.content
+                                    };
+                                    teachers_serialize.push(tmp);
+                                    callback(null,teachers_serialize)
+                                })
+                            }, function(err,results) {
+                                res.json({
+                                    status: 'success',
+                                    'question': {
+                                        parent:_parent,
+                                        question:_question
+                                    },
+                                    replys:results
+                                });
+                            });
+                        }
+                    })
+                }
             })
         }
     });
-
-	if (questionID) {
-		Reply.findById(questionID, function(err, replys) {
-            var teachers_serialize = [];
-            replys.forEach(function (reply) {
-                let _teacher
-
-                Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
-                    if(err){
-                        return res.json({status: 'error', 'errcode': 2});
-                    }
-                    _teacher = teacher
-                })
-
-                var tmp = {
-                    teacher: _teacher,
-					content:reply.content
-                };
-                teachers_serialize.push(tmp);
-            });
-            res.json({
-				status: 'success',
-				'question': {
-                    parent:_parent,
-					question:_question
-				},
-                replys:teachers_serialize
-            });
-		})
-	}
 }
 
 // 回复问题
@@ -107,40 +113,45 @@ exports.replycommit = function(req, res) {
             _question = question
             Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
                 _parent = parent
+                if (questionID) {
+                    Reply.findById(questionID, function(err, replys) {
+
+                        if (replys.length === 0) {
+                            return res.json({status: 'error', 'errcode': 3});
+                        } else {
+                            // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                            let teachers_serialize = [];
+                            async.map(replys, function(reply, callback) {
+                                let _teacher
+
+                                Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                    if(err){
+                                        return res.json({status: 'error', 'errcode': 2});
+                                    }
+                                    _teacher = teacher
+                                    var tmp = {
+                                        teacher: _teacher,
+                                        content:reply.content
+                                    };
+                                    teachers_serialize.push(tmp);
+                                    callback(null,teachers_serialize)
+                                })
+                            }, function(err,results) {
+                                res.json({
+                                    status: 'success',
+                                    'question': {
+                                        parent:_parent,
+                                        question:_question
+                                    },
+                                    replys:results
+                                });
+                            });
+                        }
+                    })
+                }
             })
         }
     });
-
-    if (questionID) {
-        Reply.findById(questionID, function(err, replys) {
-            var teachers_serialize = [];
-            replys.forEach(function (reply) {
-                let _teacher
-
-                Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
-                    if(err){
-                        return res.json({status: 'error', 'errcode': 2});
-                    }
-                    _teacher = teacher
-                })
-
-                var tmp = {
-                    teacher: _teacher,
-                    content:reply.content
-                };
-                teachers_serialize.push(tmp);
-            });
-            res.json({
-                status: 'success',
-                'question': {
-                    parent:_parent,
-                    question:_question
-                },
-                replys:teachers_serialize
-            });
-        })
-    }
-
 }
 
 // 我的所有回复
@@ -155,15 +166,14 @@ exports.replylist = function(req, res) {
         if (replys.length === 0) {
             return res.json({status: 'error', 'errcode': 3});   //该用户没有回复
         } else {
-            console.log("question.list:");
-            console.log(questions);
-            var replys_serialize = [];
-            replys.forEach(function (reply) {
 
-            	let _teacher
+
+            let replys_serialize = [];
+            async.map(replys, function(reply, callback) {
+                let _teacher
                 let _question
                 let _parent
-				const content = reply.content
+                const content = reply.content
 
                 Teacher.findById(reply.teacherID, function(err, teacher) {
                     if (err) {
@@ -177,12 +187,13 @@ exports.replylist = function(req, res) {
                         return res.json({status:'error','errcode':2});
                     }
                     _question = question
-                    Parent.findOne({_id:question.parentID}, function(err, parent) {
-                        if (err) {
-                            return res.json({status: 'error', 'errcode': 2});
-                        }
-                        _parent = parent
-                    })
+                })
+
+                Parent.findOne({_id:reply.parentID}, function(err, parent) {
+                    if (err) {
+                        return res.json({status: 'error', 'errcode': 2});
+                    }
+                    _parent = parent
                 })
 
                 var tmp = {
@@ -192,8 +203,10 @@ exports.replylist = function(req, res) {
                     content: content
                 };
                 replys_serialize.push(tmp);
+                callback(null,replys_serialize)
+            }, function(err,results) {
+                res.json({status: 'success', 'replys': results});
             });
-            res.json({status: 'success', 'replys': replys_serialize});
         }
     });
 }

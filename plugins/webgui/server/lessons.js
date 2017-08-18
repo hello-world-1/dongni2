@@ -50,35 +50,32 @@ exports.addlesson = function(req, res) {
     const title = req.body.title
     const description = req.body.description
     const teacherName = req.body.teacherName
-    const startDate = req.body.startDate + ''
-
-    const start = new Date(startDate).getTime();
-    console.log("start"+start)
+    const startDate = new Date(req.body.startDate + '').getTime();
     // a.valueOf(); // 1360002924000
-    // const endDate = req.body.endDate
-    // const classTime = req.body.classTime
-    // const enrolldeadline = req.body.enrolldeadline
-    // const studentsLimit = req.body.studentsLimit
-    // const classHours = req.body.classHours
-    // const telephone = req.body.telephone
-    // const price = req.body.price
-    // const enrollNum = req.body.enrollNum
-    // const state = req.body.state
+    const endDate = new Date(req.body.endDate + '').getTime();
+    const classTime = req.body.classTime
+    const enrolldeadline = new Date(req.body.enrolldeadline + '').getTime();
+    const studentsLimit = req.body.studentsLimit
+    const classHours = req.body.classHours
+    const telephone = req.body.telephone
+    const price = req.body.price
+    const enrollNum = req.body.enrollNum
+    const state = req.body.state
     let _lesson = new Lesson()
     _lesson.teacherID = teacherID
-    // _lesson.title = title
-    // _lesson.description = description
-    // _lesson.teacherName = teacherName
-    // _lesson.endDate = endDate
-    _lesson.startDate = start
-    // _lesson.classTime = classTime
-    // _lesson.enrolldeadline = enrolldeadline
-    // _lesson.studentsLimit = studentsLimit
-    // _lesson.classHours = classHours
-    // _lesson.telephone = telephone
-    // _lesson.price = price
-    // _lesson.enrollNum = enrollNum
-    // _lesson.state = state
+    _lesson.title = title
+    _lesson.description = description
+    _lesson.teacherName = teacherName
+    _lesson.endDate = endDate
+    _lesson.startDate = startDate
+    _lesson.classTime = classTime
+    _lesson.enrolldeadline = enrolldeadline
+    _lesson.studentsLimit = studentsLimit
+    _lesson.classHours = classHours
+    _lesson.telephone = telephone
+    _lesson.price = price
+    _lesson.enrollNum = enrollNum
+    _lesson.state = state
 
 	_lesson.save(function(err, lesson) {
         if (err) {

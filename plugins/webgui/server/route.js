@@ -39,8 +39,6 @@ app.post('/user/signin', User.signin);
 app.post('/user/login', User.login);
 app.post('/user/logout', User.logout);
 app.post('/teacher/changeavatar', multipartMiddleware, Home.signinRequired, Teacher.changeAvatar);
-// app.post('/admin/addteacher', Home,signinRequired,Teacher.addTeacher);
-
 app.post('/admin/addteacher', multipartMiddleware, Home.signinRequired,Teacher.addTeacher);
 app.post('/teacher/changeinfo',multipartMiddleware, Home.signinRequired,Teacher.changeinfo);
 app.post('/teacher/booklist', Home.signinRequired,Book.booklist);
@@ -49,11 +47,12 @@ app.post('/teacher/addbook', Home.signinRequired,Book.addbook);
 app.post('/teacher/lessondetail', Home.signinRequired,Lesson.lessondetail);
 app.post('/teacher/lessonlist', Home.signinRequired,Lesson.lessonlist);
 app.post('/teacher/addlesson', Home.signinRequired,Lesson.addlesson);
-app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
-app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
+
 
 
 // not test
+app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
+app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
 app.post('/teacher/replyview', Home.signinRequired,Answer.replyview);
 app.post('/teacher/replycommit', Home.signinRequired,Answer.replycommit);
 app.post('/child/childinfo', Home.signinRequired,User.childinfo);

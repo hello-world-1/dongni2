@@ -5,6 +5,7 @@ var mongoose = appRequire('init/mongoose');
 var Schema = mongoose.Schema;
 var Teacher = require('./teacher');
 var Question = appRequire('plugins/watch/db/question');
+var User = appRequire('plugins/watch/db/user');
 
 var ReplySchema = new Schema({
 
@@ -16,6 +17,10 @@ var ReplySchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Question'
 	}, //问题id
+    parentID: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }, //问题id
 	content: {
 		type: String,
 		default: ""

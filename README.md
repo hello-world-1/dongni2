@@ -25,8 +25,8 @@
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	  "age": "30",
-	  "sex": "male"
+	"age": "30",
+	"sex": "male"
   },......]
 }
 如果为老师登录跳转传送的数据为:
@@ -38,8 +38,8 @@
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	  "age": "30",
-	  "sex": "male"
+	"age": "30",
+	"sex": "male"
   }
 }
 ```
@@ -75,8 +75,8 @@
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	  "age": "30",
-	  "sex": "male"
+	"age": "30",
+	"sex": "male"
   },......]
 }
 跳转到重新添加老师界面传送的数据为:
@@ -154,13 +154,13 @@
 {
   "status": "success",
   "teacher": {
-   "_id": "58184fe203775a8f0fd1b096",
+    "_id": "58184fe203775a8f0fd1b096",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	  "age": "30",
-	  "sex": "male"
+	"age": "30",
+	"sex": "male"
   }
 }
 ```
@@ -185,12 +185,12 @@
   "status": "success",
   "books": [{
     "_id": "58184fe203775a8f0fd1b096",
-	  "teacherID": "fsde4fe203775a8f0fd14323",
+	"teacherID": "fsde4fe203775a8f0fd14323",
     "title": "标题",
     "author": "作者张三",
     "publishHouse": "出版社",
     "introduction": "内容简介",
-	  "purchaseLink": "购买链接"
+	"purchaseLink": "购买链接"
   },......]
 }
 {status:'error','errcode':1}
@@ -214,13 +214,13 @@
   "status": "success",
   "book": {
     "_id": "58184fe203775a8f0fd1b096",
-	  "teacherID": "fsde4fe203775a8f0fd14323",
+	"teacherID": "fsde4fe203775a8f0fd14323",
     "title": "标题",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "author": "作者张三",
     "publishHouse": "出版社",
     "introduction": "内容简介",
-	  "purchaseLink": "购买链接"
+	"purchaseLink": "购买链接"
   },
   "teacher": {
     "_id": "fsde4fe203775a8f0fd14323",
@@ -257,13 +257,13 @@
   "status": "success",
   "books": [{
     "_id": "58184fe203775a8f0fd1b096",
-	  "teacherID": "fsde4fe203775a8f0fd14323",
+	"teacherID": "fsde4fe203775a8f0fd14323",
     "title": "标题",
     "avatar": "/images/avatars/avatar_sample.jpg",
     "author": "作者张三",
     "publishHouse": "出版社",
     "introduction": "内容简介",
-	  "purchaseLink": "购买链接"
+	"purchaseLink": "购买链接"
   },......]
 }
 ```
@@ -321,13 +321,13 @@
 {
   "status": "success",
   "lesson": {
-    "_id": "58184fe203775a8f0fd1b096",
+      "_id": "58184fe203775a8f0fd1b096",
 	  "teacherID": "fsde4fe203775a8f0fd14323",
-    "description": "课程描述",
-    "teacherName": "开课老师",
-    "startDate": "课程开始时间",
-    "endDate": "课程结束时间",
-    "classTime": "上课时间",
+      "description": "课程描述",
+      "teacherName": "开课老师",
+      "startDate": "课程开始时间",
+      "endDate": "课程结束时间",
+      "classTime": "上课时间",
 	  "enrolldeadline": "报名截止日期",
 	  "studentsLimit": "限制人数",
 	  "classHours": "课程周期",
@@ -342,8 +342,8 @@
     "username": "老师",
     "introduction": "这是个人简介",
     "name": "张三",
-	  "age": "30",
-	  "sex": "male"
+	"age": "30",
+	"sex": "male"
   }
 }
 ```
@@ -351,7 +351,6 @@
 > * /teacher/addlesson
 
 > * Input Parameters
->> * teacherID:requested
 >> * description:requested
 >> * teacherName:requested
 >> * startDate:requested
@@ -378,11 +377,11 @@
   "lessons": [{
     "_id": "58184fe203775a8f0fd1b096",
 	  "teacherID": "fsde4fe203775a8f0fd14323",
-    "description": "课程描述",
-    "teacherName": "开课老师",
-    "startDate": "课程开始时间",
-    "endDate": "课程结束时间",
-    "classTime": "上课时间",
+      "description": "课程描述",
+      "teacherName": "开课老师",
+      "startDate": "课程开始时间",
+      "endDate": "课程结束时间",
+      "classTime": "上课时间",
 	  "enrolldeadline": "报名截止日期",
 	  "studentsLimit": "限制人数",
 	  "classHours": "课程周期",
@@ -416,14 +415,14 @@
   	  "parent": {
   		"_id": "58184fe203775a8f0fd1b096",
   		"avatar": "/images/avatars/avatar_sample.jpg"
-    },question:{
+      },question:{
   		"_id": "58184fe203775a8f0fd10326",
   		"content": "我家的孩子为什么会叛逆"
-    },teacher:{
+      },teacher:{
   		"_id": "fsde4fe203775a8f0fd14323",
   		"createAt": "2017-1-1 8:8:8"
-    },"content": "你的孩子很健康"
-  },......]
+      },"content": "你的孩子很健康"
+    },......]
 }
 ```
 ### 所有问题的列表
@@ -445,13 +444,13 @@
 {
   "status": "success",
   "questions": [{
-  	"parent": {
+  	  "parent": {
   		"_id": "58184fe203775a8f0fd1b096",
   		"avatar": "/images/avatars/avatar_sample.jpg"
-  	},question:{
+  	  },question:{
   		"_id": "58184fe203775a8f0fd10326",
   		"content": "我家的孩子为什么会叛逆"
-  	}
+  	  }
   },......]
 }
 ```
@@ -580,23 +579,23 @@
   	"relationship": "father"
   },
   "emotions":[
-    {
+      {
     	"emotion":{
-        "value": 88,
-        "average": 60,
-        "calm", 50,
-        "happy", 50,
-        "angry", 50,
-        "sad", 50,
-        "report", " 心情愉悦"
-      }
+            "value": 88,
+            "average": 60,
+            "calm", 50,
+            "happy", 50,
+            "angry", 50,
+            "sad", 50,
+            "report", " 心情愉悦"
+        }
     	"questions": [
-      	{
+      	  {
       		"questionid": "58184ffdsds775a8f0fd1b096",
       		"title": "标题"
-      	},......]
+      	  },......]
 
-    },......
+      },......
   ]
 }
 ```
