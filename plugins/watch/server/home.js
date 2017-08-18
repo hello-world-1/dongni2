@@ -60,16 +60,16 @@ exports.signin = (req, res) => {
     //fetch user and test password verification
     User.findOne({telephone: telephone}, function (err, user) {
         if (err) {
-            return res.json({status: 'error', 'errcode': 1});  //1:数据库查询错误
+            return res.json({status: 'error', 'errcode': 2});  //数据库查询错误
         }
         //未有该用户
         if (!user) {
-            return res.json({status: 'error', 'errcode': 2});   //2:未有该用户
+            return res.json({status: 'error', 'errcode': 3});   //未有该用户
         }
 
         user.comparePassword(password, function (err, isMatch) {
             if (err) {
-                return res.json({status: 'error', 'errcode': 3});   //3:密码匹配错误
+                return res.json({status: 'error', 'errcode': 4});   //密码匹配错误
             }
             if (isMatch) {
                 const crypto = require('crypto');
@@ -77,7 +77,7 @@ exports.signin = (req, res) => {
                 user.token = token;
                 user.save(function (err) {
                     if (err) {
-                        return res.json({status: 'error', 'errcode': 4});   //保存失败
+                        return res.json({status: 'error', 'errcode': 5});   //保存失败
                     }
                     else {
                         res.json({
@@ -88,7 +88,7 @@ exports.signin = (req, res) => {
                 });
             }
             else {
-                res.json({status: 'error', 'errcode': 5});  //密码不正确
+                res.json({status: 'error', 'errcode': 6});  //密码不正确
             }
         });
     });
@@ -163,10 +163,6 @@ exports.logout = (req, res) => {
 //     });
 //
 // };
-
-exports.status = (req, res) => {
-    res.send({ status: req.session.type });
-};
 
 //发送短信验证码
 exports.sendCode = (req, res) => {
