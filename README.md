@@ -612,8 +612,8 @@ if status == "success" means success
 if status == "error" means error
 ```
 
-##登录注册接口
-### 用于获取手机短信验证码
+## 登录注册接口
+### 获取手机短信验证码
 > * /api/user/sendCode
 
 > * Input Parameters
@@ -747,7 +747,7 @@ if status == "error" means error
 {"status":"success","user":{"userID":"1001"}}
 ```
 
-##提问接口
+## 提问接口
 ### 获取相关提问列表(一期为获取全部提问)
 > * /api/user/question/similar
 
@@ -892,7 +892,7 @@ if status == "error" means error
 }
 ```
 
-##情绪接口
+## 情绪接口
 ### 根据课程id查看课程详情
 > * /api/user/lesson/detail
 
@@ -928,7 +928,7 @@ if status == "error" means error
 }
 ```
 
-##课程接口
+## 课程接口
 ### 根据课程id查看课程详情
 > * /api/user/emotion/latest
 
@@ -1041,7 +1041,7 @@ if status == "error" means error
 }
 ```
 
-##书籍接口
+## 书籍接口
 ### 根据id查看某一本书籍
 > * /api/user/book/detail
 
@@ -1079,7 +1079,7 @@ if status == "error" means error
 }
 ```
 
-##老师接口
+## 老师接口
 ### 根据老师id查看此老师的详细信息
 > * /api/user/teacher/detail
 
@@ -1115,7 +1115,7 @@ if status == "error" means error
 }
 ```
 
-##用户信息接口
+## 用户信息接口
 ### 获取用户个人信息--对应app侧滑栏用户信息设置
 > * /api/user/information/detail
 
@@ -1246,7 +1246,7 @@ if status == "error" means error
 }
 ```
 
-##手表接口
+## 手表接口
 ### 获取手表信息--对应app设备绑定获取已经绑定的手表信息
 > * /api/user/information/detail
 
