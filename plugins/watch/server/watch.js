@@ -29,7 +29,7 @@ exports.addContact = (req, res) => {
     //判断该用户手机号是否绑定过
     Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
         if (err) {
-            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+            return res.json({status: 'error', 'errcode': 9});   //数据库查询出错
         }
         if (!watch) {
             //该用户注册手机号没有绑定过
@@ -85,14 +85,14 @@ exports.addContact = (req, res) => {
                                     return res.json({status: 'error', 'errcode': 7});   //数据库保存出错
                                 }
                                 else {
-                                    return res.json({status: 'add success', tcpcode: result});
+                                    return res.json({status: 'success'});
                                 }
                             })
                         }
                     }).catch(err => {
                         console.log(err);
                         // res.status(500).end();
-                        return res.json({status: 'error' , msg: 'sendCommand error'});
+                        return res.json({status: 'error' , 'errcode': 8});  //给手表发命令出错
                     });
                 }
             })
@@ -144,12 +144,12 @@ exports.bind = (req, res) => {
                         if(success){
                             result=success;
                             // res.send(result);
-                            return res.json({status: 'update success', tcpcode: result});
+                            return res.json({status: 'success'});
                         }
                     }).catch(err => {
                         console.log(err);
                         // res.status(500).end();
-                        return res.json({status: 'error' , msg: 'sendCommand error'});
+                        return res.json({status: 'error' , 'errcode': 7});
                     });
                     // return res.json({status: 'update success'});
                 }
@@ -169,7 +169,7 @@ exports.bind = (req, res) => {
             let watch = new Watch(_watch);
             watch.save(function (err) {
                 if (err) {
-                    return res.json({status: 'error', 'errcode': 6});   //数据库保存出错,该IMEI已被其他账号绑定
+                    return res.json({status: 'error', 'errcode': 6});   //数据库保存出错
                 }
                 else {
                     //设置手表主控号码
@@ -187,13 +187,13 @@ exports.bind = (req, res) => {
                         if(success){
                             result=success;
                             // res.send(result);
-                            return res.json({status: 'add success', tcpcode: result});
+                            return res.json({status: 'success'});
                         }
                     }).catch(err => {
                         console.log(err);
                         // res.status(500).end();
                         //本地测试要启tcpclient IMEI号为指定的IMEI号
-                        return res.json({status: 'error' , msg: 'sendCommand error'});
+                        return res.json({status: 'error' , 'errcode': 7});
                     });
                     // res.json({status: 'save success'});
                 }
@@ -276,12 +276,12 @@ exports.locate = (req, res) => {
                 if(success){
                     result=success;
                     // res.send(result);
-                    return res.json({status: 'locate success', tcpcode: result});
+                    return res.json({status: 'success'});   //发送立即定位指令成功
                 }
             }).catch(err => {
                 console.log(err);
                 // res.status(500).end();
-                return res.json({status: 'error' , msg: 'sendCommand error'});
+                return res.json({status: 'error', 'errcode': 5});
             });
         }
     })
