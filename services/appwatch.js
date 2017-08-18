@@ -76,6 +76,44 @@ const receiveCommandwatch = async (data,receive) => {
             case 'IWAP54':
                 return await logicpart.IWAP54(receive.imei,params);
                 break;
+            case "IWAP11":
+            case "IWAP12":
+            case "IWAP13":
+            case "IWAP14":
+            case "IWAP15":
+            case "IWAP16":
+            case "IWAP17":
+            case "IWAP18":
+            case "IWAP19":
+            case "IWAP20":
+            case "IWAP21":
+            case "IWAP22":
+            case "IWAP23":
+            case "IWAP24":
+            case "IWAP25":
+            case "IWAP26":
+            case "IWAP27":
+            case "IWAP28":
+            case "IWAP29":
+            case "IWAP30":
+            case "IWAP31":
+            case "IWAP32":
+            case "IWAP33":
+            case "IWAP34":
+            case "IWAP35":
+            case "IWAP36":
+            case "IWAP37":
+            case "IWAP38":
+            case "IWAP40":
+            case "IWAP41":
+            case "IWAP43":
+            case "IWAP61":
+            case "IWAP62":
+            case "IWAP63":
+            case "IWAP64":
+                receive.socket.emit("event1",message);
+                return '';
+                break;
             default:
                 return '';
                 break;
@@ -107,8 +145,14 @@ const checkDatawatch = (receive) => {
         data = buffer.slice(start,endpos);
         receive.pos=endpos+1;
         receiveCommandwatch(data,receive).then(s => {
-            console.log("s="+s);
-            receive.socket.write(packwatch(s));
+            if(s==null||s=="")
+            {
+                console.log("s="+s);
+            }
+            else {
+                receive.socket.write(packwatch(s));
+            }
+
             // receive.socket.close();
         }).catch(e => {
             logger.error(e);
@@ -179,12 +223,12 @@ const sendMessagewatch =  (message) => {
             socket: client,
         };
         client.write(message,"utf8");
-        client.once('data', data => {
-            const aptype=data.toString();
+        client.once("event1",data => {
+            const aptype=data;
             //if(aptype.includes("AP11")||aptype.includes("AP12"))
             console.log("aptype="+aptype);
-            resolve(data.toString());
-        });
+            resolve(data);
+        })
         client.once('close', () => {
             reject(new Error("client connection close"));
         });

@@ -144,6 +144,7 @@ exports.sendCode = (req,res) => {
 exports.sendtcp = (req,res) => {
     console.log("sendtcp");
     const type = req.body.type;
+    const imei = req.body.imei;
     console.log(type);
     const time=new Date().getTime();
     const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
@@ -196,7 +197,7 @@ exports.sendtcp = (req,res) => {
     const IWBP61=`IWBP61,358511020048751,${time},C|${username}|15210807608#`
 
 
-    const IWBP62=`IWBP62,358511020048751,${time},1#`
+    const IWBP62=`IWBP62,${imei},${time},1#`
     const IWBP63=`IWBP63,358511020048751,${time},1#`
     const IWBP64=`IWBP64,358511020048751,${time},1,60#`
   let result = null;
@@ -322,7 +323,7 @@ exports.sendtcp = (req,res) => {
   }).catch(err => {
         console.log(err);
         res.status(500).end();
-    });
+  });
 
 }
 

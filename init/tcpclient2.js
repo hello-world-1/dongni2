@@ -1,14 +1,17 @@
-var net = require('net');
-// var client = net.connect({host:'115.28.242.3',port: 6070},function() {
+const net = require('net');
+// const client = net.connect({host:'115.28.242.3',port: 6070},function() {
 //     console.log('连接到服务器！');
 // });
-var client = net.connect({port: 6070},function() {
+// const client = net.connect(6070,'115.28.242.3',function() {
+//     console.log('连接到服务器！');
+// });
+const client = net.connect(6070,function() {
     console.log('连接到服务器！');
 });
 client.on('data',function(data) {
     const recieveMsg=data.toString();
     console.log(recieveMsg);
-    var params=data.toString().split(",");
+    const params=data.toString().split(",");
 
     switch (params[0])
     {
@@ -44,11 +47,14 @@ client.on('data',function(data) {
         case "IWBP41":
         case "IWBP43":
         case "IWBP61":
-        case "IWBP62":
         case "IWBP63":
         case "IWBP64":
             client.write(Buffer.from(data.toString(),"utf8"));
             //client.write(Buffer.from(`${params[0]},${params[2]},${params[3]}}`,"utf8"));
+            break;
+        case "IWBP62":
+            const pp=`IWAP62,${params[2]},${params[3]}`
+            client.write(Buffer.from(pp,"utf8"));
             break;
         default:
             break;
@@ -56,6 +62,7 @@ client.on('data',function(data) {
 
     //client.end();
 });
+
 
 
 const IWAP00="IWAP00,353456789012345,ggg,zh_CN#";
@@ -74,16 +81,24 @@ const IWAP52="IWAP52,20140818064408,20150818064408,100000,78|100,89|99#"
 const IWAP53="IWAP53,20140818064408|20150818064408|13873xxxxxx|I|139xxxxx,20140818064408|20150818064408|13873xxxxxx|O|139xxxxx#"
 const IWAP54="IWAP54,20140818064408,60,78|98,70|90#"
 
+
+
 client.write(new Buffer(IWAP00))
+// setInterval(()=>{
+//     client.write(new Buffer(IWAP03))
+// },60000)
 
 setTimeout(()=>{
     client.write(new Buffer(IWAP01))
-},60000)
+},2000)
+
+
+
 
 setTimeout(()=>{
     client.write(new Buffer(IWAP02))
-},90000)
-
+},3000)
+/*
 setTimeout(()=>{
     client.write(new Buffer(IWAP03))
 },120000)
@@ -123,4 +138,5 @@ setTimeout(()=>{
 setTimeout(()=>{
     client.write(new Buffer(IWAP54))
 },39000)
+*/
 
