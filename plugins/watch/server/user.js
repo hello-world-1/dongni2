@@ -22,7 +22,7 @@ exports.detail = (req, res) => {
 
     User.findOne({_id: user._id}).populate('childID').exec(function (err, user) {
         if (err) {
-            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+            return res.json({status: 'error', 'errcode': 4});   //数据库查询出错
         }
         let _user = {
             avatar: user.avatar,
@@ -115,12 +115,12 @@ exports.changeAvatar = (req, res) => {
     readStream.pipe(writeStream);
     readStream.on('end',function(err){
         if(err){
-            res.json({status:'error','errcode':2});
+            res.json({status:'error','errcode':3});
         } else {
             fs.unlinkSync(req.files.file.path);
             User.update({_id: user._id},{avatar:newavatar},function(err,numberAffected, rawResponse) {
                 if (err) {
-                    return res.json({status:'error', 'errcode': 3});
+                    return res.json({status:'error', 'errcode': 4});
                 }else {
                     res.json({status: 'success', user: {'userID': user._id, 'avatar': newavatar}});}
             });
