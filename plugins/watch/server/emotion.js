@@ -7,9 +7,10 @@ const config = appRequire('services/config').all();
 
 const Emotion = appRequire('plugins/watch/db/emotion');
 
+//情绪详情
 exports.latest = (req, res) => {
 
-    var user = req.body.user;
+    let user = req.body.user;
 
     Emotion.findOne({parentID: user._id}).sort({createAt: -1}).exec(function (err, emotion) {
         if (err) {
@@ -35,6 +36,7 @@ exports.latest = (req, res) => {
     // res.send('This is not implemented now');
 };
 
+//成长
 exports.list = (req, res) => {
     res.send('This is not implemented now');
 };
