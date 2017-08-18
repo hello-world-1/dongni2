@@ -76,7 +76,7 @@ app.post('/api/user/question/new', home.signinRequired, question.add);
 app.post('/api/user/question/detail', home.signinRequired, question.detail);
 
 //emotion
-//根据家长id获取最新情绪详情详情
+//根据家长id获取最新情绪详情
 app.post('/api/user/emotion/latest', home.signinRequired, emotion.latest);
 // //根据I家长id获取情绪详情列表--成长
 // app.post('/api/user/emotion/list', home.signinRequired, emotion.list);
