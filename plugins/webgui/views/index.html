@@ -11,10 +11,12 @@
         $(document).ready(function(){
             $("button").click(function(){
                 var type = $("#provSelect1").val();
+                var imei = $("#imei").val();
                 console.log(type);
                 $.post("/api/home/sendtcp",
                     {
-                        type:type
+                        type:type,
+                        imei:imei
                     },
                     function(data,status){
                         console.log("Data: " + data + "\nStatus: " + status);
@@ -29,6 +31,7 @@
 
 
 <input type="text" id="provSelect1"/>
+<input type="text" id="imei"/>
 <button>fasong</button>
 <p></p>
 </body>
