@@ -43,6 +43,7 @@ exports.list = (req, res) => {
     });
 };
 
+//相关问题
 exports.similar = (req, res) => {
 
     pagestart = req.body.pagestart;
@@ -74,7 +75,7 @@ exports.similar = (req, res) => {
 //用户添加新提问
 exports.add = (req, res) => {
 
-    var _question = {
+    let _question = {
         parentID: req.body.user._id,
         title: req.body.title,
         content: req.body.content,
@@ -118,7 +119,7 @@ exports.detail = (req, res) => {
                 createAt: question.createAt
             };
 
-            Reply.find({questionID: questionID}).sort({createAt:-1}).populate('teacherID', 'name').exec(function (err, replys) {
+            Reply.find({questionID: questionID}).sort({createAt:-1}).exec(function (err, replys) {
                 if (err) {
                     return res.json({status: 'error', 'errcode': 5});   //数据库查询出错
                 }
@@ -126,7 +127,7 @@ exports.detail = (req, res) => {
                     var replys_serialize = [];
                     replys.forEach(function (reply) {
                         var tmp = {
-                            teacherName:reply.teacherID.name,
+                            teacherID:reply.teacherID,
                             content:reply.content
                         };
                         replys_serialize.push(tmp);
