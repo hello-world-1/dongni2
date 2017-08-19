@@ -25,7 +25,7 @@ const IWAP01 = async (imei,params) => {
         console.log(params[2].toString());
         let location="116.371499,39.955875"
         const weizhi=await locationtransefer.locationService(location);
-        //await watchinfo.pushXX({"imei":imei},{ $push: { "locations":weizhi } });
+        await watchinfo.pushXX({"imei":imei},{ $push: { "locations":weizhi } });
         //await
         console.log(weizhi);
         return await "IWBP01";
