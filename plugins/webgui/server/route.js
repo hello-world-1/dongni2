@@ -49,13 +49,30 @@ app.post('/teacher/lessonlist', Home.signinRequired,Lesson.lessonlist);
 app.post('/teacher/addlesson', Home.signinRequired,Lesson.addlesson);
 
 
+// app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
+
+
+//change method code
+app.post('/teacher/replylist', Answer.replylist);
+
+
+
+
+
+// app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
+app.post('/teacher/questionlist', Question.questionlist);
+// app.post('/teacher/replyview', Home.signinRequired,Answer.replyview);
+app.post('/teacher/replyview', Answer.replyview);
+// app.post('/teacher/replycommit', Home.signinRequired,Answer.replycommit);
+
+app.post('/teacher/replycommit', Answer.replycommit);
+// app.post('/teacher/allquestionreply', Home.signinRequired,Answer.allquestionreply);
+app.post('/teacher/allquestionreply', Answer.allquestionreply);
+
 
 // not test
-app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
-app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
-app.post('/teacher/replyview', Home.signinRequired,Answer.replyview);
-app.post('/teacher/replycommit', Home.signinRequired,Answer.replycommit);
-app.post('/child/childinfo', Home.signinRequired,User.childinfo);
+// app.post('/child/childinfo', Home.signinRequired,User.childinfo);
+app.post('/child/childinfo', User.childinfo);
 
 app.post('/api/home/login', home.login);
 // app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);

@@ -301,7 +301,7 @@ exports.list = function(req, res) {
 
 // 查看老师是否登录
 exports.signinRequired = function(req, res, next) {
-	var user = req.session.user
+	const user = req.session.user
 
 	if (!user) {
 		return res.redirect('/signin')

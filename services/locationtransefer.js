@@ -41,8 +41,9 @@ const locationService=  (location) => {
             res.on('end', function () {
                 logger.info('响应结束')
                 var jsonObj = JSON.parse(result)
-                logger.info('BODY: ' + jsonObj.regeocode.addressComponent.province)
-                resolve(jsonObj.regeocode.addressComponent.province);
+                // logger.info('BODY: ' + jsonObj.regeocode.addressComponent.province)
+                console.log("address:" + result)
+                resolve(jsonObj.regeocode.addressComponent.adcode);
             })
         });
         req.end();

@@ -52,7 +52,7 @@ ReplySchema.statics = {
     findByQuestionId: function(id, cb) {
         return this
             .find({
-                teacherID: id
+                questionID: id
             })
             .sort('createAt')
             .exec(cb)

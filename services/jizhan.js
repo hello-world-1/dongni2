@@ -5,12 +5,13 @@ const util = require('util');
 const log4js = require('log4js');
 const logger = log4js.getLogger('system');
 
-const jizhanService=  (location) => {
+const jizhanService=  (jizhan) => {
   const data = {
     oid: '5607',
     key: '2BD1A1439E5F6351F490230767E007BF',
     hex: '10',
-    bs: '460,00,9520,3671,13',
+    // bs: '460,00,9520,3671,13',
+    bs: jizhan,
     to: '3',
     output: 'json'
   }
@@ -39,8 +40,9 @@ const jizhanService=  (location) => {
             res.on('end', function () {
                 logger.info('响应结束')
                 var jsonObj = JSON.parse(result)
-                logger.info('BODY: ' + jsonObj.regeocode.addressComponent.province)
-                resolve('BODY: ' + jsonObj.result[0].address);
+                console.log("jizhan result:"+jsonObj)
+                resolve(jsonObj.result[0].address + '|' + jsonObj.longitude + ',' + jsonObj.latitude );
+                // resolve(jsonObj.result[0].address + '|' + jsonObj.result[0].lng + ',' + jsonObj.result[0].lat );
             })
         });
         req.end();

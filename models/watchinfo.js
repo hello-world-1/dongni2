@@ -25,7 +25,7 @@ const pushXX = (filter,pushdata) => {
             }
             else
             {
-                resolve()
+                resolve(doc)
             }
         })
     })

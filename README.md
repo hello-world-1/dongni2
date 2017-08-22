@@ -499,6 +499,53 @@
   ]
 }
 ```
+### 所有问题及回答
+> * /teacher/allquestionreply
+
+> * Input Parameters
+
+> * Successful Return
+
+> * Error Return
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
+
+> * example
+```
+跳转到所有问题及回答显示界面传送的数据为:
+
+{all:[
+    {
+      "status": "success",
+      "question": {
+        "parent": {
+            "_id": "58184fe203775a8f0fd1b096",
+            "avatar": "/images/avatars/avatar_sample.jpg"
+        },question:{
+            "_id": "58184fe203775a8f0fd10326",
+            "title": "标题",
+            "createAt", "2017-1-1 1:1:1"
+            "content": "我家的孩子为什么会叛逆"
+        }
+      },
+      "replys":[
+        {
+          "teacher":{
+            "_id": "58184fe203775a8f0fd1b096",
+            "avatar": "/images/avatars/avatar_sample.jpg",
+            "username": "老师",
+            "introduction": "这是个人简介",
+            "name": "张三",
+            "age": "30",
+            "sex": "male"
+          },
+          "content":"你的孩子很健康"
+        },......
+      ]
+    }
+  ]
+}
+```
 ### 提交回复问题
 > * /teacher/replycommit
 
@@ -565,38 +612,58 @@
 ```
 跳转到孩子的详细信息界面传送的数据为:
 {
-  "status": "success",
-  "info": {
-  	"age": "12",
-  	"sex": "male",
-  	"grade": "1",
-  	"character": "开朗"
-  },
-  "parent":{
-  	"age": "40",
-  	"sex": "male",
-  	"character": "开朗",
-  	"relationship": "father"
-  },
-  "emotions":[
-      {
-    	"emotion":{
-            "value": 88,
-            "average": 60,
-            "calm", 50,
-            "happy", 50,
-            "angry", 50,
-            "sad", 50,
-            "report", " 心情愉悦"
-        }
-    	"questions": [
-      	  {
-      		"questionid": "58184ffdsds775a8f0fd1b096",
-      		"title": "标题"
-      	  },......]
+    "status": "success",
+        "info": {
+        "age": "12",
+        "sex": "male",
+        "grade": "1",
+        "character": "开朗"
+    },
+    "parent":{
+        "age": "40",
+        "sex": "male",
+        "character": "开朗",
+        "relationship": "father"
+    },
+    "emotion":{
+        "value": 88,
+        "calm", 50,
+        "happy", 50,
+        "angry", 50,
+        "sad", 50,
+        "report", " 心情愉悦"
+    },
+    "averageEmotion":60,
+    "questions": [
+        "question": {
+            "parent": {
+                "_id": "58184fe203775a8f0fd1b096",
+                "avatar": "/images/avatars/avatar_sample.jpg"
+            },question:{
+                "_id": "58184fe203775a8f0fd10326",
+                "title": "标题",
+                "createAt", "2017-1-1 1:1:1"
+                "content": "我家的孩子为什么会叛逆"
+            }
+        },
+        "replys":[
+            {
+              "teacher":{
+                "_id": "58184fe203775a8f0fd1b096",
+                "avatar": "/images/avatars/avatar_sample.jpg",
+                "username": "老师",
+                "introduction": "这是个人简介",
+                "name": "张三",
+                "age": "30",
+                "sex": "male"
+              },
+              "content":"你的孩子很健康"
+            },......
+        ]
 
-      },......
-  ]
+    ]
+
+
 }
 ```
 

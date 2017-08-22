@@ -1,4 +1,5 @@
 const net = require('net');
+const util = require("util")
 // const client = net.connect({host:'115.28.242.3',port: 6070},function() {
 //     console.log('连接到服务器！');
 // });
@@ -65,7 +66,7 @@ client.on('data',function(data) {
 
 
 const IWAP00="IWAP00,358511020048751,ggg,zh_CN#";
-const IWAP01="IWAP01,170803,V-0.0000N-0.0000E,000.0,113235,000.00,05000006900102,460,1,4295,53753,0050004d004f0053|f4:83:cd:a6:58:89|-51&0053004f004e00490043004f004d|48:7a:da:22:5d:a3|-60&004e|48:7a:da:22:5d:a2|-60&004e00450054002d0076006f00690070|e8:fc:af:a4:6b:0e|-61&004e00450054002d0076006f00690070002d00740065007300740030|ea:fc:af:a4:6b:0f|-70&0077006900660069002d0031003900340039|b0:d5:9d:4a:f9:c9|-77,460|1|4295|53753|-72,460|1|4295|61226|-69,460|1|4295|59393|-70,460|1|4295|28682|-71,460|1|4295|25302|-69,460|1|4295|53751|-79#"
+const IWAP01="IWAP01,170803,V-0.0000N-0.0000E,000.0,113235,000.00,05000006900102,460,1,4295,53753,0050004d004f0053|f4:83:cd:a6:58:89|-51&0053004f004e00490043004f004d|48:7a:da:22:5d:a3|-60&004e|48:7a:da:22:5d:a2|-60&004e00450054002d0076006f00690070|e8:fc:af:a4:6b:0e|-61&004e00450054002d0076006f00690070002d00740065007300740030|ea:fc:af:a4:6b:0f|-70&0077006900660069002d0031003900340039|b0:d5:9d:4a:f9:c9|-77,460|0|9520|3671|10,460|1|4295|61226|-69,460|1|4295|59393|-70,460|1|4295|28682|-71,460|1|4295|25302|-69,460|1|4295|53751|-79#"
 const IWAP02="IWAP02,zh_cn,0,7,460,0,9520|3671|13,9520|3672|12,9520|3673|11,9520|3674|10,9520|3675|9,9520|3676|8,9520|3677|7#"
 const IWAP03="IWAP03,06000908000102,5555,30#"
 const IWAP04="IWAP04,075#"
@@ -88,48 +89,50 @@ client.write(new Buffer(IWAP00))
 setTimeout(()=>{
     client.write(new Buffer(IWAP01))
 },2000)
-/*
-setTimeout(()=>{
-    client.write(new Buffer(IWAP02))
-},90000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP03))
-},120000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP04))
-},150000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP05))
-},180000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP06))
-},210000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP10))
-},240000)
-
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP02))
+// },4000)
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP02))
+// },90000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP03))
+// },120000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP04))
+// },150000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP05))
+// },180000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP06))
+// },210000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP10))
+// },240000)
+//
 setTimeout(()=>{
     client.write(new Buffer(IWAP39))
-},270000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP51))
-},30000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP52))
-},33000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP53))
-},36000)
-
-setTimeout(()=>{
-    client.write(new Buffer(IWAP54))
-},39000)*/
+},3000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP51))
+// },30000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP52))
+// },33000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP53))
+// },36000)
+//
+// setTimeout(()=>{
+//     client.write(new Buffer(IWAP54))
+// },39000)
 

@@ -1,7 +1,13 @@
-require('date-utils')
 const iconv=require('iconv-lite');
 const watchinfo=appRequire('models/watchinfo');
 const locationtransefer=appRequire('services/locationtransefer')
+const jizhan=appRequire('services/jizhan')
+const weather=appRequire('services/weather')
+const util = require("util")
+const dateutil = require('date-utils')
+const log4js = require('log4js');
+const logger = log4js.getLogger('system');
+
 
 const IWAP00 = async (params) => {
     try {
@@ -23,11 +29,23 @@ const IWAP01 = async (imei,params) => {
         //await
         console.log(imei)
         console.log(params[2].toString());
-        let location="116.371499,39.955875"
-        const weizhi=await locationtransefer.locationService(location);
-        await watchinfo.pushXX({"imei":imei},{ $push: { "locations":weizhi } });
-        //await
-        console.log(weizhi);
+        const latitude = params[2].toString()
+        // LBS
+        if(latitude.indexOf("0000") > 0 ){
+            const test = params[12].toString()
+            const temp=test.split("|");
+            const MCC = temp[0]
+            const MNC = temp[1]
+            const LAC = temp[2]
+            const CID = temp[3]
+            const dBm = temp[4]
+            const weizhi=await jizhan.jizhanService(MCC+",0"+MNC+","+LAC+","+CID+","+dBm);
+            const two = weizhi.split("|");
+            const location = two[0]
+            const latitude1 = two[1]
+            console.log("weizhi:"+weizhi);
+            await watchinfo.pushXX({"imei":imei},{ $push: { "locations":{"latitude":latitude1,"time":new Date().getTime() } }});
+        }
         return await "IWBP01";
     } catch(err) {
         throw new Error(err);
@@ -52,8 +70,17 @@ const IWAP02 = async (imei,params) => {
             const LAC = jizhan[0];
             const CID = jizhan[1];
             const qiangdu = jizhan[2];
+
+            let test = MCC+ ',0' + MNC + ',' + LAC + ',' + CID + ',' + qiangdu
+
+            const weizhi=await jizhan.jizhanService(test);
+            const two = weizhi.split("|");
+            const loc = two[0]
+            const latitude = two[1]
+            await watchinfo.pushXX({"imei":imei},{ $push: { "locations":{"latitude":latitude,"time":new Date().getTime() } }});
+            console.log(weizhi);
             //此处需要调动地理位置解析插件，得到的地址返回
-            const loc='深圳市南山区南海大道1079号';
+            // const loc='深圳市南山区南海大道1079号';
             const location=iconv.encode(loc,'UTF16-BE').toString('hex');
             console.log(location);
             return await `IWBP02,${location}`;
@@ -134,12 +161,24 @@ const IWAP10 = async (imei,params) => {
         //await
         const flag=params[2];
         //此处需要调动地理位置解析插件，得到的地址返回
-        const loc='深圳市南山区南海大道1079号';
-        const location=iconv.encode(loc,'UTF16-BE').toString('hex');
-        console.log(location);
-        return await `IWBP10,${location}`;
+        if(flag.indexOf("0000N")){
+            const MCC = params[7];
+            const MNC = params[8];
+            const LAC = params[9];
+            const CID = params[10];
 
+            let test = MCC+ ',0' + MNC + ',' + LAC + ',' + CID
 
+            const weizhi=await jizhan.jizhanService(test);
+            const two = weizhi.split("|");
+            const loc = two[0]
+            const latitude = two[1]
+            await watchinfo.pushXX({"imei":imei},{ $push: { "locations":{"latitude":latitude,"time":new Date().getTime() } }});
+            console.log(weizhi);
+            const location=iconv.encode(loc,'UTF16-BE').toString('hex');
+            console.log(location);
+            return await `IWBP10,${location}`;
+        }
     } catch(err) {
         throw new Error(err);
     }
@@ -150,11 +189,43 @@ const IWAP39 = async (imei,params) => {
         //同步天气，空气，老黄历信息(拓展)
         //首先根据IMEI查找地理位置，然后把地理位置传给地图接口查询天气情况
         //await
-        const loc="深圳,2016-1-19|星期二|晴转多云|11|6|7|0|北风|微风,2016-1-20|星期三|晴转多云|11|6|7|0|北风|微风";
-        const location=iconv.encode(loc,'UTF16-BE').toString('hex');
-        console.log(location);
-        return await `IWBP39,${location}`;
+        console.log(imei)
+        // const cursor = await watchinfo.findXX({"imei":imei},{ $sort: { "locations.time" : 1 } });
+        const cursor = await watchinfo.findXX({"imei":imei});
+        // let templocaiton
 
+        cursor.each(function(err,doc){
+            if(doc) {
+                // console.log("latitude:" + doc.locations.toString())
+                console.log("latitude:" + JSON.stringify(doc))
+
+                console.log("test:" + util.inspect(doc,{depth:null}));
+                // templocaiton = JSON.parse(JSON.stringify(doc))
+
+                Promise.resolve().then(() => {
+                    return new Promise((resolve,reject)=>{
+                        const adcode = locationtransefer.locationService(doc.locations[0].latitude);
+                        resolve(adcode)
+                    })
+                }).then((adcode)=>{
+                    console.log("adcode:"+adcode)
+                    return new Promise((resolve,reject)=>{
+                        const tempweather = weather.weatherService(adcode,"all")
+                        resolve(tempweather)
+                    })
+                }).then((tempweather)=>{
+                    return new Promise((resolve,reject)=>{
+
+                        const weather=iconv.encode(tempweather,'UTF16-BE').toString('hex');
+                        console.log(tempweather);
+                        return `IWBP39,${weather}`;
+                    })
+                }).catch(err => {
+                    logger.error(err);
+                });
+                // const tempweather="深圳,2016-1-19|星期二|晴转多云|11|6|7|0|北风|微风,2016-1-20|星期三|晴转多云|11|6|7|0|北风|微风";
+            }
+        })
     } catch(err) {
         throw new Error(err);
     }

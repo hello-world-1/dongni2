@@ -12,5 +12,5 @@ const manager = () => {
 if(config.type === 's') {
     appwatch();
 } else if (config.type === 'm') {
-  manager();
+    manager();
 }

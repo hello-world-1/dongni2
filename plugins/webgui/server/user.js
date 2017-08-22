@@ -46,13 +46,15 @@ exports.login = function(req, res) {
     // >> * username:requested
     // >> * password:requested
     // var _user = req.body.user
-
     const username = req.body.username
     const password = req.body.password
+
+    console.log(username)
 
     Teacher.findOne({
         username: username
     }, function(err, user) {
+
         if (err) {
             return res.json({status: 'error', 'errcode': 2});
         }
@@ -99,8 +101,8 @@ exports.login = function(req, res) {
                 }
 
                 if (isMatch) {
-                    req.session.user = user
-                    req.session.type = 'teacher'
+                    // req.session.type = 'teacher'
+                    // req.session.user = user
                     return res.json({
                         "status": "success",
                         teacher:user
@@ -124,6 +126,8 @@ exports.childinfo = function(req, res) {
 
     //var s1 = moment().format("YYYY-MM-DD HH:mm:ss");
     const parentID = req.body.parentID
+    const firstDay = req.body.firstDay
+    // const limit = req.body.limit
 
     let _child
     let _parent
@@ -150,64 +154,99 @@ exports.childinfo = function(req, res) {
                         if (err) {
                             return res.json({status: 'error', 'errcode': 2});
                         }
-                        _child = child
-                    })
+                        if (child){
+                            _child = child
+                            // day question
+                            Question.find({}).exec(function (err, questions) {
+                                let questionreply_serialize = [];
+                                if (err) {
+                                    return res.json({status: 'error', 'errcode': 2});
+                                }
+                                if (questions.length === 0) {
+                                    return res.json({status: 'error', 'errcode': 2});
+                                } else {
+                                    const firstDateTime = firstDay.getTime()
+                                    let questions_serialize = [];
+                                    questions.forEach(function (question) {
+                                        if ((question.createAt.getTime()-firstDateTime) < 24*3600*1000) {
+                                            if ((question.createAt.getTime()-firstDateTime) > 0) {
+                                                questions_serialize.push(tmp);
+                                            }
+                                        }
+                                    });
+                                    async.map(questions_serialize, function(question, callback1) {
+                                        _question = question
+                                        if (questionID) {
+                                            Reply.findById(questionID, function(err, replys) {
 
+                                                if (replys.length === 0) {
+                                                    return res.json({status: 'error', 'errcode': 2});
+                                                } else {
+                                                    // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                                                    let teachers_serialize = [];
+                                                    async.map(replys, function(reply, callback2) {
+                                                        let _teacher
 
-                let _today_emotion
-                let _today_questions
-                let _yesterday_emotion
-                let _yesterday_questions
+                                                        Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                                            if(err){
+                                                                return res.json({status: 'error', 'errcode': 2});
+                                                            }
+                                                            _teacher = teacher
+                                                            var tmp = {
+                                                                teacher: _teacher,
+                                                                content:reply.content
+                                                            };
+                                                            teachers_serialize.push(tmp);
+                                                            callback2(null,teachers_serialize)
+                                                        })
+                                                    }, function(err,results) {
+                                                        var tmp1 = {
+                                                            status: 'success',
+                                                            'question': {
+                                                                parent:_parent,
+                                                                question:_question
+                                                            },
+                                                            replys:results
+                                                        };
+                                                        questionreply_serialize.push(tmp1)
+                                                        callback1(questionreply_serialize)
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    }, function(err,results) {
+                                        Emotion.find({}).sort({'createAt':-1}).limit(1).exec(function (err, emotion) {
+                                            if (err) {
+                                                return res.json({status: 'error', 'errcode': 2});
+                                            }
+                                            Emotion.find({}).sort({'createAt':-1}).exec(function (err, emotions) {
+                                                const firstDateTime = firstDay.getTime()
+                                                let emotionValue = 0
+                                                let emotionCount = 0
+                                                emotions.forEach(function (emotion) {
+                                                    if ((firstDateTime-question.createAt.getTime()) > 0) {
+                                                        if ((firstDateTime-question.createAt.getTime()) < 7*24*3600*1000) {
+                                                            emotionValue += emotion.value
+                                                            emotionCount += 1
+                                                        }
+                                                    }
+                                                });
+                                                res.json({
+                                                    status: 'success',
+                                                    info: _child,
+                                                    parent:_parent,
+                                                    emotion:emotion,
+                                                    averageEmotion:emotionValue/emotionCount,
+                                                    questions:results
+                                                });
+                                            })
 
-                Question.find({}).exec(function (err, questions) {
-                    if (err) {
-                        return res.json({status: 'error', 'errcode': 2});
-                    }
-                    _today_questions = questions
-                })
-                Question.find({}).exec(function (err, questions) {
-                    if (err) {
-                        return res.json({status: 'error', 'errcode': 2});
-                    }
-                    _yesterday_questions = questions
-                })
-                // find today emtion
-                Emotion.find({}).exec(function (err, emotions) {
-                    if (err) {
-                        return res.json({status: 'error', 'errcode': 2});
-                    }
-                    // today emotion list
-                    emotions.forEach(function (emotion) {
-                        // TODO caculate
-                        _today_emotion = emotion
-                    })
-                })
-                Emotion.find({}).exec(function (err, emotions) {
-                    if (err) {
-                        return res.json({status: 'error', 'errcode': 2});
-                    }
-                    // yesterday emotion list
-                    emotions.forEach(function (emotion) {
-                        // TODO caculate
-                        _yesterday_emotion = emotion
-                    })
-                })
-
-                res.json({status: 'success',
-                    info: _child,
-                    parent:_parent,
-                    emotions:[
-                        {
-                            emotion:_yesterday_emotion,
-                            questions:_yesterday_questions
-                        },
-                        {
-                            emotion:_today_emotion,
-                            questions:_today_questions
+                                        })
+                                    })
+                                }
+                            });
                         }
-
-                    ]
-                });
+                    })
             }
     });
 }
