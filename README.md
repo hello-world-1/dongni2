@@ -19,27 +19,41 @@
 如果为管理员跳转传送的数据为:
 {
   "status": "success",
-  "teachers": [{
-    "_id": "58184fe203775a8f0fd1b096",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "username": "老师",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	"age": "30",
-	"sex": "male"
-  },......]
+  "teachers": [
+    {
+      "_id": "59955d2bbc44c410ea320be2",
+      "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+      "username": "teacher5",
+      "__v": 0,
+      "meta": {
+        "updateAt": "2017-08-17T09:08:59.296Z",
+        "createAt": "2017-08-17T09:08:59.296Z"
+      },
+      "age": 30,
+      "introduction": "nihao",
+      "sex": "male",
+      "name": "lisi",
+      "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+    },......
+  ]
 }
 如果为老师登录跳转传送的数据为:
 {
   "status": "success",
   "teacher": {
-    "_id": "58184fe203775a8f0fd1b096",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "username": "老师",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	"age": "30",
-	"sex": "male"
+    "_id": "59955d2bbc44c410ea320be2",
+    "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+    "username": "teacher5",
+    "__v": 0,
+    "meta": {
+      "updateAt": "2017-08-17T09:08:59.296Z",
+      "createAt": "2017-08-17T09:08:59.296Z"
+    },
+    "age": 30,
+    "introduction": "nihao",
+    "sex": "male",
+    "name": "lisi",
+    "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   }
 }
 ```
@@ -68,16 +82,23 @@
 跳转到管理员首页传送的数据为:
 {
   "status": "success",
-  "teachers": [{
-    "_id": "58184fe203775a8f0fd1b096",
-    "token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "username": "老师",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	"age": "30",
-	"sex": "male"
-  },......]
+  "teachers": [
+    {
+      "_id": "59955d2bbc44c410ea320be2",
+      "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+      "username": "teacher5",
+      "__v": 0,
+      "meta": {
+        "updateAt": "2017-08-17T09:08:59.296Z",
+        "createAt": "2017-08-17T09:08:59.296Z"
+      },
+      "age": 30,
+      "introduction": "nihao",
+      "sex": "male",
+      "name": "lisi",
+      "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+    },......
+  ]
 }
 跳转到重新添加老师界面传送的数据为:
 {status:'error','errcode':1}
@@ -118,13 +139,19 @@
 {
   "status": "success",
   "teacher": {
-    "_id": "58184fe203775a8f0fd1b096",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "username": "老师",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	"age": "30",
-	"sex": "male"
+    "_id": "59955d2bbc44c410ea320be2",
+    "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+    "username": "teacher5",
+    "__v": 0,
+    "meta": {
+      "updateAt": "2017-08-17T09:08:59.296Z",
+      "createAt": "2017-08-17T09:08:59.296Z"
+    },
+    "age": 30,
+    "introduction": "nihao",
+    "sex": "male",
+    "name": "lisi",
+    "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   }
 }
 {status:'error','errcode':1}
@@ -154,13 +181,19 @@
 {
   "status": "success",
   "teacher": {
-    "_id": "58184fe203775a8f0fd1b096",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "username": "老师",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	"age": "30",
-	"sex": "male"
+    "_id": "59955d2bbc44c410ea320be2",
+    "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+    "username": "teacher5",
+    "__v": 0,
+    "meta": {
+      "updateAt": "2017-08-17T09:08:59.296Z",
+      "createAt": "2017-08-17T09:08:59.296Z"
+    },
+    "age": 30,
+    "introduction": "nihao",
+    "sex": "male",
+    "name": "lisi",
+    "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   }
 }
 ```
@@ -169,7 +202,6 @@
 > * /teacher/booklist
 
 > * Input Parameters
->> * teacherID:requested
 
 > * Successful Return
 跳转到老师添加过的所有图书界面
@@ -183,17 +215,20 @@
 跳转到老师添加过的所有图书界面传送的数据为:
 {
   "status": "success",
-  "books": [{
-    "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
-    "title": "标题",
-    "author": "作者张三",
-    "publishHouse": "出版社",
-    "introduction": "内容简介",
-	"purchaseLink": "购买链接"
-  },......]
+  "books": [
+    {
+      "_id": "59955ee99e1f16117b2e43c3",
+      "purchaseLink": "purchaseLink",
+      "teacherID": "59955d2bbc44c410ea320be2",
+      "__v": 0,
+      "createAt": "2017-08-17T09:16:25.187Z",
+      "introduction": "introduction",
+      "publishHouse": "publishHouse",
+      "author": "author",
+      "title": "title"
+    },......
+  ]
 }
-{status:'error','errcode':1}
 ```
 ### 图书的详细信息
 > * /teacher/bookdetail
@@ -213,23 +248,30 @@
 {
   "status": "success",
   "book": {
-    "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
-    "title": "标题",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "author": "作者张三",
-    "publishHouse": "出版社",
-    "introduction": "内容简介",
-	"purchaseLink": "购买链接"
+    "_id": "59955f206aa71911a542f909",
+    "purchaseLink": "purchaseLink",
+    "teacherID": "59955d2bbc44c410ea320be2",
+    "__v": 0,
+    "createAt": "2017-08-17T09:17:20.538Z",
+    "introduction": "introduction",
+    "publishHouse": "publishHouse",
+    "author": "author",
+    "title": "title"
   },
   "teacher": {
-    "_id": "fsde4fe203775a8f0fd14323",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "username": "老师",
-    "introduction": "这是个人简介",
-    "name": "张三",
-	  "age": "30",
-	  "sex": "male"
+    "_id": "59955d2bbc44c410ea320be2",
+    "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+    "username": "teacher5",
+    "__v": 0,
+    "meta": {
+      "updateAt": "2017-08-17T09:08:59.296Z",
+      "createAt": "2017-08-17T09:08:59.296Z"
+    },
+    "age": 30,
+    "introduction": "nihao",
+    "sex": "male",
+    "name": "lisi",
+    "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   }
 }
 ```
@@ -255,16 +297,19 @@
 跳转到老师添加过的所有图书界面传送的数据为:
 {
   "status": "success",
-  "books": [{
-    "_id": "58184fe203775a8f0fd1b096",
-	"teacherID": "fsde4fe203775a8f0fd14323",
-    "title": "标题",
-    "avatar": "/images/avatars/avatar_sample.jpg",
-    "author": "作者张三",
-    "publishHouse": "出版社",
-    "introduction": "内容简介",
-	"purchaseLink": "购买链接"
-  },......]
+  "books": [
+    {
+      "_id": "59955ee99e1f16117b2e43c3",
+      "purchaseLink": "purchaseLink",
+      "teacherID": "59955d2bbc44c410ea320be2",
+      "__v": 0,
+      "createAt": "2017-08-17T09:16:25.187Z",
+      "introduction": "introduction",
+      "publishHouse": "publishHouse",
+      "author": "author",
+      "title": "title"
+    },......
+  ]
 }
 ```
 ### 当前老师添加过的所有课程
@@ -412,17 +457,49 @@
   "status": "success",
   "replys": [
     {
-  	  "parent": {
-  		"_id": "58184fe203775a8f0fd1b096",
-  		"avatar": "/images/avatars/avatar_sample.jpg"
-      },question:{
-  		"_id": "58184fe203775a8f0fd10326",
-  		"content": "我家的孩子为什么会叛逆"
-      },teacher:{
-  		"_id": "fsde4fe203775a8f0fd14323",
-  		"createAt": "2017-1-1 8:8:8"
-      },"content": "你的孩子很健康"
-    },......]
+      "parent": {
+        "_id": "59965ba9e1097e36ab8fdb47",
+        "telephone": "15387561723",
+        "childID": "599c8996712784694ddef8fe",
+        "meta": {
+          "updateAT": "2017-08-22T20:37:39.050Z",
+          "createAt": "2017-08-22T20:37:39.050Z"
+        },
+        "childrenTelephone": "",
+        "relationship": "father",
+        "avatar": "",
+        "character": "ufdahappy",
+        "sex": "male",
+        "age": "23"
+      },
+      "question": {
+        "_id": "599666e3e1097e36ab8fdb4b",
+        "parentID": "59965ba9e1097e36ab8fdb47",
+        "conten": "content",
+        "createAt": "2017-08-22T20:37:46.682Z",
+        "replyFlag": "0",
+        "openFlag": "1",
+        "content": "",
+        "title": "question"
+      },
+      "teacher": {
+        "_id": "59955d2bbc44c410ea320be2",
+        "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+        "username": "teacher5",
+        "__v": 0,
+        "meta": {
+          "updateAt": "2017-08-17T09:08:59.296Z",
+          "createAt": "2017-08-17T09:08:59.296Z"
+        },
+        "age": 30,
+        "introduction": "nihao",
+        "sex": "male",
+        "name": "lisi",
+        "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+      },
+      "content": "health"
+    }
+  ]
 }
 ```
 ### 所有问题的列表
@@ -443,15 +520,62 @@
 跳转所有问题的列表界面传送的数据为:
 {
   "status": "success",
-  "questions": [{
-  	  "parent": {
-  		"_id": "58184fe203775a8f0fd1b096",
-  		"avatar": "/images/avatars/avatar_sample.jpg"
-  	  },question:{
-  		"_id": "58184fe203775a8f0fd10326",
-  		"content": "我家的孩子为什么会叛逆"
-  	  }
-  },......]
+  "questions": [
+    {
+      "question": {
+        "_id": "599666e3e1097e36ab8fdb4b",
+        "parentID": "59965ba9e1097e36ab8fdb47",
+        "conten": "content",
+        "createAt": "2017-08-22T20:41:27.903Z",
+        "replyFlag": "0",
+        "openFlag": "1",
+        "content": "",
+        "title": "question"
+      },
+      "parent": {
+        "_id": "59965ba9e1097e36ab8fdb47",
+        "telephone": "15387561723",
+        "childID": "599c8996712784694ddef8fe",
+        "meta": {
+          "updateAT": "2017-08-22T20:41:23.274Z",
+          "createAt": "2017-08-22T20:41:23.274Z"
+        },
+        "childrenTelephone": "",
+        "relationship": "father",
+        "avatar": "",
+        "character": "ufdahappy",
+        "sex": "male",
+        "age": "23"
+      }
+    },
+    {
+      "question": {
+        "_id": "599c6c58712784694ddef8fb",
+        "parentID": "59965ba9e1097e36ab8fdb47",
+        "conten": "content2",
+        "createAt": "2017-08-22T20:41:27.905Z",
+        "replyFlag": "0",
+        "openFlag": "1",
+        "content": "",
+        "title": "question2"
+      },
+      "parent": {
+        "_id": "59965ba9e1097e36ab8fdb47",
+        "telephone": "15387561723",
+        "childID": "599c8996712784694ddef8fe",
+        "meta": {
+          "updateAT": "2017-08-22T20:41:23.274Z",
+          "createAt": "2017-08-22T20:41:23.274Z"
+        },
+        "childrenTelephone": "",
+        "relationship": "father",
+        "avatar": "",
+        "character": "ufdahappy",
+        "sex": "male",
+        "age": "23"
+      }
+    }
+  ]
 }
 ```
 ### 回复问题显示界面
@@ -473,29 +597,51 @@
 {
   "status": "success",
   "question": {
-  	"parent": {
-  		"_id": "58184fe203775a8f0fd1b096",
-  		"avatar": "/images/avatars/avatar_sample.jpg"
-  	},question:{
-  		"_id": "58184fe203775a8f0fd10326",
-  		"title": "标题",
-  		"createAt", "2017-1-1 1:1:1"
-  		"content": "我家的孩子为什么会叛逆"
-  	}
-  },
-  "replys":[
-    {
-      "teacher":{
-        "_id": "58184fe203775a8f0fd1b096",
-        "avatar": "/images/avatars/avatar_sample.jpg",
-        "username": "老师",
-        "introduction": "这是个人简介",
-        "name": "张三",
-        "age": "30",
-        "sex": "male"
+    "parent": {
+      "_id": "59965ba9e1097e36ab8fdb47",
+      "telephone": "15387561723",
+      "childID": "599c8996712784694ddef8fe",
+      "meta": {
+        "updateAT": "2017-08-22T20:44:20.819Z",
+        "createAt": "2017-08-22T20:44:20.819Z"
       },
-      "content":"你的孩子很健康"
-    },......
+      "childrenTelephone": "",
+      "relationship": "father",
+      "avatar": "",
+      "character": "ufdahappy",
+      "sex": "male",
+      "age": "23"
+    },
+    "question": {
+      "_id": "599666e3e1097e36ab8fdb4b",
+      "parentID": "59965ba9e1097e36ab8fdb47",
+      "conten": "content",
+      "createAt": "2017-08-22T20:44:24.821Z",
+      "replyFlag": "0",
+      "openFlag": "1",
+      "content": "",
+      "title": "question"
+    }
+  },
+  "replys": [
+    {
+      "teacher": {
+        "_id": "59955d2bbc44c410ea320be2",
+        "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+        "username": "teacher5",
+        "__v": 0,
+        "meta": {
+          "updateAt": "2017-08-17T09:08:59.296Z",
+          "createAt": "2017-08-17T09:08:59.296Z"
+        },
+        "age": 30,
+        "introduction": "nihao",
+        "sex": "male",
+        "name": "lisi",
+        "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+      },
+      "content": "health"
+    }
   ]
 }
 ```
@@ -513,19 +659,17 @@
 > * example
 ```
 跳转到所有问题及回答显示界面传送的数据为:
-
 {
   "all": [
     {
-      "status": "success",
       "question": {
         "parent": {
           "_id": "59965ba9e1097e36ab8fdb47",
           "telephone": "15387561723",
-          "childID": "59965c23e1097e36ab8fdb4a",
+          "childID": "599c8996712784694ddef8fe",
           "meta": {
-            "updateAT": "2017-08-22T17:47:38.451Z",
-            "createAt": "2017-08-22T17:47:38.451Z"
+            "updateAT": "2017-08-22T20:54:40.614Z",
+            "createAt": "2017-08-22T20:54:40.614Z"
           },
           "childrenTelephone": "",
           "relationship": "father",
@@ -538,7 +682,7 @@
           "_id": "599666e3e1097e36ab8fdb4b",
           "parentID": "59965ba9e1097e36ab8fdb47",
           "conten": "content",
-          "createAt": "2017-08-22T17:47:48.824Z",
+          "createAt": "2017-08-22T20:55:44.460Z",
           "replyFlag": "0",
           "openFlag": "1",
           "content": "",
@@ -566,38 +710,35 @@
         }
       ]
     },
-    [
-      {
-        "status": "success",
-        "question": {
-          "parent": {
-            "_id": "59965ba9e1097e36ab8fdb47",
-            "telephone": "15387561723",
-            "childID": "59965c23e1097e36ab8fdb4a",
-            "meta": {
-              "updateAT": "2017-08-22T17:47:38.451Z",
-              "createAt": "2017-08-22T17:47:38.451Z"
-            },
-            "childrenTelephone": "",
-            "relationship": "father",
-            "avatar": "",
-            "character": "ufdahappy",
-            "sex": "male",
-            "age": "23"
+    {
+      "question": {
+        "parent": {
+          "_id": "59965ba9e1097e36ab8fdb47",
+          "telephone": "15387561723",
+          "childID": "599c8996712784694ddef8fe",
+          "meta": {
+            "updateAT": "2017-08-22T20:54:40.614Z",
+            "createAt": "2017-08-22T20:54:40.614Z"
           },
-          "question": {
-            "_id": "599c6c58712784694ddef8fb",
-            "parentID": "59965ba9e1097e36ab8fdb47",
-            "conten": "content2",
-            "createAt": "2017-08-22T17:47:48.824Z",
-            "replyFlag": "0",
-            "openFlag": "1",
-            "content": "",
-            "title": "question2"
-          }
+          "childrenTelephone": "",
+          "relationship": "father",
+          "avatar": "",
+          "character": "ufdahappy",
+          "sex": "male",
+          "age": "23"
+        },
+        "question": {
+          "_id": "599c6c58712784694ddef8fb",
+          "parentID": "59965ba9e1097e36ab8fdb47",
+          "conten": "content2",
+          "createAt": "2017-08-22T20:55:44.466Z",
+          "replyFlag": "0",
+          "openFlag": "1",
+          "content": "",
+          "title": "question2"
         }
       }
-    ]
+    }
   ]
 }
 ```
@@ -623,28 +764,68 @@
 {
   "status": "success",
   "question": {
-  	"parent": {
-  		"_id": "58184fe203775a8f0fd1b096",
-  		"avatar": "/images/avatars/avatar_sample.jpg"
-  	},question:{
-  		"_id": "58184fe203775a8f0fd10326",
-  		"title": "标题",
-  		"createAt", "2017-1-1 1:1:1"
-  		"content": "我家的孩子为什么会叛逆"
+    "parent": {
+      "_id": "59965ba9e1097e36ab8fdb47",
+      "telephone": "15387561723",
+      "childID": "599c8996712784694ddef8fe",
+      "meta": {
+        "updateAT": "2017-08-22T21:01:18.391Z",
+        "createAt": "2017-08-22T21:01:18.391Z"
+      },
+      "childrenTelephone": "",
+      "relationship": "father",
+      "avatar": "",
+      "character": "ufdahappy",
+      "sex": "male",
+      "age": "23"
+    },
+    "question": {
+      "_id": "599666e3e1097e36ab8fdb4b",
+      "parentID": "59965ba9e1097e36ab8fdb47",
+      "conten": "content",
+      "createAt": "2017-08-22T21:01:24.690Z",
+      "replyFlag": "0",
+      "openFlag": "1",
+      "content": "",
+      "title": "question"
     }
   },
-  "replys":[
+  "replys": [
     {
-      "teacher":{
-        "_id": "58184fe203775a8f0fd1b096",
-        "avatar": "/images/avatars/avatar_sample.jpg",
-        "username": "老师",
-        "introduction": "这是个人简介",
-        "name": "张三",
-        "age": "30",
-        "sex": "male"
+      "teacher": {
+        "_id": "59955d2bbc44c410ea320be2",
+        "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+        "username": "teacher5",
+        "__v": 0,
+        "meta": {
+          "updateAt": "2017-08-17T09:08:59.296Z",
+          "createAt": "2017-08-17T09:08:59.296Z"
+        },
+        "age": 30,
+        "introduction": "nihao",
+        "sex": "male",
+        "name": "lisi",
+        "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
       },
-      "content":"你的孩子很健康"
+      "content": "health"
+    },
+    {
+      "teacher": {
+        "_id": "59955d2bbc44c410ea320be2",
+        "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+        "username": "teacher5",
+        "__v": 0,
+        "meta": {
+          "updateAt": "2017-08-17T09:08:59.296Z",
+          "createAt": "2017-08-17T09:08:59.296Z"
+        },
+        "age": 30,
+        "introduction": "nihao",
+        "sex": "male",
+        "name": "lisi",
+        "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+      },
+      "content": "health"
     },......
   ]
 }
@@ -667,58 +848,147 @@
 ```
 跳转到孩子的详细信息界面传送的数据为:
 {
-    "status": "success",
-    "child": {
-        "age": "12",
-        "sex": "male",
-        "grade": "1",
-        "character": "开朗"
+  "status": "success",
+  "parent": {
+    "_id": "59965ba9e1097e36ab8fdb47",
+    "telephone": "15387561723",
+    "childID": "599c8996712784694ddef8fe",
+    "meta": {
+      "updateAT": "2017-08-22T21:01:18.391Z",
+      "createAt": "2017-08-22T21:01:18.391Z"
     },
-    "parent":{
-        "age": "40",
-        "sex": "male",
-        "character": "开朗",
-        "relationship": "father"
+    "childrenTelephone": "",
+    "relationship": "father",
+    "avatar": "",
+    "character": "ufdahappy",
+    "sex": "male",
+    "age": "23"
+  },
+  "child": {
+    "_id": "599c8996712784694ddef8fe",
+    "nickname": "hello",
+    "parentID": "59965ba9e1097e36ab8fdb47",
+    "meta": {
+      "updateAT": "2017-08-22T21:01:18.391Z",
+      "createAt": "2017-08-22T21:01:18.391Z"
     },
-    "emotion":{
-        "value": 88,
-        "calm", 50,
-        "happy", 50,
-        "angry", 50,
-        "sad", 50,
-        "report", " 心情愉悦"
-    },
-    "averageEmotion":60,
-    "questions": [
-        "question": {
-            "parent": {
-                "_id": "58184fe203775a8f0fd1b096",
-                "avatar": "/images/avatars/avatar_sample.jpg"
-            },question:{
-                "_id": "58184fe203775a8f0fd10326",
-                "title": "标题",
-                "createAt", "2017-1-1 1:1:1"
-                "content": "我家的孩子为什么会叛逆"
-            }
+    "birthday": "2017-08-22T20:14:21.159Z",
+    "sex": "male",
+    "age": 12,
+    "character": "ufdahappy",
+    "grade": "2"
+  }
+  "emotion": {
+    "_id": "599c909d712784694ddef902",
+    "parentID": "59965ba9e1097e36ab8fdb47",
+    "createAt": "2017-08-22T20:14:21.159Z",
+    "time": "2017-08-22T21:07:22.442Z",
+    "report": "",
+    "sad": 0,
+    "angry": 0,
+    "happy": 0,
+    "calm": 0,
+    "value": 60
+  },
+  "averageEmotion": 60,
+  "questions": [
+    {
+      "question": {
+        "parent": {
+          "_id": "59965ba9e1097e36ab8fdb47",
+          "telephone": "15387561723",
+          "childID": "599c8996712784694ddef8fe",
+          "meta": {
+            "updateAT": "2017-08-22T21:01:18.391Z",
+            "createAt": "2017-08-22T21:01:18.391Z"
+          },
+          "childrenTelephone": "",
+          "relationship": "father",
+          "avatar": "",
+          "character": "ufdahappy",
+          "sex": "male",
+          "age": "23"
         },
-        "replys":[
-            {
-              "teacher":{
-                "_id": "58184fe203775a8f0fd1b096",
-                "avatar": "/images/avatars/avatar_sample.jpg",
-                "username": "老师",
-                "introduction": "这是个人简介",
-                "name": "张三",
-                "age": "30",
-                "sex": "male"
-              },
-              "content":"你的孩子很健康"
-            },......
-        ]
-
-    ]
-
-
+        "question": {
+          "_id": "599666e3e1097e36ab8fdb4b",
+          "parentID": "59965ba9e1097e36ab8fdb47",
+          "conten": "content",
+          "createAt": "2017-08-22T21:07:22.446Z",
+          "replyFlag": "0",
+          "openFlag": "1",
+          "content": "",
+          "title": "question"
+        }
+      },
+      "replys": [
+        {
+          "teacher": {
+            "_id": "59955d2bbc44c410ea320be2",
+            "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+            "username": "teacher5",
+            "__v": 0,
+            "meta": {
+              "updateAt": "2017-08-17T09:08:59.296Z",
+              "createAt": "2017-08-17T09:08:59.296Z"
+            },
+            "age": 30,
+            "introduction": "nihao",
+            "sex": "male",
+            "name": "lisi",
+            "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+          },
+          "content": "health"
+        },
+        {
+          "teacher": {
+            "_id": "59955d2bbc44c410ea320be2",
+            "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+            "username": "teacher5",
+            "__v": 0,
+            "meta": {
+              "updateAt": "2017-08-17T09:08:59.296Z",
+              "createAt": "2017-08-17T09:08:59.296Z"
+            },
+            "age": 30,
+            "introduction": "nihao",
+            "sex": "male",
+            "name": "lisi",
+            "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+          },
+          "content": "health"
+        }
+      ]
+    },
+    {
+      "question": {
+        "parent": {
+          "_id": "59965ba9e1097e36ab8fdb47",
+          "telephone": "15387561723",
+          "childID": "599c8996712784694ddef8fe",
+          "meta": {
+            "updateAT": "2017-08-22T21:01:18.391Z",
+            "createAt": "2017-08-22T21:01:18.391Z"
+          },
+          "childrenTelephone": "",
+          "relationship": "father",
+          "avatar": "",
+          "character": "ufdahappy",
+          "sex": "male",
+          "age": "23"
+        },
+        "question": {
+          "_id": "599c6c58712784694ddef8fb",
+          "parentID": "59965ba9e1097e36ab8fdb47",
+          "conten": "content2",
+          "createAt": "2017-08-22T21:07:22.446Z",
+          "replyFlag": "0",
+          "openFlag": "1",
+          "content": "",
+          "title": "question2"
+        }
+      }
+    }
+  ]
 }
 ```
 

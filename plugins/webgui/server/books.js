@@ -76,7 +76,8 @@ exports.addbook = function(req, res) {
 
 // 书籍列表界面
 exports.booklist = function(req, res) {
-	const teacherID = req.session.user._id
+	// const teacherID = req.session.user._id
+	const teacherID = req.body.id
 
 	if (teacherID) {
 		Book.findByTeacherId(teacherID, function(err, books) {

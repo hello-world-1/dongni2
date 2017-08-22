@@ -81,8 +81,8 @@ exports.login = function(req, res) {
                         }
                         if (isMatch) {
                             // if admin match
-                            req.session.user = user
-                            req.session.type = 'admin'
+                            // req.session.user = user
+                            // req.session.type = 'admin'
                             Teacher.fetch(function(err, teachers) {
                                 return res.json({
                                         "status": "success",

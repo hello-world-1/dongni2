@@ -41,24 +41,19 @@ app.post('/user/logout', User.logout);
 app.post('/teacher/changeavatar', multipartMiddleware, Home.signinRequired, Teacher.changeAvatar);
 app.post('/admin/addteacher', multipartMiddleware, Home.signinRequired,Teacher.addTeacher);
 app.post('/teacher/changeinfo',multipartMiddleware, Home.signinRequired,Teacher.changeinfo);
-app.post('/teacher/booklist', Home.signinRequired,Book.booklist);
-app.post('/teacher/bookdetail', Home.signinRequired,Book.bookdetail);
+// app.post('/teacher/booklist', Home.signinRequired,Book.booklist);
+app.post('/teacher/booklist', Book.booklist);
+// app.post('/teacher/bookdetail', Home.signinRequired,Book.bookdetail);
+app.post('/teacher/bookdetail', Book.bookdetail);
 app.post('/teacher/addbook', Home.signinRequired,Book.addbook);
-app.post('/teacher/lessondetail', Home.signinRequired,Lesson.lessondetail);
-app.post('/teacher/lessonlist', Home.signinRequired,Lesson.lessonlist);
+// app.post('/teacher/lessondetail', Home.signinRequired,Lesson.lessondetail);
+app.post('/teacher/lessondetail', Lesson.lessondetail);
+// app.post('/teacher/lessonlist', Home.signinRequired,Lesson.lessonlist);
+app.post('/teacher/lessonlist', Lesson.lessonlist);
 app.post('/teacher/addlesson', Home.signinRequired,Lesson.addlesson);
-
-
 // app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
-
-
 //change method code
 app.post('/teacher/replylist', Answer.replylist);
-
-
-
-
-
 // app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
 app.post('/teacher/questionlist', Question.questionlist);
 // app.post('/teacher/replyview', Home.signinRequired,Answer.replyview);

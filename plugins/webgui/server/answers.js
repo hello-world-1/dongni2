@@ -116,7 +116,7 @@ exports.replyview = function(req, res) {
                             return res.json({status: 'error', 'errcode': 3});
                         } else {
                             // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
-                            let teachers_serialize = [];
+                            // let teachers_serialize = [];
                             async.map(replys, function(reply, callback) {
                                 let _teacher
 
@@ -129,8 +129,9 @@ exports.replyview = function(req, res) {
                                         teacher: _teacher,
                                         content:reply.content
                                     };
-                                    teachers_serialize.push(tmp);
-                                    callback(null,teachers_serialize)
+                                    // teachers_serialize.push(tmp);
+                                    // callback(null,teachers_serialize)
+                                    callback(null,tmp)
                                 })
                             }, function(err,results) {
                                 res.json({
@@ -205,7 +206,7 @@ exports.replycommit = function(req, res) {
                                         return res.json({status: 'error', 'errcode': 3});
                                     } else {
                                         // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
-                                        let teachers_serialize = [];
+                                        // let teachers_serialize = [];
                                         async.map(replys, function(reply, callback) {
                                             let _teacher
 
@@ -218,8 +219,9 @@ exports.replycommit = function(req, res) {
                                                     teacher: _teacher,
                                                     content:reply.content
                                                 };
-                                                teachers_serialize.push(tmp);
-                                                callback(null,teachers_serialize)
+                                                // teachers_serialize.push(tmp);
+                                                // callback(null,teachers_serialize)
+                                                callback(null,tmp)
                                             })
                                         }, function(err,results) {
                                             res.json({
@@ -255,7 +257,7 @@ exports.replylist = function(req, res) {
         if (replys.length === 0) {
             return res.json({status: 'error', 'errcode': 3});   //该用户没有回复
         } else {
-            let replys_serialize = [];
+            // let replys_serialize = [];
             async.map(replys, function(reply, callback) {
                 let _teacher
                 let _question
@@ -286,8 +288,9 @@ exports.replylist = function(req, res) {
                                             teacher: _teacher,
                                             content: content
                                         };
-                                        replys_serialize.push(tmp);
-                                        callback(null,replys_serialize)
+                                        // replys_serialize.push(tmp);
+                                        // callback(null,replys_serialize)
+                                        callback(null,tmp)
                                     }
 
                                 })
