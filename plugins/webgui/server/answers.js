@@ -16,83 +16,77 @@ exports.allquestionreply = function(req, res) {
     Question.find({}).exec(function (err, questions) {
         let questionreply_serialize = [];
         if (err) {
-            return res.json({status: 'error', 'errcode': 2});
+            return res.json({status: 'error', 'errcode': 1});
         }
         if (questions.length === 0) {
             return res.json({status: 'error', 'errcode': 2});
         } else {
-
-            // Promise.resolve().then(() => {
-            //     return new Promise((resolve,reject)=>{
-            //         const adcode = locationtransefer.locationService(doc.locations[0].latitude);
-            //         resolve(adcode)
-            //     })
-            // }).then((adcode)=>{
-            //     console.log("adcode:"+adcode)
-            //     return new Promise((resolve,reject)=>{
-            //         const tempweather = weather.weatherService(adcode,"all")
-            //         resolve(tempweather)
-            //     })
-            // }).then((tempweather)=>{
-            //     return new Promise((resolve,reject)=>{
-            //
-            //         const weather=iconv.encode(tempweather,'UTF16-BE').toString('hex');
-            //         console.log(tempweather);
-            //         return `IWBP39,${weather}`;
-            //     })
-            // }).catch(err => {
-            //     logger.error(err);
-            // });
             async.map(questions, function(question, callback1) {
-                Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
-                    if (parent) {
-                        Reply.findByQuestionId(question.questionID, function(err, replys) {
+                Promise.resolve().then(() => {
+                    return new Promise((resolve,reject)=>{
+                        Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
+                            if (parent) {
+                                Reply.find({questionID:question._id}, function(err, replys) {
 
-                            if (replys.length === 0) {
-                                return res.json({status: 'error', 'errcode': 2});
-                            } else {
-                                // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
-                                let teachers_serialize = [];
-                                async.map(replys, function(reply, callback2) {
-                                    Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
-                                        if(err){
-                                            return res.json({status: 'error', 'errcode': 2});
-                                        }
-                                        if(teacher){
-                                            var tmp = {
-                                                teacher: teacher,
-                                                content:reply.content
+                                    if (replys.length === 0) {
+                                        var tmp1 = {
+                                            'question': {
+                                                parent:parent,
+                                                question:question
+                                            }
+                                        };
+                                        // questionreply_serialize.push(tmp1)
+                                        // resolve(questionreply_serialize)
+                                        resolve(tmp1)
+                                    } else {
+                                        // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                                        // let teachers_serialize = [];
+                                        async.map(replys, function(reply, callback2) {
+                                            Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                                if(err){
+                                                    return res.json({status: 'error', 'errcode': 4});
+                                                }
+                                                if(teacher){
+                                                    var tmp = {
+                                                        teacher: teacher,
+                                                        content:reply.content
+                                                    };
+                                                    // teachers_serialize.push(tmp);
+                                                    // console.log("teachers_serialize:" + teachers_serialize)
+                                                    // callback2(null,teachers_serialize)
+                                                    callback2(null,tmp)
+                                                }
+                                            })
+                                        }, function(err,results) {
+                                            if(err){
+                                                return res.json({status: 'error', 'errcode': 5});
+                                            }
+                                            var tmp1 = {
+                                                'question': {
+                                                    parent:parent,
+                                                    question:question
+                                                },
+                                                replys:results
                                             };
-                                            teachers_serialize.push(tmp);
-                                            console.log("teachers_serialize:" + teachers_serialize)
-                                            callback2(null,teachers_serialize)
-                                        }
-                                    })
-                                }, function(err,results) {
-                                    if(err){
-                                        return res.json({status: 'error', 'errcode': 2});
+                                            // questionreply_serialize.push(tmp1)
+                                            // resolve(questionreply_serialize)
+                                            resolve(tmp1)
+                                        });
                                     }
-                                    var tmp1 = {
-                                        status: 'success',
-                                        'question': {
-                                            parent:parent,
-                                            question:question
-                                        },
-                                        replys:results
-                                    };
-                                    questionreply_serialize.push(tmp1)
-                                    console.log("questionreply_serialize:" + questionreply_serialize)
-                                    callback1(null,questionreply_serialize)
-                                });
+                                })
                             }
                         })
-                    }
-                })
+                    })
+                }).then((questionreply_serialize)=>{
+                    callback1(null,questionreply_serialize)
+                }).catch(err => {
+                    logger.error(err);
+                });
             }, function(err,results) {
                 if(err){
-                    return res.json({status: 'error', 'errcode': 2});
+                    return res.json({status: 'error', 'errcode': 6});
                 }
-                res.json({
+                return res.json({
                     all:results
                 });
             })

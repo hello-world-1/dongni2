@@ -514,35 +514,90 @@
 ```
 跳转到所有问题及回答显示界面传送的数据为:
 
-{all:[
+{
+  "all": [
     {
       "status": "success",
       "question": {
         "parent": {
-            "_id": "58184fe203775a8f0fd1b096",
-            "avatar": "/images/avatars/avatar_sample.jpg"
-        },question:{
-            "_id": "58184fe203775a8f0fd10326",
-            "title": "标题",
-            "createAt", "2017-1-1 1:1:1"
-            "content": "我家的孩子为什么会叛逆"
+          "_id": "59965ba9e1097e36ab8fdb47",
+          "telephone": "15387561723",
+          "childID": "59965c23e1097e36ab8fdb4a",
+          "meta": {
+            "updateAT": "2017-08-22T17:47:38.451Z",
+            "createAt": "2017-08-22T17:47:38.451Z"
+          },
+          "childrenTelephone": "",
+          "relationship": "father",
+          "avatar": "",
+          "character": "ufdahappy",
+          "sex": "male",
+          "age": "23"
+        },
+        "question": {
+          "_id": "599666e3e1097e36ab8fdb4b",
+          "parentID": "59965ba9e1097e36ab8fdb47",
+          "conten": "content",
+          "createAt": "2017-08-22T17:47:48.824Z",
+          "replyFlag": "0",
+          "openFlag": "1",
+          "content": "",
+          "title": "question"
         }
       },
-      "replys":[
+      "replys": [
         {
-          "teacher":{
-            "_id": "58184fe203775a8f0fd1b096",
-            "avatar": "/images/avatars/avatar_sample.jpg",
-            "username": "老师",
-            "introduction": "这是个人简介",
-            "name": "张三",
-            "age": "30",
-            "sex": "male"
+          "teacher": {
+            "_id": "59955d2bbc44c410ea320be2",
+            "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+            "username": "teacher5",
+            "__v": 0,
+            "meta": {
+              "updateAt": "2017-08-17T09:08:59.296Z",
+              "createAt": "2017-08-17T09:08:59.296Z"
+            },
+            "age": 30,
+            "introduction": "nihao",
+            "sex": "male",
+            "name": "lisi",
+            "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
           },
-          "content":"你的孩子很健康"
-        },......
+          "content": "health"
+        }
       ]
-    }
+    },
+    [
+      {
+        "status": "success",
+        "question": {
+          "parent": {
+            "_id": "59965ba9e1097e36ab8fdb47",
+            "telephone": "15387561723",
+            "childID": "59965c23e1097e36ab8fdb4a",
+            "meta": {
+              "updateAT": "2017-08-22T17:47:38.451Z",
+              "createAt": "2017-08-22T17:47:38.451Z"
+            },
+            "childrenTelephone": "",
+            "relationship": "father",
+            "avatar": "",
+            "character": "ufdahappy",
+            "sex": "male",
+            "age": "23"
+          },
+          "question": {
+            "_id": "599c6c58712784694ddef8fb",
+            "parentID": "59965ba9e1097e36ab8fdb47",
+            "conten": "content2",
+            "createAt": "2017-08-22T17:47:48.824Z",
+            "replyFlag": "0",
+            "openFlag": "1",
+            "content": "",
+            "title": "question2"
+          }
+        }
+      }
+    ]
   ]
 }
 ```
@@ -613,7 +668,7 @@
 跳转到孩子的详细信息界面传送的数据为:
 {
     "status": "success",
-        "info": {
+    "child": {
         "age": "12",
         "sex": "male",
         "grade": "1",

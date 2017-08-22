@@ -19,7 +19,14 @@ var EmotionSchema = new Schema({
     time: {type: Date, default: Date.now},                          //时间
     IMEI: {type: String, required: true},                           //手表IMEI号
     parentID: {type: Schema.Types.ObjectId, ref: 'User'},           //家长id
-    createAt: {type: Date, default: Date.now}                       //该情绪数据的创建时间
+    createAt: {type: Date}                       //该情绪数据的创建时间
+});
+
+EmotionSchema.pre('save',function (next) {
+    if (this.isNew) {
+        this.createAt = Date.now();
+    }
+    next();
 });
 
 module.exports = mongoose.model('Emotion',EmotionSchema);
