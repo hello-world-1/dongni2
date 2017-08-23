@@ -532,7 +532,6 @@ exports.powerOff = (req, res) => {
     })
 };
 
-
 //拨打电话
 exports.phoneCall = (req, res) => {
     user = req.body.user;

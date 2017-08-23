@@ -9,6 +9,8 @@ const Child = appRequire('plugins/watch/db/child');
 const Parent = appRequire('plugins/watch/db/user');
 const Emotion = appRequire('plugins/watch/db/emotion');
 const Question = appRequire('plugins/watch/db/question');
+const Survey = appRequire('plugins/watch/db/survey');
+const SurveyAnswer = appRequire('plugins/watch/db/surveyAnswer');
 const moment = require('moment');
 const ObjectId = require('mongodb').ObjectId;
 const async = require('async');
@@ -137,6 +139,7 @@ exports.childinfo = function(req, res) {
     let _parent
     let _averageEmotion
     let _emotion
+    let _survey
 
     Promise.resolve().then(() => {
         return new Promise((resolve,reject)=>{
@@ -157,16 +160,64 @@ exports.childinfo = function(req, res) {
         return new Promise((resolve,reject)=>{
             console.log("parent:" + _parent)
             //"": ObjectId()
-            Child.find({_id:parent.childID}).limit(1).exec(function (err, child) {
+            Child.findOne({_id:parent.childID}).limit(1).exec(function (err, child) {
                 console.log("child:" + child)
                 if (err) {
                     return res.json({status: 'error', 'errcode': 3});
                 }
                 if (!child) {
-                    return res.json({status: 'error', 'errcode': 4});
+                    // return res.json({status: 'error', 'errcode': 4});
+                    resolve(parent)
                 }else{
-                    _child = child[0]
-                    resolve()
+                    _child = child
+                    resolve(parent)
+                }
+            })
+        })
+    }).then((parent)=>{
+
+        let surveys = []
+        let contain = false
+
+        return new Promise((resolve,reject)=>{
+            SurveyAnswer.find({userID:parent._id}).exec(function (err, surveyAnswers) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 1});
+                }
+                if (surveyAnswers.length === 0) {
+                    return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+                }else{
+                    async.map(surveyAnswers, function(surveyAnswer, callback) {
+                        Survey.findOne({_id:surveyAnswer.surveyID}, function(err, survey) {
+                            if (err) {
+                                return res.json({status:'error','errcode':2});
+                            }
+                            if(!survey){
+                                return res.json({status:'error','errcode':2});
+                            }
+                            if(surveys.length > 0){
+                                surveys.forEach(function (tempsurvey) {
+                                    if(tempsurvey.surveyName == survey.surveyName){
+                                        contain = true
+                                    }
+                                })
+                            }
+                            if(!contain){
+                                surveys.push(survey)
+                                contain = false
+                                let tmp = {
+                                    surveyName: survey.surveyName,
+                                    answer:surveyAnswer.answer
+                                };
+                                callback(null,tmp)
+                            }else{
+                                callback(null,null)
+                            }
+                        })
+                    }, function(err,results) {
+                        _survey = results
+                        resolve()
+                    });
                 }
             })
         })
@@ -191,6 +242,7 @@ exports.childinfo = function(req, res) {
                         }
                     });
                     _averageEmotion = emotionValue/emotionCount
+                    console.log("_averageEmotion:" + _averageEmotion)
                 }
                 resolve()
             })
@@ -201,14 +253,6 @@ exports.childinfo = function(req, res) {
                     return res.json({status: 'error', 'errcode': 6});
                 }
                 if (questions.length === 0) {
-                    // var tmp1 = {
-                    //     status: 'success',
-                    //     'question': {
-                    //         parent:parent,
-                    //         question:question
-                    //     }
-                    // };
-                    // questionreply_serialize.push(tmp1)
                     resolve()
                 } else {
                     let questions_serialize = [];
@@ -234,12 +278,9 @@ exports.childinfo = function(req, res) {
                                                         question: question
                                                     }
                                                 };
-                                                // questionreply_serialize.push(tmp1)
-                                                // resolve(questionreply_serialize)
                                                 resolve(tmp1)
                                             } else {
                                                 // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
-                                                // let teachers_serialize = [];
                                                 async.map(replys, function (reply, callback2) {
                                                     Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
                                                         if (err) {
@@ -250,9 +291,6 @@ exports.childinfo = function(req, res) {
                                                                 teacher: teacher,
                                                                 content: reply.content
                                                             };
-                                                            // teachers_serialize.push(tmp);
-                                                            // console.log("teachers_serialize:" + teachers_serialize)
-                                                            // callback2(null,teachers_serialize)
                                                             callback2(null, tmp)
                                                         }
                                                     })
@@ -267,8 +305,6 @@ exports.childinfo = function(req, res) {
                                                         },
                                                         replys: results
                                                     };
-                                                    // questionreply_serialize.push(tmp1)
-                                                    // resolve(questionreply_serialize)
                                                     resolve(tmp1)
                                                 });
                                             }
@@ -280,10 +316,11 @@ exports.childinfo = function(req, res) {
                             callback1(null, questionreply_serialize)
                         }).catch(err => {
                             logger.error(err);
+                            return res.json({status: 'error', 'errcode': 7});
                         });
                     }, function (err, results) {
                         if (err) {
-                            return res.json({status: 'error', 'errcode': 6});
+                            return res.json({status: 'error', 'errcode': 8});
                         }
                         resolve(results)
                     })
@@ -291,16 +328,18 @@ exports.childinfo = function(req, res) {
             });
         })})
     }).then((results)=>{
-        res.json({
+        return res.json({
             status:'success',
             child:_child,
             parent:_parent,
             emotion:_emotion,
             averageEmotion:_averageEmotion,
+            survey:_survey,
             questions:results
         })
     }).catch(err => {
         logger.error(err);
+        return res.json({status: 'error', 'errcode': 9});
     });
 
 

@@ -17,6 +17,7 @@ var SurveyAnswerSchema = new Schema({
         answer:String,
         answerIndex:{type: Number, min: 0}
     }],
+    score:{type: Number, min: 0},
     createAt: {type: Date, default: Date.now}
 });
 

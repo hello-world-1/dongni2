@@ -45,6 +45,9 @@ const IWAP01 = async (imei,params) => {
             const latitude1 = two[1]
             console.log("weizhi:"+weizhi);
             await watchinfo.pushXX({"imei":imei},{ $push: { "locations":{"latitude":latitude1,"time":new Date().getTime() } }});
+        }else{
+            //A2232.9806N11404.9355E
+            //如何转换成高德地图可识别的经纬度
         }
         return await "IWBP01";
     } catch(err) {

@@ -67,7 +67,16 @@ exports.insertQuestion = function(req, res) {
 exports.insertAnswer = function(req, res) {
     const surveyAnswer = req.body
 
+    let score = 0
+    surveyAnswer.answer.forEach(function (item) {
+        score += parseInt(item.answerIndex);
+    })
+
     const _surveyAnswer = new SurveyAnswer(surveyAnswer);
+
+    _surveyAnswer.score = score
+
+    console.log(score)
     _surveyAnswer.save(function (err,surveyAnswer) {
         if (err) {
             return res.json({stauts: 'error', 'errcode': 1});   //数据库保存出错
@@ -202,4 +211,26 @@ exports.newestScore = function(req, res) {
         logger.error(err);
         return res.json({status: 'error', 'errcode': 1});
     });
+}
+
+//全部问卷
+exports.allSurvey = function(req, res) {
+    Survey.find({}).exec(function (err, surveys) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 1});
+        }
+        if (surveys.length === 0) {
+            return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+        }else{
+            async.map(surveys, function(survey, callback) {
+                callback(null,survey)
+            }, function(err,results) {
+                res.json({
+                    status: 'success',
+                    surveys: results
+                });
+            });
+        }
+    })
+
 }

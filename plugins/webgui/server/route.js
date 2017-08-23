@@ -75,6 +75,8 @@ app.post('/survey/insertAnswer', require('body-parser').json(), Survey.insertAns
 app.post('/survey/historyScore', Survey.historyScore);
 //家长所填写的全部问卷的最新答案
 app.post('/survey/newestScore', Survey.newestScore);
+//全部问卷
+app.post('/survey/allSurvey', Survey.allSurvey);
 
 
 

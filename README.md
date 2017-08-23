@@ -876,7 +876,7 @@
     "age": 12,
     "character": "ufdahappy",
     "grade": "2"
-  }
+  },
   "emotion": {
     "_id": "599c909d712784694ddef902",
     "parentID": "59965ba9e1097e36ab8fdb47",
@@ -890,6 +890,26 @@
     "value": 60
   },
   "averageEmotion": 60,
+  "survey": [
+      {
+        "surveyName": "surveyName",
+        "score":"1",
+        "answer": [
+          {
+            "topicName": "topicName",
+            "answer": "answer1",
+            "answerIndex": 1,
+            "_id": "599dfce41c017634ea7c1cf1"
+          },
+          {
+            "topicName": "topicName2",
+            "answer": "answer1",
+            "answerIndex": 0,
+            "_id": "599dfce41c017634ea7c1cf0"
+          }
+        ]
+      }
+  ],
   "questions": [
     {
       "question": {
@@ -1199,6 +1219,50 @@
         }
       ]
     },......
+  ]
+}
+```
+### 全部问卷
+> * /survey/allSurvey
+
+> * Input Parameters
+
+> * Successful Return
+{status,"success","surveys":[]}
+
+> * Error Return
+>> * errcode = 1: 查询数据库错误
+>> * errcode = 2: 题库名已存在
+
+> * example
+```
+{
+  "status": "success",
+  "surveys": [
+    {
+      "_id": "599cca01fd107b43cad62217",
+      "surveyName": "surveyName",
+      "__v": 0,
+      "createAt": "2017-08-23T00:19:13.436Z",
+      "topic": [
+        {
+          "topicName": "topicName",
+          "answer1": "topic1answer1",
+          "answer2": "topic1answer2",
+          "answer3": "topic1answer3",
+          "answer4": "topic1answer4",
+          "_id": "599cca01fd107b43cad62219"
+        },
+        {
+          "topicName": "topicName2",
+          "answer1": "topic2answer1",
+          "answer2": "topic2answer2",
+          "answer3": "topic2answer3",
+          "answer4": "topic2answer4",
+          "_id": "599cca01fd107b43cad62218"
+        }
+      ]
+    }
   ]
 }
 ```
