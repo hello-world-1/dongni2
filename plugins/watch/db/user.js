@@ -24,7 +24,6 @@ let UserSchema = new Schema({
     childrenTelephone: {type:String,default: ""},                       //孩子手机号
     device_token: {type:String},                                        //消息推送手机id
     childID: {type: Schema.Types.ObjectId, ref: 'Child'},               //孩子id
-    surveyAnswerID: {type: Schema.Types.ObjectId, ref: 'SurveyAnswer'},
     meta: {
         createAt: {type: Date, default: Date.now()},
         updateAT: {type: Date, default: Date.now()}

@@ -830,7 +830,6 @@
   ]
 }
 ```
-
 ### 孩子信息
 > * /child/childinfo
 
@@ -991,7 +990,114 @@
   ]
 }
 ```
+### 插入问卷
+> * /survey/insertQuestion
 
+> * Input Parameters
+```
+{ surveyName: 'surveyName',
+  topic:
+   [ { topicName: 'topicName',
+       answer1: 'topic1answer1',
+       answer2: 'topic1answer2',
+       answer3: 'topic1answer3',
+       answer4: 'topic1answer4' },
+     { topicName: 'topicName2',
+       answer1: 'topic2answer1',
+       answer2: 'topic2answer2',
+       answer3: 'topic2answer3',
+       answer4: 'topic2answer4' } ] }
+```
+> * Successful Return
+{status,"success"}
+
+> * Error Return
+>> * errcode = 1: 查询数据库错误
+>> * errcode = 2: 题库名已存在
+
+> * example
+```
+{
+  "status": "success"
+}
+```
+### 根据某个题库名生成考题
+> * /survey/productSurvey
+
+> * Input Parameters
+>> * surveyName:requested
+
+> * Successful Return
+{status,"success","survey":[]}
+
+> * Error Return
+>> * errcode = 1: 查询数据库错误
+>> * errcode = 2: 题库名已存在
+
+> * example
+```
+{
+  "status": "success",
+  "survey": [
+    {
+      "_id": "599cca01fd107b43cad62217",
+      "surveyName": "surveyName",
+      "__v": 0,
+      "createAt": "2017-08-23T00:19:13.436Z",
+      "topic": [
+        {
+          "topicName": "topicName",
+          "answer1": "topic1answer1",
+          "answer2": "topic1answer2",
+          "answer3": "topic1answer3",
+          "answer4": "topic1answer4",
+          "_id": "599cca01fd107b43cad62219"
+        },
+        {
+          "topicName": "topicName2",
+          "answer1": "topic2answer1",
+          "answer2": "topic2answer2",
+          "answer3": "topic2answer3",
+          "answer4": "topic2answer4",
+          "_id": "599cca01fd107b43cad62218"
+        }
+      ]
+    }
+  ]
+}
+```
+### 插入答案
+> * /survey/insertAnswer
+
+> * Input Parameters
+```
+{
+    "surveyID":"599cca01fd107b43cad62217",
+    "userID":"59965ba9e1097e36ab8fdb47",
+    "answer":[{
+        "topicName":"topicName",
+        "answer":"answer1",
+        "answerIndex":"0"
+    },
+    {
+        "topicName":"topicName2",
+        "answer":"answer1",
+        "answerIndex":"0"
+    }]
+}
+```
+> * Successful Return
+{status,"success"}
+
+> * Error Return
+>> * errcode = 1: 数据库保存出错
+
+> * example
+```
+{
+  "status": "success"
+}
+```
 ## 手机客户端接口说明
 Requests use POST method, return JSON (all the key-value in string format).
 

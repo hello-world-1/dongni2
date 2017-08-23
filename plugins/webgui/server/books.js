@@ -21,27 +21,27 @@ exports.bookdetail = function(req, res) {
 }
 
 // 文件上传
-exports.savePoster = function(req, res, next) {
-	var posterData = req.files.uploadPoster
-	var filePath = posterData.path
-	var originalFilename = posterData.originalFilename
-
-	if (originalFilename) {
-		fs.readFile(filePath, function(err, data) {
-			var timestamp = Date.now()
-			var type = posterData.type.split('/')[1]
-			var poster = timestamp + '.' + type
-			var newPath = path.join(__dirname, '../../', '/public/upload/' + poster)
-
-			fs.writeFile(newPath, data, function(err) {
-				req.poster = poster
-				next()
-			})
-		})
-	} else {
-		next()
-	}
-}
+// exports.savePoster = function(req, res, next) {
+// 	var posterData = req.files.uploadPoster
+// 	var filePath = posterData.path
+// 	var originalFilename = posterData.originalFilename
+//
+// 	if (originalFilename) {
+// 		fs.readFile(filePath, function(err, data) {
+// 			var timestamp = Date.now()
+// 			var type = posterData.type.split('/')[1]
+// 			var poster = timestamp + '.' + type
+// 			var newPath = path.join(__dirname, '../../', '/public/upload/' + poster)
+//
+// 			fs.writeFile(newPath, data, function(err) {
+// 				req.poster = poster
+// 				next()
+// 			})
+// 		})
+// 	} else {
+// 		next()
+// 	}
+// }
 
 // 添加书籍
 exports.addbook = function(req, res) {
@@ -90,37 +90,37 @@ exports.booklist = function(req, res) {
 }
 
 // 跳转到更新书籍的界面
-exports.showUpdate = function(req, res) {
-	var id = req.params.id
-
-	if (id) {
-		Book.findById(id, function(err, book) {
-			res.render('admin', {
-				title: '书籍更新页',
-				book: book
-			})
-		})
-	}
-}
+// exports.showUpdate = function(req, res) {
+// 	var id = req.params.id
+//
+// 	if (id) {
+// 		Book.findById(id, function(err, book) {
+// 			res.render('admin', {
+// 				title: '书籍更新页',
+// 				book: book
+// 			})
+// 		})
+// 	}
+// }
 
 // 删除书籍,老师表不用更新?
-exports.delete = function(req, res) {
-	var id = req.query.id
-
-	if (id) {
-		Book.remove({
-			_id: id
-		}, function(err, book) {
-			if (err) {
-				console.log(err)
-				res.json({
-					success: 0
-				})
-			} else {
-				res.json({
-					success: 1
-				})
-			}
-		})
-	}
-}
+// exports.delete = function(req, res) {
+// 	var id = req.query.id
+//
+// 	if (id) {
+// 		Book.remove({
+// 			_id: id
+// 		}, function(err, book) {
+// 			if (err) {
+// 				console.log(err)
+// 				res.json({
+// 					success: 0
+// 				})
+// 			} else {
+// 				res.json({
+// 					success: 1
+// 				})
+// 			}
+// 		})
+// 	}
+// }

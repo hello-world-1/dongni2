@@ -6,17 +6,24 @@
  */
 var mongoose = appRequire('init/mongoose');
 var Schema = mongoose.Schema;
-var User = require('./user');
 
 var SurveySchema = new Schema({
-    surveyName:{type:String,required:true}, //题库名称
+    surveyName:{type:String,required:true,index: {unique: true}}, //题库名称
     topic:[{
         topicName:String,                   //题目名称
         answer1:String,
         answer2:String,
         answer3:String,
-        answer3:String                      //题目答案
-    }]
+        answer4:String
+    }],
+    createAt: {type: Date, default: Date.now},
+});
+
+SurveySchema.pre('save', function (next) {
+    if (this.isNew) {
+        this.createAt = Date.now();
+    }
+    next();
 });
 
 module.exports = mongoose.model('Survey',SurveySchema);

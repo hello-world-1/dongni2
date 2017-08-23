@@ -16,6 +16,7 @@ const Home = appRequire('plugins/webgui/server/home');
 const Answer = appRequire('plugins/webgui/server/answers');
 const Lesson = appRequire('plugins/webgui/server/lessons');
 const Message = appRequire('plugins/webgui/server/messages');
+const Survey = appRequire('plugins/webgui/server/survey');
 
 const isUser = (req, res, next) => {
     if(req.session.type === 'normal') {
@@ -59,25 +60,22 @@ app.post('/teacher/questionlist', Question.questionlist);
 // app.post('/teacher/replyview', Home.signinRequired,Answer.replyview);
 app.post('/teacher/replyview', Answer.replyview);
 // app.post('/teacher/replycommit', Home.signinRequired,Answer.replycommit);
-
 app.post('/teacher/replycommit', Answer.replycommit);
 // app.post('/teacher/allquestionreply', Home.signinRequired,Answer.allquestionreply);
 app.post('/teacher/allquestionreply', Answer.allquestionreply);
-
-
-// not test
 // app.post('/child/childinfo', Home.signinRequired,User.childinfo);
 app.post('/child/childinfo', User.childinfo);
 
+
+// 根据某个题库名生成考题
+app.post('/survey/productSurvey', Survey.productSurvey);// product question
+//向某个题库中插入问题
+app.post('/survey/insertQuestion', require('body-parser').json(), Survey.insertQuestion);// insert question
+//向某个题库中插入答案
+app.post('/survey/insertAnswer', require('body-parser').json(), Survey.insertAnswer);// insert answer
+
+
 app.post('/api/home/login', home.login);
-// app.post('/api/home/password/sendEmail', home.sendResetPasswordEmail);
-// app.get('/api/home/password/reset', home.checkResetPasswordToken);
-// app.post('/api/home/password/reset', home.resetPassword);
-//
-// app.get('/api/admin/server', isAdmin, adminServer.getServers);
-// app.get('/api/admin/server/:serverId(\\d+)', isAdmin, adminServer.getOneServer);
-// app.put('/api/admin/account/:accountId(\\d+)/data', isAdmin, admin.changeAccountData);
-// app.get('/api/admin/flow/:serverId(\\d+)/:port(\\d+)/lastConnect', isAdmin, adminFlow.getServerPortLastConnect);
 
 
 app.post('/api/home/sendtcp',home.sendtcp);
