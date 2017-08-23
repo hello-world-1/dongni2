@@ -21,8 +21,6 @@ const receiveDatawatch = (receive, data) => {
     checkDatawatch(receive);
 };
 
-
-
 const receiveCommandwatch = async (data,receive) => {
     try {
         const message = data.toString();

@@ -7,6 +7,7 @@ const Reply = require('../db/reply');
 const Teacher = require('../db/teacher');
 const Survey = appRequire('plugins/watch/db/survey');
 const SurveyAnswer = appRequire('plugins/watch/db/surveyAnswer');
+const Parent = appRequire('plugins/watch/db/user');
 const async = require('async');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -34,6 +35,7 @@ exports.productSurvey = function(req, res) {
 }
 
 
+// insert question
 exports.insertQuestion = function(req, res) {
     console.log(req.body)
     // const survey = JSON.parse(req.body);
@@ -61,6 +63,7 @@ exports.insertQuestion = function(req, res) {
     })
 }
 
+//insert answer
 exports.insertAnswer = function(req, res) {
     const surveyAnswer = req.body
 
@@ -75,6 +78,128 @@ exports.insertAnswer = function(req, res) {
     })
 }
 
-exports.replylist = function(req, res) {
+//家长所填写的全部问卷的历史记录
+exports.historyScore = function(req, res) {
+    const parentID = req.body.parentID
+    let _parent
 
+    Promise.resolve().then(() => {
+        return new Promise((resolve,reject)=>{
+            Parent.findOne({_id:parentID}).exec(function (err, parent) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 1});
+                }
+                if (!parent) {
+                    return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+                }
+                _parent = parent
+                resolve()
+            })
+
+        })
+    }).then(()=>{
+        SurveyAnswer.find({userID:parentID}).exec(function (err, surveyAnswers) {
+            if (err) {
+                return res.json({status: 'error', 'errcode': 1});
+            }
+            if (surveyAnswers.length === 0) {
+                return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+            }else{
+                async.map(surveyAnswers, function(surveyAnswer, callback) {
+                    Survey.findOne({_id:surveyAnswer.surveyID}, function(err, survey) {
+                        if (err) {
+                            return res.json({status:'error','errcode':2});
+                        }
+                        if (survey) {
+                            let tmp = {
+                                surveyName: survey.surveyName,
+                                answer:surveyAnswer.answer
+                            };
+                            callback(null,tmp)
+                        }
+
+                    })
+                }, function(err,results) {
+                    res.json({
+                        status: 'success',
+                        parent: _parent,
+                        surveyAnswer: results
+                    });
+                });
+            }
+        })
+    }).catch(err => {
+        logger.error(err);
+    });
+}
+
+//家长所填写的全部问卷的最新答案
+exports.newestScore = function(req, res) {
+    const parentID = req.body.parentID
+    let _parent
+    let surveys = []
+    let contain = false
+
+    Promise.resolve().then(() => {
+        return new Promise((resolve,reject)=>{
+            Parent.findOne({_id:parentID}).exec(function (err, parent) {
+                if (err) {
+                    return res.json({status: 'error', 'errcode': 1});
+                }
+                if (!parent) {
+                    return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+                }
+                _parent = parent
+                resolve()
+            })
+
+        })
+    }).then(()=>{
+        SurveyAnswer.find({userID:parentID}).sort({createAt:-1}).exec(function (err, surveyAnswers) {
+            if (err) {
+                return res.json({status: 'error', 'errcode': 1});
+            }
+            if (surveyAnswers.length === 0) {
+                return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+            }else{
+                async.map(surveyAnswers, function(surveyAnswer, callback) {
+                    Survey.findOne({_id:surveyAnswer.surveyID}, function(err, survey) {
+                        if (err) {
+                            return res.json({status:'error','errcode':2});
+                        }
+                        if(!survey){
+                            return res.json({status:'error','errcode':2});
+                        }
+                        if(surveys.length > 0){
+                            surveys.forEach(function (tempsurvey) {
+                                if(tempsurvey.surveyName == survey.surveyName){
+                                    contain = true
+                                }
+                            })
+                        }
+                        if(!contain){
+                            surveys.push(survey)
+                            contain = false
+                            let tmp = {
+                                surveyName: survey.surveyName,
+                                answer:surveyAnswer.answer
+                            };
+                            callback(null,tmp)
+                        }else{
+                            callback(null,null)
+                        }
+                    })
+                }, function(err,results) {
+                    res.json({
+                        status: 'success',
+                        parent: _parent,
+                        surveyAnswer: results
+                    });
+                });
+            }
+        })
+    }).catch(err => {
+        logger.error(err);
+        return res.json({status: 'error', 'errcode': 1});
+    });
 }

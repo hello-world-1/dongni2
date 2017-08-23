@@ -1098,6 +1098,110 @@
   "status": "success"
 }
 ```
+### 家长所填写的全部问卷的历史记录
+> * /survey/historyScore
+
+> * Input Parameters
+>> * parentID:requested
+
+> * Successful Return
+{status,"success","parent":{},surveyAnswer:[]}
+
+> * Error Return
+>> * errcode = 1: 查询数据库错误
+
+> * example
+```
+{
+  "status": "success",
+  "parent": {
+    "_id": "59965ba9e1097e36ab8fdb47",
+    "telephone": "15387561723",
+    "childID": "599c8996712784694ddef8fe",
+    "meta": {
+      "updateAT": "2017-08-23T21:26:14.276Z",
+      "createAt": "2017-08-23T21:26:14.276Z"
+    },
+    "childrenTelephone": "",
+    "relationship": "father",
+    "avatar": "",
+    "character": "ufdahappy",
+    "sex": "male",
+    "age": "23"
+  },
+  "surveyAnswer": [
+    {
+      "surveyName": "surveyName",
+      "answer": [
+        {
+          "topicName": "topicName",
+          "answer": "answer1",
+          "answerIndex": 0,
+          "_id": "599ccedd5b4666471d19e4f5"
+        },
+        {
+          "topicName": "topicName2",
+          "answer": "answer1",
+          "answerIndex": 0,
+          "_id": "599ccedd5b4666471d19e4f4"
+        }
+      ]
+    },......
+  ]
+}
+```
+### 家长所填写的全部问卷的最新答案
+> * /survey/newestScore
+
+> * Input Parameters
+>> * parentID:requested
+
+> * Successful Return
+{status,"success","parent":{},surveyAnswer:[]}
+
+> * Error Return
+>> * errcode = 1: 查询数据库错误
+
+> * example
+```
+{
+  "status": "success",
+  "parent": {
+    "_id": "59965ba9e1097e36ab8fdb47",
+    "telephone": "15387561723",
+    "childID": "599c8996712784694ddef8fe",
+    "meta": {
+      "updateAT": "2017-08-23T21:26:14.276Z",
+      "createAt": "2017-08-23T21:26:14.276Z"
+    },
+    "childrenTelephone": "",
+    "relationship": "father",
+    "avatar": "",
+    "character": "ufdahappy",
+    "sex": "male",
+    "age": "23"
+  },
+  "surveyAnswer": [
+    {
+      "surveyName": "surveyName",
+      "answer": [
+        {
+          "topicName": "topicName",
+          "answer": "answer1",
+          "answerIndex": 0,
+          "_id": "599ccedd5b4666471d19e4f5"
+        },
+        {
+          "topicName": "topicName2",
+          "answer": "answer1",
+          "answerIndex": 0,
+          "_id": "599ccedd5b4666471d19e4f4"
+        }
+      ]
+    },......
+  ]
+}
+```
 ## 手机客户端接口说明
 Requests use POST method, return JSON (all the key-value in string format).
 
@@ -1864,6 +1968,289 @@ if status == "error" means error
 
 ### 立即定位
 > * /api/user/watch/locate
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 恢复出厂设置
+> * /api/user/watch/restoreSettings
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 重启终端
+> * /api/user/watch/restartTerminal
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置服务器信息
+> * /api/user/watch/settingServer
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * address:requested
+>> * port:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置计步器开关
+> * /api/user/watch/pedometer
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * pedometerStatus:requested --设置计步器开关状态，1 表示开，0表示关
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置短信报警开关
+> * /api/user/watch/sms
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * smsStatus:requested --设置短信报警开关状态，1 表示开，0表示关
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置设备脱落报警开关
+> * /api/user/watch/fallOff
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * fallOffStatus:requested --设置设备脱落报警开关状态，1 表示开，0表示关
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 关机
+> * /api/user/watch/powerOff
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 拨打电话
+> * /api/user/watch/phoneCall
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * phoneNumber:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置设备工作模式
+> * /api/user/watch/workModel
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * workModel:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设备验证码显示界面
+> * /api/user/watch/authCode
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * authCode:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 退出设备验证码显示界面
+> * /api/user/watch/exitAuthCode
 
 > * Input Parameters
 >> * userID:requested

@@ -112,14 +112,40 @@ app.post('/api/user/information/add', home.signinRequired, user.infoAdd);
 //watch
 //获取手表信息
 app.post('/api/user/watch/detail', home.signinRequired, watch.detail);
-//绑定手表和主控号码XX
+//绑定手表和主控号码XX  --BP11
 app.post('/api/user/watch/bind', home.signinRequired, watch.bind);
-// //为手表添加联系人XX
+// //为手表添加联系人XX  --BP61
 app.post('/api/user/watch/contact/add', home.signinRequired, watch.addContact);
 //获取手表电话号码--电话
 app.post('/api/user/watch/call', home.signinRequired, watch.call);
-//立即定位XXX
+//发送立即定位指令  --BP16
 app.post('/api/user/watch/locate', home.signinRequired, watch.locate);
+//恢复出厂设置  --BP17
+app.post('/api/user/watch/restoreSettings', home.signinRequired, watch.restoreSettings);
+//重启终端  --BP18
+app.post('/api/user/watch/restartTerminal', home.signinRequired, watch.restartTerminal);
+//设置服务器信息  --BP19
+app.post('/api/user/watch/settingServer', home.signinRequired, watch.settingServer);
+//设置计步器开关  --BP21
+app.post('/api/user/watch/pedometer', home.signinRequired, watch.pedometer);
+//设置短信报警开关 --BP24
+app.post('/api/user/watch/sms', home.signinRequired, watch.sms);
+//设置设备脱落报警开关  --BP30
+app.post('/api/user/watch/fallOff', home.signinRequired, watch.fallOff);
+//关机  --BP31
+app.post('/api/user/watch/powerOff', home.signinRequired, watch.powerOff);
+//拨打电话  --BP32
+app.post('/api/user/watch/phoneCall', home.signinRequired, watch.phoneCall);
+//设置设备工作模式  --BP33
+app.post('/api/user/watch/workModel', home.signinRequired, watch.workModel);
+//设备验证码显示界面  --BP35
+app.post('/api/user/watch/authCode', home.signinRequired, watch.authCode);
+//退出设备验证码显示界面  --BP35
+app.post('/api/user/watch/exitAuthCode', home.signinRequired, watch.exitAuthCode);
+
+
+
+
 
 //message
 // //获取消息列表

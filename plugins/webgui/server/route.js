@@ -65,19 +65,20 @@ app.post('/teacher/replycommit', Answer.replycommit);
 app.post('/teacher/allquestionreply', Answer.allquestionreply);
 // app.post('/child/childinfo', Home.signinRequired,User.childinfo);
 app.post('/child/childinfo', User.childinfo);
-
-
 // 根据某个题库名生成考题
 app.post('/survey/productSurvey', Survey.productSurvey);// product question
 //向某个题库中插入问题
 app.post('/survey/insertQuestion', require('body-parser').json(), Survey.insertQuestion);// insert question
 //向某个题库中插入答案
 app.post('/survey/insertAnswer', require('body-parser').json(), Survey.insertAnswer);// insert answer
+//家长所填写的全部问卷的历史记录
+app.post('/survey/historyScore', Survey.historyScore);
+//家长所填写的全部问卷的最新答案
+app.post('/survey/newestScore', Survey.newestScore);
+
 
 
 app.post('/api/home/login', home.login);
-
-
 app.post('/api/home/sendtcp',home.sendtcp);
 const version = appRequire('package').version;
 const homePage = (req, res) => res.render('index', { version });

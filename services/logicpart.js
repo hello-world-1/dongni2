@@ -133,8 +133,21 @@ const IWAP05 = async (imei,params) => {
 const IWAP06 = async (imei,params) => {
     try {
         //此处需要调动地理位置解析插件，得到的地址返回 (需要经纬度)23.11333,113.12333:纬度,经度
-        //await
-        const location="23.11333,113.12333";
+
+        const MCC = params[1];
+        const MNC = params[2];
+        const LAC = params[3];
+        const CID = params[4];
+
+        let test = MCC+ ',0' + MNC + ',' + LAC + ',' + CID
+
+        const weizhi=await jizhan.jizhanService(test);
+        const two = weizhi.split("|");
+        const loc = two[0]
+        const latitude = two[1]
+        const lat = latitude.split(",")
+        await watchinfo.pushXX({"imei":imei},{ $push: { "locations":{"latitude":latitude,"time":new Date().getTime() } }});
+        const location=lat[1] + "," + lat[0];
         return await `IWBP06,${location}`;
 
     } catch(err) {

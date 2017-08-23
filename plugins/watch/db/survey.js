@@ -16,7 +16,7 @@ var SurveySchema = new Schema({
         answer3:String,
         answer4:String
     }],
-    createAt: {type: Date, default: Date.now},
+    createAt: {type: Date, default: Date.now}
 });
 
 SurveySchema.pre('save', function (next) {

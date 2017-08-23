@@ -246,6 +246,7 @@ exports.call = (req, res) => {
 
 };
 
+//发送立即定位指令
 exports.locate = (req, res) => {
 
     user = req.body.user;
@@ -287,3 +288,387 @@ exports.locate = (req, res) => {
     })
 
 };
+
+//恢复出厂设置
+exports.restoreSettings = (req, res) => {
+    user = req.body.user;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP17,${IMEI},${time}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//重启终端
+exports.restartTerminal = (req, res) => {
+    user = req.body.user;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP18,${IMEI},${time}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//设置服务器信息
+exports.settingServer = (req, res) => {
+    user = req.body.user;
+    const address = req.body.address;
+    const port = req.body.port;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP19,${IMEI},${time},0,${address},${port}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//设置计步器开关
+exports.pedometer = (req, res) => {
+    user = req.body.user;
+    const pedometerStatus = req.body.pedometerStatus;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP21,${IMEI},${time},${pedometerStatus}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//设置短信报警开关
+exports.sms = (req, res) => {
+    user = req.body.user;
+    const smsStatus = req.body.smsStatus;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP24,${IMEI},${time},${smsStatus}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//设置设备脱落报警开关
+exports.fallOff = (req, res) => {
+    user = req.body.user;
+    const fallOffStatus = req.body.fallOffStatus;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP30,${IMEI},${time},${fallOffStatus}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//关机
+exports.powerOff = (req, res) => {
+    user = req.body.user;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP31,${IMEI},${time}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+
+//拨打电话
+exports.phoneCall = (req, res) => {
+    user = req.body.user;
+    const phoneNumber = req.body.phoneNumber;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP32,${IMEI},${time},${phoneNumber}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//设置设备工作模式
+exports.workModel = (req, res) => {
+    user = req.body.user;
+    const workModel = req.body.workModel;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP33,${IMEI},${time},${workModel}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//设置设备工作模式
+exports.authCode = (req, res) => {
+    user = req.body.user;
+    const authCode = req.body.authCode;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP35,${IMEI},${time},${authCode}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
+//退出设备验证码显示界面
+exports.exitAuthCode = (req, res) => {
+    user = req.body.user;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP16=`IWBP35,${IMEI},${time}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP16;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
