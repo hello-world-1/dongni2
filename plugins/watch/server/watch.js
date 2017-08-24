@@ -227,6 +227,45 @@ exports.detail = (req, res) => {
     // res.send('This is not implemented now');
 };
 
+//设置亲情号码
+exports.addFamilyNumber = (req, res) => {
+
+    user = req.body.user;
+    const phoneNumber1 = req.body.phoneNumber1;
+    const phoneNumber2 = req.body.phoneNumber2;
+    const phoneNumber3 = req.body.phoneNumber3;
+    const phoneNumber4 = req.body.phoneNumber4;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP13=`IWBP13,${IMEI},${time},${phoneNumber1},${phoneNumber2},${phoneNumber3},${phoneNumber4}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP13;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
 //获取手表电话号码
 exports.call = (req, res) => {
 
@@ -289,6 +328,43 @@ exports.locate = (req, res) => {
 
 };
 
+//设置SOS号码
+exports.sos = (req, res) => {
+    user = req.body.user;
+    const phoneNumber1 = req.body.phoneNumber1;
+    const phoneNumber2 = req.body.phoneNumber2;
+    const phoneNumber3 = req.body.phoneNumber3;
+    Watch.findOne({controlTelephone: user.telephone}, function (err, watch) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
+        }
+        if (!watch) {
+            //该用户注册手机号没有绑定过
+            return res.json({stauts: 'error', 'errcode': 4});   //该用户注册手机号未绑定手表
+        }
+        else {
+            const IMEI = watch.IMEI;
+            const time=new Date().getTime();
+            const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
+            const IWBP12=`IWBP12,${IMEI},${time},${phoneNumber1},${phoneNumber2},${phoneNumber3}#`;
+
+            let result = null;
+            let message=null;
+            message=IWBP12;
+            console.log('message: ' + message);
+            appwatch.sendCommand(message).then(success=>{
+                if(success){
+                    result=success;
+                    return res.json({status: 'success'});
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.json({status: 'error', 'errcode': 5});
+            });
+        }
+    })
+};
+
 //恢复出厂设置
 exports.restoreSettings = (req, res) => {
     user = req.body.user;
@@ -304,11 +380,11 @@ exports.restoreSettings = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP17,${IMEI},${time}#`;
+            const IWBP17=`IWBP17,${IMEI},${time}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP17;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -338,11 +414,11 @@ exports.restartTerminal = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP18,${IMEI},${time}#`;
+            const IWBP18=`IWBP18,${IMEI},${time}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP18;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -374,11 +450,11 @@ exports.settingServer = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP19,${IMEI},${time},0,${address},${port}#`;
+            const IWBP19=`IWBP19,${IMEI},${time},0,${address},${port}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP19;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -409,11 +485,11 @@ exports.pedometer = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP21,${IMEI},${time},${pedometerStatus}#`;
+            const IWBP21=`IWBP21,${IMEI},${time},${pedometerStatus}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP21;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -444,11 +520,11 @@ exports.sms = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP24,${IMEI},${time},${smsStatus}#`;
+            const IWBP24=`IWBP24,${IMEI},${time},${smsStatus}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP24;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -479,11 +555,11 @@ exports.fallOff = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP30,${IMEI},${time},${fallOffStatus}#`;
+            const IWBP30=`IWBP30,${IMEI},${time},${fallOffStatus}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP30;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -513,11 +589,11 @@ exports.powerOff = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP31,${IMEI},${time}#`;
+            const IWBP31=`IWBP31,${IMEI},${time}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP31;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -548,11 +624,11 @@ exports.phoneCall = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP32,${IMEI},${time},${phoneNumber}#`;
+            const IWBP32=`IWBP32,${IMEI},${time},${phoneNumber}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP32;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -583,11 +659,11 @@ exports.workModel = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP33,${IMEI},${time},${workModel}#`;
+            const IWBP33=`IWBP33,${IMEI},${time},${workModel}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP33;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -602,7 +678,7 @@ exports.workModel = (req, res) => {
     })
 };
 
-//设置设备工作模式
+//设置设备验证码
 exports.authCode = (req, res) => {
     user = req.body.user;
     const authCode = req.body.authCode;
@@ -618,11 +694,11 @@ exports.authCode = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP35,${IMEI},${time},${authCode}#`;
+            const IWBP35=`IWBP35,${IMEI},${time},${authCode}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP35;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){
@@ -652,11 +728,11 @@ exports.exitAuthCode = (req, res) => {
             const IMEI = watch.IMEI;
             const time=new Date().getTime();
             const timeStr=(new Date()).toFormat("YYYYMMDDHHMISS");
-            const IWBP16=`IWBP35,${IMEI},${time}#`;
+            const IWBP36=`IWBP36,${IMEI},${time}#`;
 
             let result = null;
             let message=null;
-            message=IWBP16;
+            message=IWBP36;
             console.log('message: ' + message);
             appwatch.sendCommand(message).then(success=>{
                 if(success){

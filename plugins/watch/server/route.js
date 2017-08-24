@@ -114,7 +114,11 @@ app.post('/api/user/information/add', home.signinRequired, user.infoAdd);
 app.post('/api/user/watch/detail', home.signinRequired, watch.detail);
 //绑定手表和主控号码XX  --BP11
 app.post('/api/user/watch/bind', home.signinRequired, watch.bind);
-// //为手表添加联系人XX  --BP61
+// 设置SOS号码  --BP12
+app.post('/api/user/watch/sos', home.signinRequired, watch.sos);
+//设置亲情号码  --BP13
+app.post('/api/user/watch/contact/addFamilyNumber', home.signinRequired, watch.addFamilyNumber);
+//为手表添加联系人XX  --BP61
 app.post('/api/user/watch/contact/add', home.signinRequired, watch.addContact);
 //获取手表电话号码--电话
 app.post('/api/user/watch/call', home.signinRequired, watch.call);

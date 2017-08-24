@@ -2003,7 +2003,61 @@ if status == "error" means error
     "stauts": "success"
 }
 ```
+### 设置SOS号码
+> * api/user/watch/sos
 
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * phoneNumber1:requested
+>> * phoneNumber2:
+>> * phoneNumber3:
+
+> * Successful Return
+>> * {status，childrenTelephone}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询错误
+>> * errcode = 4: 该用户不存在
+
+> * example
+
+```
+{
+    "status": "success",
+}
+```
+### 设置亲情号码
+> * api/user/watch/addFamilyNumber
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * phoneNumber1:requested
+>> * phoneNumber2:
+>> * phoneNumber3:
+>> * phoneNumber4:
+
+> * Successful Return
+>> * {status，childrenTelephone}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询错误
+>> * errcode = 4: 该用户不存在
+
+> * example
+
+```
+{
+    "status": "success",
+}
+```
 ### 获取手表电话号码--对应app‘电话’功能
 > * api/user/watch/call
 
