@@ -99,7 +99,7 @@ exports.addlesson = function(req, res) {
                             if (parent) {
                                 console.log("parent:" + parent)
                                 if(parent.pushID){
-                                    push.pushService(parent.pushID,message._id)
+                                    push.pushService(parent.pushID + '',message._id + '')
                                 }
                             }
                         })

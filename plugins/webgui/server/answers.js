@@ -212,7 +212,7 @@ exports.replycommit = function(req, res) {
                                         }
                                         if(message){
                                             if(_parent.pushID){
-                                                push.pushService(_parent.pushID,message._id)
+                                                push.pushService(_parent.pushID + '',message._id+'')
                                             }
                                             callback(null,null)
                                         }
@@ -233,7 +233,7 @@ exports.replycommit = function(req, res) {
                                                 }
                                                 if(message){
                                                     if(_parent.pushID){
-                                                        push.pushService(_parent.pushID,message._id)
+                                                        push.pushService(_parent.pushID + '',message._id+'')
                                                     }
                                                     callback(null,null)
                                                 }
@@ -270,7 +270,7 @@ exports.replycommit = function(req, res) {
                         return res.json({"status":"error","errcode":6});
                     }
                     if(_parent.pushID){
-                        push.pushService(_parent.pushID,message._id)
+                        push.pushService(_parent.pushID + '',message._id+'')
                     }
                     _replyPerson.save(function(err, replyPerson) {
                         if (err) {

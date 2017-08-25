@@ -82,26 +82,23 @@ exports.signin = (req, res) => {
                     if (err) {
                         return res.json({status: 'error', 'errcode': 5});   //保存失败
                     }
-                    else {
+                    if(user) {
                         // cat not view message
-                        Message.find({parentID: user._id,viewedFlag:'0'}).exec(function (err, messages) {
+                        // Message.find({parentID: user._id,viewedFlag:"0"}).exec(function (err, messages) {
+                        Message.find({parentID: user._id}).exec(function (err, messages) {
                             console.log('mesages:'+messages)
 
                             async.map(messages, function(message, callback) {
-                                push.pushService(user._id,message._id)
+                                push.pushService(user.pushID + '',message._id + '')
                                 callback(null,null)
                             }, function(err,results) {
-                                res.json({
+                                return res.json({
                                     status: 'success',
                                     'user': {'userID': user.id, 'token': user.token}
                                 });
                             });
 
                         })
-                        // res.json({
-                        //             status: 'success',
-                        //             'user': {'userID': user.id, 'token': user.token}
-                        //         });
                     }
                 });
             }
