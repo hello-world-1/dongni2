@@ -2707,3 +2707,102 @@ if status == "error" means error
     "status": "success"
 }
 ```
+### 查看所有消息
+> * /api/user/message/viewAllMessage
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * messageType:requested --消息类型1：问题回复 2：推荐课程 3：推荐书籍
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+  "status": "success",
+  "list": [
+    {
+      "_id": "599565a036e63f1346167fdc",
+      "teacherID": "59955d2bbc44c410ea320be2",
+      "__v": 0,
+      "createAt": "2017-08-17T09:45:04.609Z",
+      "state": "1",
+      "enrollNum": 0,
+      "price": 0,
+      "telephone": "",
+      "classHours": "",
+      "studentsLimit": 0,
+      "enrolldeadline": null,
+      "classTime": "",
+      "endDate": null,
+      "startDate": "2010-10-20T11:30:00.000Z",
+      "teacherName": "",
+      "description": "",
+      "title": ""
+    },......
+  ]
+}
+```
+### 是否显示二级侧边栏的红点
+> * /api/user/message/redPoint
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+```
+{
+  "status": "success",
+  "reply": true,
+  "lesson": true,
+  "book": true
+}
+```
+### 改变消息查看状态
+> * /api/user/message/changeMessageStatus
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * typeID:requested  --查看内容的ID
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+```
+{
+  "status": "success"
+}
+```

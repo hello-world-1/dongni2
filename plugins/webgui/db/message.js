@@ -17,7 +17,7 @@ const MessageSchema = new Schema({
 		default: ""
 	}, //消息类型：1：问题回复 2：推荐课程 3：推荐书籍
 	typeID: {
-		type: String,
+        type: String,
 		default: ""
 	}, //消息来源id
 	content: {

@@ -84,8 +84,7 @@ exports.signin = (req, res) => {
                     }
                     if(user) {
                         // cat not view message
-                        // Message.find({parentID: user._id,viewedFlag:"0"}).exec(function (err, messages) {
-                        Message.find({parentID: user._id}).exec(function (err, messages) {
+                        Message.find({parentID: user._id,viewedFlag:"0"}).exec(function (err, messages) {
                             console.log('mesages:'+messages)
 
                             async.map(messages, function(message, callback) {

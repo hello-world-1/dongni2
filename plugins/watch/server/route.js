@@ -16,6 +16,7 @@ const bill = appRequire('plugins/watch/server/bill');
 const book = appRequire('plugins/watch/server/book');
 const teacher = appRequire('plugins/watch/server/teacher');
 const user = appRequire('plugins/watch/server/user');
+const message = appRequire('plugins/watch/server/message');
 
 
 // const isUser = (req, res, next) => {
@@ -109,6 +110,13 @@ app.post('/api/user/information/avatar', multipartMiddleware, home.signinRequire
 // app.get('/api/user/information/child', user.childDetail);
 //用户添加孩子以及自己的信息--第一次提问
 app.post('/api/user/information/add', home.signinRequired, user.infoAdd);
+
+//改变消息查看状态
+app.post('/api/user/message/changeMessageStatus', home.signinRequired, message.changeMessageStatus);
+//查看所有消息
+app.post('/api/user/message/viewAllMessage', home.signinRequired, message.viewAllMessage);
+//是否显示红点
+app.post('/api/user/message/redPoint', home.signinRequired, message.redPoint);
 
 //watch
 //获取手表信息
