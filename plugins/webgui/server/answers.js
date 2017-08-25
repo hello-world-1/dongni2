@@ -179,56 +179,72 @@ exports.replycommit = function(req, res) {
     }
 	let _reply = new Reply(replyObj)
     let _replyPerson = new ReplyPerson(replyPersonObj)
+    let _parent
+    let _question
 
     Promise.resolve().then(() => {
         return new Promise((resolve,reject)=>{
             Reply.findOne({teacherID: teacherID,parentID:parentID}).exec(function (err, reply) {
                 if(err){
-                    return res.json({status: 'error', 'errcode': 2});
+                    return res.json({status: 'error', 'errcode': 1});
                 }
-                if(!reply){//if not reply,create new message
+                if(!reply){
+                    //if not reply,create new message
                     // create all book message
-
-                    Book.find({teacherID: teacherID}).exec(function (err, books) {
-                        async.map(books, function(book, callback) {
-                            let message = new Message()
-                            message.parentID = parentID
-                            message.type = '3'
-                            message.typeID = book._id
-                            message.content = ''
-                            message.viewedFlag = '0'
-                            message.teacherID = teacherID
-                            message.save(function(err, message) {
-                                if (err) {
-                                    return res.json({"status": "error", "errcode": 2});
-                                }
-                                if(message){
-                                    callback(null,null)
-                                }
-                            })
-                        }, function(err,results) {
-                            Lesson.find({teacherID: teacherID}).exec(function (err, lessons) {
-                                async.map(lessons, function(lesson, callback) {
+                    Parent.findOne({_id: parentID}).exec(function (err, parent) {
+                        if (err) {
+                            return res.json({"status": "error", "errcode": err});
+                        }
+                        if (parent) {
+                            _parent = parent
+                            Book.find({teacherID: teacherID}).exec(function (err, books) {
+                                async.map(books, function(book, callback) {
                                     let message = new Message()
                                     message.parentID = parentID
-                                    message.type = '2'
-                                    message.typeID = lesson._id
+                                    message.type = '3'
+                                    message.typeID = book._id
                                     message.content = ''
                                     message.viewedFlag = '0'
                                     message.teacherID = teacherID
                                     message.save(function(err, message) {
                                         if (err) {
-                                            return res.json({"status": "error", "errcode": 2});
+                                            return res.json({"status": "error", "errcode": 3});
                                         }
                                         if(message){
+                                            if(_parent.pushID){
+                                                push.pushService(_parent.pushID,message._id)
+                                            }
                                             callback(null,null)
                                         }
                                     })
                                 }, function(err,results) {
-                                    resolve()
+                                    Lesson.find({teacherID: teacherID}).exec(function (err, lessons) {
+                                        async.map(lessons, function(lesson, callback) {
+                                            let message = new Message()
+                                            message.parentID = parentID
+                                            message.type = '2'
+                                            message.typeID = lesson._id
+                                            message.content = ''
+                                            message.viewedFlag = '0'
+                                            message.teacherID = teacherID
+                                            message.save(function(err, message) {
+                                                if (err) {
+                                                    return res.json({"status": "error", "errcode": 4});
+                                                }
+                                                if(message){
+                                                    if(_parent.pushID){
+                                                        push.pushService(_parent.pushID,message._id)
+                                                    }
+                                                    callback(null,null)
+                                                }
+                                            })
+                                        }, function(err,results) {
+                                            resolve()
+                                        });
+                                    })
                                 });
                             })
-                        });
+                        }
                     })
                 }else{
                     resolve()
@@ -239,7 +255,7 @@ exports.replycommit = function(req, res) {
     }).then(()=>{
         _reply.save(function(err, reply) {
             if (err) {
-                return res.json({status: 'error', 'errcode': 2});
+                return res.json({status: 'error', 'errcode': 5});
             }
             if (reply){
                 let message = new Message()
@@ -251,75 +267,59 @@ exports.replycommit = function(req, res) {
                 message.teacherID = teacherID
                 message.save(function(err, message) {
                     if (err) {
-                        return res.json({"status":"error","errcode":2});
+                        return res.json({"status":"error","errcode":6});
                     }
-                    Parent.findOne({_id: reply.parentID}).exec(function (err, parent) {
+                    if(_parent.pushID){
+                        push.pushService(_parent.pushID,message._id)
+                    }
+                    _replyPerson.save(function(err, replyPerson) {
                         if (err) {
-                            return res.json({"status":"error","errcode":2});
+                            return res.json({status: 'error', 'errcode': 7});
                         }
-                        if (parent) {
-                            _parent = parent
-                            console.log("parent:" + parent)
-                            if(parent.pushID){
-                                push.pushService(parent.pushID,message._id)
-                            }
-                            _replyPerson.save(function(err, replyPerson) {
+                        if (replyPerson) {
+                            Question.findOne({_id: questionID}).exec(function (err, question) {
                                 if (err) {
-                                    return res.json({status: 'error', 'errcode': 2});
+                                    return res.json({status: 'error', 'errcode': 8});
                                 }
-                                if (replyPerson) {
-                                    let _parent
-                                    let _question
+                                _question = question
+                                if (questionID) {
+                                    Reply.findByQuestionId(questionID, function(err, replys) {
 
-                                    Question.findOne({_id: questionID}).exec(function (err, question) {
-                                        if (err) {
-                                            return res.json({status: 'error', 'errcode': 2});
+                                        if (replys.length === 0) {
+                                            return res.json({status: 'error', 'errcode': 9});
+                                        } else {
+                                            // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                                            // let teachers_serialize = [];
+                                            async.map(replys, function(reply, callback) {
+                                                let _teacher
+
+                                                Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                                    if(err){
+                                                        return res.json({status: 'error', 'errcode': 10});
+                                                    }
+                                                    _teacher = teacher
+                                                    var tmp = {
+                                                        teacher: _teacher,
+                                                        content:reply.content
+                                                    };
+                                                    // teachers_serialize.push(tmp);
+                                                    // callback(null,teachers_serialize)
+                                                    callback(null,tmp)
+                                                })
+                                            }, function(err,results) {
+                                                res.json({
+                                                    status: 'success',
+                                                    'question': {
+                                                        parent:_parent,
+                                                        question:_question
+                                                    },
+                                                    replys:results
+                                                });
+                                            });
                                         }
-
-                                        _question = question
-
-
-                                        if (questionID) {
-                                            Reply.findByQuestionId(questionID, function(err, replys) {
-
-                                                if (replys.length === 0) {
-                                                    return res.json({status: 'error', 'errcode': 3});
-                                                } else {
-                                                    // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
-                                                    // let teachers_serialize = [];
-                                                    async.map(replys, function(reply, callback) {
-                                                        let _teacher
-
-                                                        Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
-                                                            if(err){
-                                                                return res.json({status: 'error', 'errcode': 2});
-                                                            }
-                                                            _teacher = teacher
-                                                            var tmp = {
-                                                                teacher: _teacher,
-                                                                content:reply.content
-                                                            };
-                                                            // teachers_serialize.push(tmp);
-                                                            // callback(null,teachers_serialize)
-                                                            callback(null,tmp)
-                                                        })
-                                                    }, function(err,results) {
-                                                        res.json({
-                                                            status: 'success',
-                                                            'question': {
-                                                                parent:_parent,
-                                                                question:_question
-                                                            },
-                                                            replys:results
-                                                        });
-                                                    });
-                                                }
-                                            })
-                                        }
-                                    });
+                                    })
                                 }
-                            })
-
+                            });
                         }
                     })
                 })
@@ -327,7 +327,7 @@ exports.replycommit = function(req, res) {
         })
     }).catch(err => {
         logger.error(err);
-        return res.json({status: 'error', 'errcode': 2});
+        return res.json({status: 'error', 'errcode': 12});
     });
 }
 

@@ -30,7 +30,8 @@ exports.signin = function(req, res) {
             // if admin contain this username,return username exist
             return res.json({status: 'error', 'errcode': 1});
         }else{
-            let user = new Admin()
+            // let user = new Admin()
+            let user = new Teacher()
             user.username = username
             user.password = password
             // user = new Admin(_user)

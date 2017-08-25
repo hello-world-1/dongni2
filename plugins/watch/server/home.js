@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const User = appRequire('plugins/watch/db/user');
 const Message = appRequire('plugins/webgui/db/message');
 const push=appRequire('services/push')
+const async = require('async');
 
 //用户注册
 exports.signup = (req, res) => {
@@ -82,17 +83,25 @@ exports.signin = (req, res) => {
                         return res.json({status: 'error', 'errcode': 5});   //保存失败
                     }
                     else {
-                        //cat not view message
-                        Message.find({'parentID': user._id,'viewedFlag':'0'}).exec(function (err, messages) {
+                        // cat not view message
+                        Message.find({parentID: user._id,viewedFlag:'0'}).exec(function (err, messages) {
                             console.log('mesages:'+messages)
-                            messages.forEach(function (message) {
+
+                            async.map(messages, function(message, callback) {
                                 push.pushService(user._id,message._id)
-                            })
-                            res.json({
-                                status: 'success',
-                                'user': {'userID': user.id, 'token': user.token}
+                                callback(null,null)
+                            }, function(err,results) {
+                                res.json({
+                                    status: 'success',
+                                    'user': {'userID': user.id, 'token': user.token}
+                                });
                             });
+
                         })
+                        // res.json({
+                        //             status: 'success',
+                        //             'user': {'userID': user.id, 'token': user.token}
+                        //         });
                     }
                 });
             }
