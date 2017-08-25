@@ -4,7 +4,7 @@
 const mongoose = appRequire('init/mongoose');
 const Schema = mongoose.Schema;
 const User = appRequire('plugins/watch/db/user');
-const Teacher = require('./teacer');
+const Teacher = require('./teacher');
 
 const MessageSchema = new Schema({
 
@@ -17,8 +17,8 @@ const MessageSchema = new Schema({
 		default: ""
 	}, //消息类型：1：问题回复 2：推荐课程 3：推荐书籍
 	typeID: {
-		type: ObjectId,
-		default: null
+		type: String,
+		default: ""
 	}, //消息来源id
 	content: {
 		type: String,
@@ -36,6 +36,13 @@ const MessageSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Teacher'
 	}, //老师id
+});
+
+MessageSchema.pre('save', function (next) {
+    if (this.isNew) {
+        this.date = Date.now();
+    }
+    next();
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

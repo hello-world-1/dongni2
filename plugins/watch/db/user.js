@@ -27,7 +27,8 @@ let UserSchema = new Schema({
     meta: {
         createAt: {type: Date, default: Date.now()},
         updateAT: {type: Date, default: Date.now()}
-    }
+    },
+    pushID:{type:String,default: ""}
 });
 
 //更新登录时间，密码改动后hash新密码

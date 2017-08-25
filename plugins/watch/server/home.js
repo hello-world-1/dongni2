@@ -6,6 +6,8 @@ const randomstring = require('randomstring');
 const iHuyi = appRequire('plugins/watch/server/ihuyisdk');
 const bcrypt = require('bcryptjs');
 const User = appRequire('plugins/watch/db/user');
+const Message = appRequire('plugins/webgui/db/message');
+const push=appRequire('services/push')
 
 //用户注册
 exports.signup = (req, res) => {
@@ -75,15 +77,22 @@ exports.signin = (req, res) => {
                 const crypto = require('crypto');
                 token = crypto.randomBytes(64).toString('hex');
                 user.token = token;
-                user.save(function (err) {
+                user.save(function (err,user) {
                     if (err) {
                         return res.json({status: 'error', 'errcode': 5});   //保存失败
                     }
                     else {
-                        res.json({
-                            status: 'success',
-                            'user': {'userID': user.id, 'token': user.token}
-                        });
+                        //cat not view message
+                        Message.find({'parentID': user._id,'viewedFlag':'0'}).exec(function (err, messages) {
+                            console.log('mesages:'+messages)
+                            messages.forEach(function (message) {
+                                push.pushService(user._id,message._id)
+                            })
+                            res.json({
+                                status: 'success',
+                                'user': {'userID': user.id, 'token': user.token}
+                            });
+                        })
                     }
                 });
             }
@@ -266,6 +275,22 @@ exports.resetPassword = (req, res) => {
         }
     });
 };
+
+//用户添加pushID
+exports.addPushID = (req, res) => {
+    user = req.body.user;
+    const pushID = req.body.pushID;
+    user.pushID = pushID
+
+    user.save(function (err) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});   //pushID保存错误
+        } else {
+            return res.json({status: 'success',user:user});
+        }
+    })
+};
+
 
 // exports.resetPassword = (req, res) => {
 //     req.checkBody('token', 'Invalid token').notEmpty();

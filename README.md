@@ -2003,18 +2003,16 @@ if status == "error" means error
     "stauts": "success"
 }
 ```
-### 设置SOS号码
-> * api/user/watch/sos
+### 设置GPS定位数据上传时间间隔
+> * api/user/watch/locationInterval
 
 > * Input Parameters
 >> * userID:requested
 >> * token:requested
->> * phoneNumber1:requested
->> * phoneNumber2:
->> * phoneNumber3:
+>> * interval:requested
 
 > * Successful Return
->> * {status，childrenTelephone}
+>> * {status}
 
 > * Error Return
 >> * errcode = 0: userID或token为空
@@ -2042,7 +2040,7 @@ if status == "error" means error
 >> * phoneNumber4:
 
 > * Successful Return
->> * {status，childrenTelephone}
+>> * {status}
 
 > * Error Return
 >> * errcode = 0: userID或token为空
@@ -2066,7 +2064,7 @@ if status == "error" means error
 >> * token:requested
 
 > * Successful Return
->> * {status，childrenTelephone}
+>> * {status}
 
 > * Error Return
 >> * errcode = 0: userID或token为空
@@ -2186,6 +2184,34 @@ if status == "error" means error
     "status": "success"
 }
 ```
+### 设置终端语言与时区
+> * /api/user/watch/languageSetting
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * languageCode:requested   --zh_CN
+>> * timeZone:requested  --Asia/chongqin
+>> * UTCTime:requested  --20150101125223
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
 ### 设置计步器开关
 > * /api/user/watch/pedometer
 
@@ -2212,6 +2238,58 @@ if status == "error" means error
     "status": "success"
 }
 ```
+### 设置体感接听开关
+> * /api/user/watch/bodyInduction
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * bodyInductionStatus:requested --设置开关状态，1 表示开，0表示关
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置监听开关
+> * /api/user/watch/monitor
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * monitorStatus:requested --设置开关状态，1 表示开，0表示关
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
 ### 设置短信报警开关
 > * /api/user/watch/sms
 
@@ -2219,6 +2297,33 @@ if status == "error" means error
 >> * userID:requested
 >> * token:requested
 >> * smsStatus:requested --设置短信报警开关状态，1 表示开，0表示关
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置闹钟
+> * /api/user/watch/alarmClock
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * alarmClockStatus:requested --设置闹钟开关状态，1 表示开，0表示关
+>> * alarmClock:requested --数据格式为:0900,135,1，表示一组闹钟，0900表示早上09:00,135表示周一周三周五，使用24小时制,1表示该组闹钟开启或关闭状态   1表示开启  0表示关闭
 
 > * Successful Return
 >> * {status}
@@ -2341,6 +2446,32 @@ if status == "error" means error
     "status": "success"
 }
 ```
+### 设置GPS工作时间段
+> * /api/user/watch/GPSTimeSlot
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * timeSlot:requested --数据格式:0900@1145，表示一组工作时间段，0900@1145表示早上09:00至11:45分隐身，使用24小时制
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
 ### 设备验证码显示界面
 > * /api/user/watch/authCode
 
@@ -2373,6 +2504,190 @@ if status == "error" means error
 > * Input Parameters
 >> * userID:requested
 >> * token:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置休眠检测时间下行
+> * /api/user/watch/sleepDetection
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * sleepDetectionTime:requested  --数据格式:600 : 当设备停止600秒后通知平台设备进入休眠状态，单位：秒
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设备休眠前主动上传休眠状态
+> * /api/user/watch/sleepStatus
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * sleepStatus:requested  --数据格式:1 : 表示进入休眠状态，0表示退出休眠状态
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 文字下发
+> * /api/user/watch/sendWords
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * sendWords:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 设置终端地址，紧急电话
+> * /api/user/watch/emergencyCall
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * emergencyCall:requested
+>> * terminalAddress:requested  --设置终端地址
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 开启和关闭上传通话记录
+> * /api/user/watch/callRecords
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * callRecordsStatus:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 开启和关闭整点心率测试
+> * /api/user/watch/heartRateSwitch
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * heartRateStatus:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询出错
+>> * errcode = 4: 该用户注册手机号未绑定手表
+>> * errcode = 5: 给手表发命令出错
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 开启和关闭实时心率测试
+> * /api/user/watch/realTimeHeartRate
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * heartRateStatus:requested
+>> * heartRateInterval:requested
 
 > * Successful Return
 >> * {status}

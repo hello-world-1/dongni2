@@ -9,7 +9,10 @@ const Question = appRequire('plugins/watch/db/question');
 const Parent = appRequire('plugins/watch/db/user');
 const async = require('async');
 const ObjectId = require('mongodb').ObjectId;
-
+const push=appRequire('services/push')
+const Book = appRequire('plugins/webgui/db/book');
+const Lesson = appRequire('plugins/webgui/db/lesson');
+const Message = appRequire('plugins/webgui/db/message');
 
 exports.allquestionreply = function(req, res) {
 
@@ -177,78 +180,162 @@ exports.replycommit = function(req, res) {
 	let _reply = new Reply(replyObj)
     let _replyPerson = new ReplyPerson(replyPersonObj)
 
-	// 保存回复
-	_reply.save(function(err, reply) {
-		if (err) {
-            return res.json({status: 'error', 'errcode': 2});
-		}
-		if (reply){
-            _replyPerson.save(function(err, replyPerson) {
-                if (err) {
+    Promise.resolve().then(() => {
+        return new Promise((resolve,reject)=>{
+            Reply.findOne({teacherID: teacherID,parentID:parentID}).exec(function (err, reply) {
+                if(err){
                     return res.json({status: 'error', 'errcode': 2});
                 }
-                if (replyPerson) {
-                    let _parent
-                    let _question
+                if(!reply){//if not reply,create new message
+                    // create all book message
 
-                    Question.findOne({_id: questionID}).exec(function (err, question) {
-                        if (err) {
-                            return res.json({status: 'error', 'errcode': 2});
-                        }
-
-                        _question = question
-                        Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
-                            _parent = parent
-                            if (questionID) {
-                                Reply.findByQuestionId(questionID, function(err, replys) {
-
-                                    if (replys.length === 0) {
-                                        return res.json({status: 'error', 'errcode': 3});
-                                    } else {
-                                        // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
-                                        // let teachers_serialize = [];
-                                        async.map(replys, function(reply, callback) {
-                                            let _teacher
-
-                                            Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
-                                                if(err){
-                                                    return res.json({status: 'error', 'errcode': 2});
-                                                }
-                                                _teacher = teacher
-                                                var tmp = {
-                                                    teacher: _teacher,
-                                                    content:reply.content
-                                                };
-                                                // teachers_serialize.push(tmp);
-                                                // callback(null,teachers_serialize)
-                                                callback(null,tmp)
-                                            })
-                                        }, function(err,results) {
-                                            res.json({
-                                                status: 'success',
-                                                'question': {
-                                                    parent:_parent,
-                                                    question:_question
-                                                },
-                                                replys:results
-                                            });
-                                        });
-                                    }
-                                })
-                            }
-                        })
-                    });
+                    Book.find({teacherID: teacherID}).exec(function (err, books) {
+                        async.map(books, function(book, callback) {
+                            let message = new Message()
+                            message.parentID = parentID
+                            message.type = '3'
+                            message.typeID = book._id
+                            message.content = ''
+                            message.viewedFlag = '0'
+                            message.teacherID = teacherID
+                            message.save(function(err, message) {
+                                if (err) {
+                                    return res.json({"status": "error", "errcode": 2});
+                                }
+                                if(message){
+                                    callback(null,null)
+                                }
+                            })
+                        }, function(err,results) {
+                            Lesson.find({teacherID: teacherID}).exec(function (err, lessons) {
+                                async.map(lessons, function(lesson, callback) {
+                                    let message = new Message()
+                                    message.parentID = parentID
+                                    message.type = '2'
+                                    message.typeID = lesson._id
+                                    message.content = ''
+                                    message.viewedFlag = '0'
+                                    message.teacherID = teacherID
+                                    message.save(function(err, message) {
+                                        if (err) {
+                                            return res.json({"status": "error", "errcode": 2});
+                                        }
+                                        if(message){
+                                            callback(null,null)
+                                        }
+                                    })
+                                }, function(err,results) {
+                                    resolve()
+                                });
+                            })
+                        });
+                    })
+                }else{
+                    resolve()
                 }
             })
-        }
-	})
+
+        })
+    }).then(()=>{
+        _reply.save(function(err, reply) {
+            if (err) {
+                return res.json({status: 'error', 'errcode': 2});
+            }
+            if (reply){
+                let message = new Message()
+                message.parentID = parentID
+                message.type = '1'
+                message.typeID = reply._id
+                message.content = ''
+                message.viewedFlag = '0'
+                message.teacherID = teacherID
+                message.save(function(err, message) {
+                    if (err) {
+                        return res.json({"status":"error","errcode":2});
+                    }
+                    Parent.findOne({_id: reply.parentID}).exec(function (err, parent) {
+                        if (err) {
+                            return res.json({"status":"error","errcode":2});
+                        }
+                        if (parent) {
+                            _parent = parent
+                            console.log("parent:" + parent)
+                            if(parent.pushID){
+                                push.pushService(parent.pushID,message._id)
+                            }
+                            _replyPerson.save(function(err, replyPerson) {
+                                if (err) {
+                                    return res.json({status: 'error', 'errcode': 2});
+                                }
+                                if (replyPerson) {
+                                    let _parent
+                                    let _question
+
+                                    Question.findOne({_id: questionID}).exec(function (err, question) {
+                                        if (err) {
+                                            return res.json({status: 'error', 'errcode': 2});
+                                        }
+
+                                        _question = question
+
+
+                                        if (questionID) {
+                                            Reply.findByQuestionId(questionID, function(err, replys) {
+
+                                                if (replys.length === 0) {
+                                                    return res.json({status: 'error', 'errcode': 3});
+                                                } else {
+                                                    // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                                                    // let teachers_serialize = [];
+                                                    async.map(replys, function(reply, callback) {
+                                                        let _teacher
+
+                                                        Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                                            if(err){
+                                                                return res.json({status: 'error', 'errcode': 2});
+                                                            }
+                                                            _teacher = teacher
+                                                            var tmp = {
+                                                                teacher: _teacher,
+                                                                content:reply.content
+                                                            };
+                                                            // teachers_serialize.push(tmp);
+                                                            // callback(null,teachers_serialize)
+                                                            callback(null,tmp)
+                                                        })
+                                                    }, function(err,results) {
+                                                        res.json({
+                                                            status: 'success',
+                                                            'question': {
+                                                                parent:_parent,
+                                                                question:_question
+                                                            },
+                                                            replys:results
+                                                        });
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    });
+                                }
+                            })
+
+                        }
+                    })
+                })
+            }
+        })
+    }).catch(err => {
+        logger.error(err);
+        return res.json({status: 'error', 'errcode': 2});
+    });
 }
 
 // 我的所有回复
 exports.replylist = function(req, res) {
-	// var teacherID = req.session.user._id
+	var teacherID = req.session.user._id
 
-    let teacherID = req.body.id
+    // let teacherID = req.body.id
     //通过家长id获得该id下的所有提问
     Reply.find({teacherID: teacherID}).sort({createAt:-1}).exec(function (err, replys) {
         if (err) {

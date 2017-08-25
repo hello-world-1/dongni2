@@ -5,6 +5,9 @@ const config = appRequire('services/config').all();
 const Lesson = require('../db/lesson');
 const Teacher = require('../db/teacher');
 const moment = require('moment');
+const async = require('async');
+const push=appRequire('services/push')
+const Parent = appRequire('plugins/watch/db/user');
 
 // 课程详细信息
 exports.lessondetail = function(req, res) {
@@ -20,28 +23,6 @@ exports.lessondetail = function(req, res) {
     })
 }
 
-// 文件上传
-exports.savePoster = function(req, res, next) {
-	var posterData = req.files.uploadPoster
-	var filePath = posterData.path
-	var originalFilename = posterData.originalFilename
-
-	if (originalFilename) {
-		fs.readFile(filePath, function(err, data) {
-			var timestamp = Date.now()
-			var type = posterData.type.split('/')[1]
-			var poster = timestamp + '.' + type
-			var newPath = path.join(__dirname, '../../', '/public/upload/' + poster)
-
-			fs.writeFile(newPath, data, function(err) {
-				req.poster = poster
-				next()
-			})
-		})
-	} else {
-		next()
-	}
-}
 
 // 添加课程
 exports.addlesson = function(req, res) {
@@ -81,11 +62,60 @@ exports.addlesson = function(req, res) {
         if (err) {
             return res.json({"status":"error","errcode":2});
         }
-        Lesson.findByTeacherId(teacherID, function(err, lessons) {
-            if (err) {
-                return res.json({"status":"error","errcode":2});
-            }
-            return res.json({"status":"success","lessons":lessons});
+
+        let parents = []
+        let contain = false
+        // create a new message
+        Reply.find({teacherID: teacherID}).exec(function (err, replys) {
+
+            async.map(replys, function(reply, callback) {
+
+                if(parents.length > 0){
+
+                    parents.forEach(function (tempReply) {
+                        if(tempReply.parentID+'' == reply.parentID+''){
+                            contain = true
+                        }
+                    })
+                }
+                if(!contain){
+                    parents.push(reply)
+                    contain = false
+                    let message = new Message()
+                    message.parentID = reply.parentID
+                    message.type = '2'
+                    message.typeID = lesson._id
+                    message.content = ''
+                    message.viewedFlag = '0'
+                    message.teacherID = teacherID
+                    message.save(function(err, message) {
+                        if (err) {
+                            return res.json({"status":"error","errcode":2});
+                        }
+                        Parent.findOne({_id: reply.parentID}).exec(function (err, parent) {
+                            if (err) {
+                                return res.json({"status":"error","errcode":2});
+                            }
+                            if (parent) {
+                                console.log("parent:" + parent)
+                                if(parent.pushID){
+                                    push.pushService(parent.pushID,message._id)
+                                }
+                            }
+                        })
+                        callback(null,null)
+                    })
+                }else{
+                    callback(null,null)
+                }
+            }, function(err,results) {
+                Lesson.findByTeacherId(teacherID, function(err, lessons) {
+                    if (err) {
+                        return res.json({"status":"error","errcode":2});
+                    }
+                    return res.json({"status":"success","lessons":lessons});
+                })
+            });
         })
 	})
 }

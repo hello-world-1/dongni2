@@ -16,7 +16,6 @@ const bill = appRequire('plugins/watch/server/bill');
 const book = appRequire('plugins/watch/server/book');
 const teacher = appRequire('plugins/watch/server/teacher');
 const user = appRequire('plugins/watch/server/user');
-const User = appRequire('plugins/watch/db/user');
 
 
 // const isUser = (req, res, next) => {
@@ -64,6 +63,8 @@ app.post('/api/user/signin', home.signin);
 app.post('/api/user/logout', home.signinRequired, home.logout);
 //修改密码
 app.post('/api/user/resetPassword', home.signinRequired, home.resetPassword);
+//添加pushID
+app.post('/api/user/addPushID', home.signinRequired, home.addPushID);
 
 //question
 //获取相关提问列表(一期为获取全部提问)
@@ -114,14 +115,14 @@ app.post('/api/user/information/add', home.signinRequired, user.infoAdd);
 app.post('/api/user/watch/detail', home.signinRequired, watch.detail);
 //绑定手表和主控号码XX  --BP11
 app.post('/api/user/watch/bind', home.signinRequired, watch.bind);
-// 设置SOS号码  --BP12
-app.post('/api/user/watch/sos', home.signinRequired, watch.sos);
 //设置亲情号码  --BP13
 app.post('/api/user/watch/contact/addFamilyNumber', home.signinRequired, watch.addFamilyNumber);
 //为手表添加联系人XX  --BP61
 app.post('/api/user/watch/contact/add', home.signinRequired, watch.addContact);
 //获取手表电话号码--电话
 app.post('/api/user/watch/call', home.signinRequired, watch.call);
+//GPS定位数据上传时间间隔  -BP15
+app.post('/api/user/watch/locationInterval', home.signinRequired, watch.locationInterval);
 //发送立即定位指令  --BP16
 app.post('/api/user/watch/locate', home.signinRequired, watch.locate);
 //恢复出厂设置  --BP17
@@ -130,10 +131,18 @@ app.post('/api/user/watch/restoreSettings', home.signinRequired, watch.restoreSe
 app.post('/api/user/watch/restartTerminal', home.signinRequired, watch.restartTerminal);
 //设置服务器信息  --BP19
 app.post('/api/user/watch/settingServer', home.signinRequired, watch.settingServer);
+//设置终端语言与时区 --BP20
+app.post('/api/user/watch/languageSetting', home.signinRequired, watch.languageSetting);
 //设置计步器开关  --BP21
 app.post('/api/user/watch/pedometer', home.signinRequired, watch.pedometer);
+//设置体感接听开关  --BP22
+app.post('/api/user/watch/bodyInduction', home.signinRequired, watch.bodyInduction);
+//设置监听开关  --BP23
+app.post('/api/user/watch/monitor', home.signinRequired, watch.monitor);
 //设置短信报警开关 --BP24
 app.post('/api/user/watch/sms', home.signinRequired, watch.sms);
+//设置闹钟 --BP25
+app.post('/api/user/watch/alarmClock', home.signinRequired, watch.alarmClock);
 //设置设备脱落报警开关  --BP30
 app.post('/api/user/watch/fallOff', home.signinRequired, watch.fallOff);
 //关机  --BP31
@@ -142,10 +151,31 @@ app.post('/api/user/watch/powerOff', home.signinRequired, watch.powerOff);
 app.post('/api/user/watch/phoneCall', home.signinRequired, watch.phoneCall);
 //设置设备工作模式  --BP33
 app.post('/api/user/watch/workModel', home.signinRequired, watch.workModel);
+//设置GPS工作时间段  --BP34
+app.post('/api/user/watch/GPSTimeSlot', home.signinRequired, watch.GPSTimeSlot);
 //设备验证码显示界面  --BP35
 app.post('/api/user/watch/authCode', home.signinRequired, watch.authCode);
-//退出设备验证码显示界面  --BP35
+//退出设备验证码显示界面  --BP36
 app.post('/api/user/watch/exitAuthCode', home.signinRequired, watch.exitAuthCode);
+//设置休眠检测时间下行  --BP37
+app.post('/api/user/watch/sleepDetection', home.signinRequired, watch.sleepDetection);
+//设备休眠前主动上传休眠状态  --BP38
+app.post('/api/user/watch/sleepStatus', home.signinRequired, watch.sleepStatus);
+//文字下发  --BP40
+app.post('/api/user/watch/sendWords', home.signinRequired, watch.sendWords);
+//设置终端地址，紧急电话  --BP41
+app.post('/api/user/watch/emergencyCall', home.signinRequired, watch.emergencyCall);
+//开启和关闭上传通话记录  --BP62
+app.post('/api/user/watch/callRecords', home.signinRequired, watch.callRecords);
+//开启和关闭整点心率测试  --BP63
+app.post('/api/user/watch/heartRateSwitch', home.signinRequired, watch.heartRateSwitch);
+//开启和关闭实时心率测试  --BP64
+app.post('/api/user/watch/realTimeHeartRate', home.signinRequired, watch.realTimeHeartRate);
+
+
+
+
+
 
 
 

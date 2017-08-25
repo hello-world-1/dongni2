@@ -5,6 +5,11 @@ const config = appRequire('services/config').all();
 const _ = require('underscore')
 const Book = require('../db/book');
 const Teacher = require('../db/teacher');
+const Message = require('../db/message');
+const Reply = require('../db/reply');
+const async = require('async');
+const push=appRequire('services/push')
+const Parent = appRequire('plugins/watch/db/user');
 
 // 书籍详细信息
 exports.bookdetail = function(req, res) {
@@ -19,29 +24,6 @@ exports.bookdetail = function(req, res) {
 		})
 	})
 }
-
-// 文件上传
-// exports.savePoster = function(req, res, next) {
-// 	var posterData = req.files.uploadPoster
-// 	var filePath = posterData.path
-// 	var originalFilename = posterData.originalFilename
-//
-// 	if (originalFilename) {
-// 		fs.readFile(filePath, function(err, data) {
-// 			var timestamp = Date.now()
-// 			var type = posterData.type.split('/')[1]
-// 			var poster = timestamp + '.' + type
-// 			var newPath = path.join(__dirname, '../../', '/public/upload/' + poster)
-//
-// 			fs.writeFile(newPath, data, function(err) {
-// 				req.poster = poster
-// 				next()
-// 			})
-// 		})
-// 	} else {
-// 		next()
-// 	}
-// }
 
 // 添加书籍
 exports.addbook = function(req, res) {
@@ -64,11 +46,59 @@ exports.addbook = function(req, res) {
 		if (err) {
 			return res.json({"status":"error","errcode":2});
 		}
-        Book.findByTeacherId(teacherID, function(err, books) {
-            if (err) {
-                return res.json({"status":"error","errcode":2});
-            }
-            return res.json({"status":"success","books":books});
+        let parents = []
+        let contain = false
+		// create a new message
+        Reply.find({teacherID: teacherID}).exec(function (err, replys) {
+
+            async.map(replys, function(reply, callback) {
+
+                if(parents.length > 0){
+
+                    parents.forEach(function (tempReply) {
+                        if(tempReply.parentID+'' == reply.parentID+''){
+                            contain = true
+                        }
+                    })
+                }
+                if(!contain){
+                    parents.push(reply)
+                    contain = false
+                    let message = new Message()
+                    message.parentID = reply.parentID
+                    message.type = '3'
+                    message.typeID = book._id
+                    message.content = ''
+                    message.viewedFlag = '0'
+                    message.teacherID = teacherID
+                    message.save(function(err, message) {
+                        if (err) {
+                            return res.json({"status":"error","errcode":2});
+                        }
+                        Parent.findOne({_id: reply.parentID}).exec(function (err, parent) {
+                            if (err) {
+                                return res.json({"status":"error","errcode":2});
+                            }
+                            if (parent) {
+                            	console.log("parent:" + parent)
+                                if(parent.pushID){
+                                    push.pushService(parent.pushID,message._id)
+                                }
+                            }
+                        })
+                        callback(null,null)
+                    })
+                }else{
+                    callback(null,null)
+				}
+            }, function(err,results) {
+                Book.findByTeacherId(teacherID, function(err, books) {
+                    if (err) {
+                        return res.json({"status":"error","errcode":2});
+                    }
+                    return res.json({"status":"success","books":books});
+                })
+            });
         })
 	})
 
@@ -76,8 +106,8 @@ exports.addbook = function(req, res) {
 
 // 书籍列表界面
 exports.booklist = function(req, res) {
-	// const teacherID = req.session.user._id
-	const teacherID = req.body.id
+	const teacherID = req.session.user._id
+	// const teacherID = req.body.id
 
 	if (teacherID) {
 		Book.findByTeacherId(teacherID, function(err, books) {
