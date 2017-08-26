@@ -89,9 +89,9 @@ client.write(new Buffer(IWAP00))
 setTimeout(()=>{
     client.write(new Buffer(IWAP01))
 },2000)
-// setTimeout(()=>{
-//     client.write(new Buffer(IWAP02))
-// },4000)
+setTimeout(()=>{
+    client.write(new Buffer(IWAP02))
+},2500)
 // setTimeout(()=>{
 //     client.write(new Buffer(IWAP02))
 // },90000)
@@ -108,13 +108,13 @@ setTimeout(()=>{
 //     client.write(new Buffer(IWAP05))
 // },180000)
 //
-// setTimeout(()=>{
-//     client.write(new Buffer(IWAP06))
-// },210000)
-//
-// setTimeout(()=>{
-//     client.write(new Buffer(IWAP10))
-// },240000)
+setTimeout(()=>{
+    client.write(new Buffer(IWAP06))
+},4000)
+
+setTimeout(()=>{
+    client.write(new Buffer(IWAP10))
+},4100)
 //
 setTimeout(()=>{
     client.write(new Buffer(IWAP39))
