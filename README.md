@@ -1956,7 +1956,8 @@ if status == "error" means error
         "introduction": "this is a test book",
         "publishHouse": "people education publishHouse",
         "author": "amsfe",
-        "title": "test book"
+        "title": "test book",
+        "avatar": ""
     }
 }
 ```
