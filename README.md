@@ -312,7 +312,8 @@
       "introduction": "introduction",
       "publishHouse": "publishHouse",
       "author": "author",
-      "title": "title"
+      "title": "title",
+      "avatar": ""
     },......
   ]
 }
@@ -348,7 +349,8 @@
     "telephone": "联系方式",
     "price": "课程价格",
     "enrollNum": "已报名人数",
-    "state": "课程状态"
+    "state": "课程状态",
+    "avatar": ""
   },......]
 }
 ```
@@ -701,6 +703,7 @@
       },
       "replys": [
         {
+
           "teacher": {
             "_id": "59955d2bbc44c410ea320be2",
             "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
@@ -1466,17 +1469,17 @@ if status == "error" means error
 > * Input Parameters
 >> * token:requested
 >> * userID:requested
->> * nickname:requested
+>> * parentAge:requested
 >> * parentSex:requested
 >> * relation:requested
 >> * parentTelephone:requested
->> * parentBirth:requested
 >> * parentCharacter:requested
 >> * childAge:requested
 >> * childSex:requested
 >> * childGrade:requested
 >> * childBirth:requested
 >> * childCharacter:requested
+>> * chilPhone:requested
 
 > * Successful Return
 >> * {status}
