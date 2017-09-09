@@ -109,7 +109,7 @@ exports.signinRequired = (req, res, next) => {
 
     if (!req.session.user) {
         // if not login
-        return res.json({status: 'error', 'errcode': 2});
+        return res.json({status: 'error', 'errcode': 5});
     }else{
         next();
     }

@@ -18,7 +18,7 @@ exports.productSurvey = function(req, res) {
 
     console.log("surveyName:" + surveyName)
     // Survey.findOne({surveyName:surveyName}).exec(function (err, survey) {
-    Survey.find({surveyName:surveyName}).exec(function (err, survey) {
+    Survey.findOne({surveyName:surveyName}).exec(function (err, survey) {
         if (err) {
             return res.json({status: 'error', 'errcode': 1});
         }
@@ -37,6 +37,10 @@ exports.productSurvey = function(req, res) {
 
 // insert question
 exports.insertQuestion = function(req, res) {
+    if(req.session.type == 'teacher'){
+        return res.json({status: 'error', 'errcode': 3});
+    }
+
     console.log(req.body)
     // const survey = JSON.parse(req.body);
     const survey = req.body
@@ -112,16 +116,17 @@ exports.historyScore = function(req, res) {
                 return res.json({status: 'error', 'errcode': 1});
             }
             if (surveyAnswers.length === 0) {
-                return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+                return res.json({status: 'error', 'errcode': 3}); //not calculate survey
             }else{
                 async.map(surveyAnswers, function(surveyAnswer, callback) {
                     Survey.findOne({_id:surveyAnswer.surveyID}, function(err, survey) {
                         if (err) {
-                            return res.json({status:'error','errcode':2});
+                            return res.json({status:'error','errcode':1});
                         }
                         if (survey) {
                             let tmp = {
                                 surveyName: survey.surveyName,
+                                surveyTime:surveyAnswer.createAt,
                                 answer:surveyAnswer.answer
                             };
                             callback(null,tmp)
@@ -138,7 +143,7 @@ exports.historyScore = function(req, res) {
             }
         })
     }).catch(err => {
-        logger.error(err);
+        return res.json({status:'error','errcode':1});
     });
 }
 
@@ -169,15 +174,15 @@ exports.newestScore = function(req, res) {
                 return res.json({status: 'error', 'errcode': 1});
             }
             if (surveyAnswers.length === 0) {
-                return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+                return res.json({status: 'error', 'errcode': 3}); //not calculate survey
             }else{
                 async.map(surveyAnswers, function(surveyAnswer, callback) {
                     Survey.findOne({_id:surveyAnswer.surveyID}, function(err, survey) {
                         if (err) {
-                            return res.json({status:'error','errcode':2});
+                            return res.json({status:'error','errcode':1});
                         }
                         if(!survey){
-                            return res.json({status:'error','errcode':2});
+                            return res.json({status:'error','errcode':4});
                         }
                         if(surveys.length > 0){
                             surveys.forEach(function (tempsurvey) {
@@ -191,6 +196,7 @@ exports.newestScore = function(req, res) {
                             contain = false
                             let tmp = {
                                 surveyName: survey.surveyName,
+                                surveyTime:surveyAnswer.createAt,
                                 answer:surveyAnswer.answer
                             };
                             callback(null,tmp)

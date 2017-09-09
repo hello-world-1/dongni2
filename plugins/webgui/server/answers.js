@@ -22,7 +22,7 @@ exports.allquestionreply = function(req, res) {
             return res.json({status: 'error', 'errcode': 1});
         }
         if (questions.length === 0) {
-            return res.json({status: 'error', 'errcode': 2});
+            return res.json({status: 'error', 'errcode': 3});
         } else {
             async.map(questions, function(question, callback1) {
                 Promise.resolve().then(() => {
@@ -47,7 +47,7 @@ exports.allquestionreply = function(req, res) {
                                         async.map(replys, function(reply, callback2) {
                                             Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
                                                 if(err){
-                                                    return res.json({status: 'error', 'errcode': 4});
+                                                    return res.json({status: 'error', 'errcode': 1});
                                                 }
                                                 if(teacher){
                                                     var tmp = {
@@ -62,7 +62,7 @@ exports.allquestionreply = function(req, res) {
                                             })
                                         }, function(err,results) {
                                             if(err){
-                                                return res.json({status: 'error', 'errcode': 5});
+                                                return res.json({status: 'error', 'errcode': 1});
                                             }
                                             var tmp1 = {
                                                 'question': {
@@ -87,7 +87,7 @@ exports.allquestionreply = function(req, res) {
                 });
             }, function(err,results) {
                 if(err){
-                    return res.json({status: 'error', 'errcode': 6});
+                    return res.json({status: 'error', 'errcode': 1});
                 }
                 return res.json({
                     all:results
@@ -106,7 +106,7 @@ exports.replyview = function(req, res) {
     // Question.findOne({_id: questionID}).exec(function (err, question) {
     Question.findOne({_id: ObjectId(questionID)}).exec(function (err, question) {
         if (err) {
-            return res.json({status: 'error', 'errcode': 2});
+            return res.json({status: 'error', 'errcode': 1});
         }
         if(question){
             _question = question
@@ -125,7 +125,7 @@ exports.replyview = function(req, res) {
 
                                 Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
                                     if(err){
-                                        return res.json({status: 'error', 'errcode': 2});
+                                        return res.json({status: 'error', 'errcode': 1});
                                     }
                                     _teacher = teacher
                                     var tmp = {
@@ -208,7 +208,7 @@ exports.replycommit = function(req, res) {
                                     message.teacherID = teacherID
                                     message.save(function(err, message) {
                                         if (err) {
-                                            return res.json({"status": "error", "errcode": 3});
+                                            return res.json({"status": "error", "errcode": 1});
                                         }
                                         if(message){
                                             if(_parent.pushID){
@@ -229,7 +229,7 @@ exports.replycommit = function(req, res) {
                                             message.teacherID = teacherID
                                             message.save(function(err, message) {
                                                 if (err) {
-                                                    return res.json({"status": "error", "errcode": 4});
+                                                    return res.json({"status": "error", "errcode": 1});
                                                 }
                                                 if(message){
                                                     if(_parent.pushID){
@@ -255,7 +255,7 @@ exports.replycommit = function(req, res) {
     }).then(()=>{
         _reply.save(function(err, reply) {
             if (err) {
-                return res.json({status: 'error', 'errcode': 5});
+                return res.json({status: 'error', 'errcode': 1});
             }
             if (reply){
                 let message = new Message()
@@ -267,26 +267,26 @@ exports.replycommit = function(req, res) {
                 message.teacherID = teacherID
                 message.save(function(err, message) {
                     if (err) {
-                        return res.json({"status":"error","errcode":6});
+                        return res.json({"status":"error","errcode":1});
                     }
                     if(_parent.pushID){
                         push.pushService(_parent.pushID + '',message._id+'')
                     }
                     _replyPerson.save(function(err, replyPerson) {
                         if (err) {
-                            return res.json({status: 'error', 'errcode': 7});
+                            return res.json({status: 'error', 'errcode': 1});
                         }
                         if (replyPerson) {
                             Question.findOne({_id: questionID}).exec(function (err, question) {
                                 if (err) {
-                                    return res.json({status: 'error', 'errcode': 8});
+                                    return res.json({status: 'error', 'errcode': 1});
                                 }
                                 _question = question
                                 if (questionID) {
                                     Reply.findByQuestionId(questionID, function(err, replys) {
 
                                         if (replys.length === 0) {
-                                            return res.json({status: 'error', 'errcode': 9});
+                                            return res.json({status: 'error', 'errcode': 1});
                                         } else {
                                             // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
                                             // let teachers_serialize = [];
@@ -295,7 +295,7 @@ exports.replycommit = function(req, res) {
 
                                                 Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
                                                     if(err){
-                                                        return res.json({status: 'error', 'errcode': 10});
+                                                        return res.json({status: 'error', 'errcode': 1});
                                                     }
                                                     _teacher = teacher
                                                     var tmp = {
@@ -339,7 +339,7 @@ exports.replylist = function(req, res) {
     //通过家长id获得该id下的所有提问
     Reply.find({teacherID: teacherID}).sort({createAt:-1}).exec(function (err, replys) {
         if (err) {
-            return res.json({status: 'error', 'errcode': 2});
+            return res.json({status: 'error', 'errcode': 1});
         }
         if (replys.length === 0) {
             return res.json({status: 'error', 'errcode': 3});   //该用户没有回复
@@ -353,19 +353,19 @@ exports.replylist = function(req, res) {
 
                 Teacher.findById(reply.teacherID, function(err, teacher) {
                     if (err) {
-                        return res.json({status:'error','errcode':2});
+                        return res.json({status:'error','errcode':1});
                     }
                     if (teacher) {
                         _teacher = teacher
                         Question.findOne({_id:reply.questionID}, function(err, question) {
                             if (err) {
-                                return res.json({status:'error','errcode':2});
+                                return res.json({status:'error','errcode':1});
                             }
                             if (question) {
                                 _question = question
                                 Parent.findOne({_id:reply.parentID}, function(err, parent) {
                                     if (err) {
-                                        return res.json({status: 'error', 'errcode': 2});
+                                        return res.json({status: 'error', 'errcode': 1});
                                     }
                                     if (parent) {
                                         _parent = parent

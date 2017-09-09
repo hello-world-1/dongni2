@@ -10,7 +10,7 @@ const async = require('async');
 exports.questionlist = function(req, res) {
     Question.find({openFlag: 1}).sort({createAt:-1}).exec(function (err, questions) {
         if (err) {
-            return res.json({status: 'error', 'errcode': 2});
+            return res.json({status: 'error', 'errcode': 1});
         }
         if (questions.length === 0) {
             return res.json({status: 'error', 'errcode': 3});
@@ -21,7 +21,7 @@ exports.questionlist = function(req, res) {
                 Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
                     console.log(parent)
                     if(err){
-                        return res.json({status: 'error', 'errcode': 2});
+                        return res.json({status: 'error', 'errcode': 1});
                     }
                     let tmp = {
                         question: question,

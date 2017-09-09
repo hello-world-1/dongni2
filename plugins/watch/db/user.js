@@ -15,6 +15,7 @@ let UserSchema = new Schema({
 
     telephone: {type: String, required: true, index: {unique: true}},   //用户手机号
     password: {type: String, required: true},                           //用户密码
+    username:{type: String, default: ""},                               //用户名
     token: {type: String},                                              //用户登录使用的token
     age: {type: String, default: ""},                                   //用户年龄
     sex: {type: String, default: "male"},                               //用户性别

@@ -15,7 +15,7 @@ exports.lessondetail = function(req, res) {
 
     Lesson.findById(id, function(err, lesson) {
         if(err){
-            return res.json({"status":"error","errcode":2});
+            return res.json({"status":"error","errcode":1});
         }
         Teacher.findById(lesson.teacherID, function(err, teacher) {
             return res.json({"status":"success","lesson":lesson,"teacher":teacher});
@@ -26,6 +26,25 @@ exports.lessondetail = function(req, res) {
 
 // 添加课程
 exports.addlesson = function(req, res) {
+
+    let filestr = uuid.v1();
+    console.log("Received file:\n" + JSON.stringify(req.files));
+    let fileext = req.files.file.name.split('.');
+    let fileExt = fileext[fileext.length - 1];
+    let filename = filestr + "." + fileExt;
+    let location = path.join(__dirname, '../public') + "/images/avatars/" + filename;
+    let readStream = fs.createReadStream(req.files.file.path);
+    let writeStream = fs.createWriteStream(location);
+    let newavatar = "/images/avatars/" + filename;
+    readStream.pipe(writeStream);
+    readStream.on('end', function (err) {
+        if (err) {
+            return res.json({status: 'error', 'errcode': 1});
+        } else {
+            fs.unlinkSync(req.files.file.path);
+        }
+    });
+
     //https://jingyan.baidu.com/article/6079ad0ea56db628fe86db61.html
     const teacherID = req.session.user._id
     const title = req.body.title
@@ -57,10 +76,11 @@ exports.addlesson = function(req, res) {
     _lesson.price = price
     _lesson.enrollNum = enrollNum
     _lesson.state = state
+    _lesson.avatar = newavatar
 
 	_lesson.save(function(err, lesson) {
         if (err) {
-            return res.json({"status":"error","errcode":2});
+            return res.json({"status":"error","errcode":1});
         }
 
         let parents = []
@@ -90,11 +110,11 @@ exports.addlesson = function(req, res) {
                     message.teacherID = teacherID
                     message.save(function(err, message) {
                         if (err) {
-                            return res.json({"status":"error","errcode":2});
+                            return res.json({"status":"error","errcode":1});
                         }
                         Parent.findOne({_id: reply.parentID}).exec(function (err, parent) {
                             if (err) {
-                                return res.json({"status":"error","errcode":2});
+                                return res.json({"status":"error","errcode":1});
                             }
                             if (parent) {
                                 console.log("parent:" + parent)
@@ -111,7 +131,7 @@ exports.addlesson = function(req, res) {
             }, function(err,results) {
                 Lesson.findByTeacherId(teacherID, function(err, lessons) {
                     if (err) {
-                        return res.json({"status":"error","errcode":2});
+                        return res.json({"status":"error","errcode":1});
                     }
                     return res.json({"status":"success","lessons":lessons});
                 })
@@ -127,7 +147,7 @@ exports.lessonlist = function(req, res) {
 	if (teacherID) {
 		Lesson.findByTeacherId(teacherID, function(err, lessons) {
             if (err) {
-                return res.json({"status":"error","errcode":2});
+                return res.json({"status":"error","errcode":1});
             }
 
 			return res.json({"status":"success","lessons":lessons});

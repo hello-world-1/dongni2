@@ -62,6 +62,10 @@ const LessonSchema = new Schema({
         min: 0,
         default: 0
     }, //已报名人数
+    avatar: {
+        type: String,
+        default: ""
+    }, //头像
     state: {
         type: String,
         default: "1"

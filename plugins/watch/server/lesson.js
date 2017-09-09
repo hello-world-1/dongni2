@@ -67,6 +67,4 @@ exports.detail = (req, res) => {
             });
         }
     });
-
-    // res.send('This is not implemented now');
 };

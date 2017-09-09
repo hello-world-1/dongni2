@@ -7,6 +7,9 @@ const config = appRequire('services/config').all();
 
 const Question = appRequire('plugins/watch/db/question');
 const Reply = appRequire('plugins/webgui/db/reply');
+const Teacher = appRequire('plugins/webgui/db/teacher');
+const Parent = appRequire('plugins/watch/db/user');
+const async = require('async');
 
 //列出该用户的所有提问
 exports.list = (req, res) => {
@@ -17,7 +20,7 @@ exports.list = (req, res) => {
     if (!pagestart) pagestart = 0;
 
     //通过家长id获得该id下的所有提问
-    Question.find({parentID: user._id}).limit(pagestart*10,10).sort({createAt:-1}).exec(function (err, questions) {
+    Question.find({parentID: user._id}).limit(pagestart * 10, 10).sort({createAt: -1}).exec(function (err, questions) {
         if (err) {
             return res.json({status: 'error', 'errcode': 3});   //数据库查询出错
         }
@@ -32,6 +35,7 @@ exports.list = (req, res) => {
             var questions_serialize = [];
             questions.forEach(function (question) {
                 var tmp = {
+                    id: question._id,
                     title: question.title,
                     content: question.content,
                     createAt: question.createAt
@@ -51,7 +55,7 @@ exports.similar = (req, res) => {
         pagestart = 0;
     }
 
-    Question.find().limit(pagestart*10, 10).sort({createAt: -1}).exec(function (err, questions) {
+    Question.find().limit(pagestart * 10, 10).sort({createAt: -1}).exec(function (err, questions) {
         if (err) {
             return res.json({status: 'error', 'errcode': 3});   //数据库查询错误
         }
@@ -63,13 +67,14 @@ exports.similar = (req, res) => {
                 var _question = {
                     questionID: question._id,
                     title: question.title,
-                    content: question.content
+                    content: question.content,
+                    createAt: question.createAt
                 };
                 questions_serialize.push(_question);
             });
             res.json({status: 'success', 'similar': questions_serialize});
         }
-    })
+    });
 };
 
 //用户添加新提问
@@ -85,12 +90,15 @@ exports.add = (req, res) => {
     question = new Question(_question);
     console.log("question.add:");
     console.log(question);
-    question.save(function (err,question) {
+    question.save(function (err, question) {
         if (err) {
             return res.json({status: 'error', 'errcode': 3});   //提问保存出错
         }
         else {
-            res.json({status: 'success'});
+            res.json({
+                status: 'success',
+                questionID: question._id,
+            });
         }
     });
 
@@ -105,55 +113,125 @@ exports.detail = (req, res) => {
         if (err) {
             return res.json({status: 'error', 'errcode': 3});   //数据库查询错误
         }
-        //查询不到该question
         if (!question) {
             return res.json({statu: 'error', 'errcode': 4});    //未查询到该问题
-        }
-        else {
-
-            console.log("question.detail:");
-            console.log(question);
+        } else {
             var _question = {
                 title: question.title,
                 content: question.content,
                 createAt: question.createAt
             };
-
-            Reply.find({questionID: questionID}).sort({createAt:-1}).exec(function (err, replys) {
+            Reply.find({questionID: questionID}).sort({createAt: -1}).exec(function (err, replys) {
                 if (err) {
                     return res.json({status: 'error', 'errcode': 5});   //数据库查询出错
                 }
                 else {
-                    var replys_serialize = [];
-                    replys.forEach(function (reply) {
-                        var tmp = {
-                            teacherID:reply.teacherID,
-                            content:reply.content
-                        };
-                        replys_serialize.push(tmp);
+                    async.map(replys, function (reply, callback) {
+                        Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                            if (err) {
+                                return res.json({"status": "error", "errcode": 1});
+                            }
+                            if (teacher) {
+                                console.log("parent:" + parent);
+                                var tmp = {
+                                    teacher: teacher,
+                                    content:reply.content
+                                };
+                                callback(null,tmp)
+                            }
+                        });
+                    },function (err, results) {
+                        res.json({status: 'success', 'question': _question, 'replys': results});
                     });
-                    console.log("replys_serialize:");
-                    console.log(replys_serialize);
-                    res.json({status: 'success', 'question': _question, 'replys': replys_serialize});
                 }
-            });
 
-            // //test
-            // var reply = new Reply ({
-            //     teacherID: '598d194a416bfc9331706117',
-            //     questionID: '598c379949f5412215bdc42c',
-            //     content: 'This is a test2 reply'
-            // });
-            // reply.save(function (err) {
-            //     if (err) {
-            //         res.json('error')
-            //     }
-            //     else {
-            //         res.json('success')
-            //     }
-            // })
+
+            })
         }
     });
-    // res.send('This is not implemented now');
 };
+
+exports.replies = function(req, res) {
+    parentID = req.body.user._id;
+
+    Question.find({parentID:parentID}).exec(function (err, questions) {
+        let questionreply_serialize = [];
+        if (err) {
+            return res.json({status: 'error', 'errcode': 3});
+        }
+        if (questions.length === 0) {
+            return res.json({status: 'error', 'errcode': 4});
+        } else {
+            async.map(questions, function(question, callback1) {
+                Promise.resolve().then(() => {
+                    return new Promise((resolve,reject)=>{
+                        Parent.findOne({_id: question.parentID}).exec(function (err, parent) {
+                            if (parent) {
+                                Reply.find({questionID:question._id}, function(err, replys) {
+
+                                    if (replys.length === 0) {
+                                        var tmp1 = {
+                                            'question': {
+                                                parent:parent,
+                                                question:question
+                                            }
+                                        };
+                                        // questionreply_serialize.push(tmp1)
+                                        // resolve(questionreply_serialize)
+                                        resolve(tmp1)
+                                    } else {
+                                        // db.questions.update({"_id":ObjectId("599666e3e1097e36ab8fdb4b")},{$set:{"parentID" : "59965ba9e1097e36ab8fdb47"}})
+                                        // let teachers_serialize = [];
+                                        async.map(replys, function(reply, callback2) {
+                                            Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
+                                                if(err){
+                                                    return res.json({status: 'error', 'errcode': 3});
+                                                }
+                                                if(teacher){
+                                                    var tmp = {
+                                                        teacher: teacher,
+                                                        content:reply.content
+                                                    };
+                                                    // teachers_serialize.push(tmp);
+                                                    // console.log("teachers_serialize:" + teachers_serialize)
+                                                    // callback2(null,teachers_serialize)
+                                                    callback2(null,tmp)
+                                                }
+                                            })
+                                        }, function(err,results) {
+                                            if(err){
+                                                return res.json({status: 'error', 'errcode': 3});
+                                            }
+                                            var tmp1 = {
+                                                'question': {
+                                                    parent:parent,
+                                                    question:question
+                                                },
+                                                replys:results
+                                            };
+                                            // questionreply_serialize.push(tmp1)
+                                            // resolve(questionreply_serialize)
+                                            resolve(tmp1)
+                                        });
+                                    }
+                                })
+                            }
+                        })
+                    })
+                }).then((questionreply_serialize)=>{
+                    callback1(null,questionreply_serialize)
+                }).catch(err => {
+                    return res.json({status: 'error', 'errcode': 3});
+                });
+            }, function(err,results) {
+                if(err){
+                    return res.json({status: 'error', 'errcode': 3});
+                }
+                return res.json({
+                    all:results
+                });
+            })
+        }
+    });
+}
 

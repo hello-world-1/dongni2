@@ -66,7 +66,8 @@ app.post('/api/user/logout', home.signinRequired, home.logout);
 app.post('/api/user/resetPassword', home.signinRequired, home.resetPassword);
 //添加pushID
 app.post('/api/user/addPushID', home.signinRequired, home.addPushID);
-
+//修改用户的个人信息
+app.post('/api/user/information/changeInfo', home.signinRequired, home.changeInfo);
 //question
 //获取相关提问列表(一期为获取全部提问)
 app.post('/api/user/question/similar', home.signinRequired, question.similar);
@@ -76,6 +77,8 @@ app.post('/api/user/question/list', home.signinRequired, question.list);
 app.post('/api/user/question/new', home.signinRequired, question.add);
 //根据提问id获取提问详情
 app.post('/api/user/question/detail', home.signinRequired, question.detail);
+//所有问题的所有回复
+app.post('/api/user/question/replies', home.signinRequired, question.replies);
 
 //emotion
 //根据家长id获取最新情绪详情

@@ -54,10 +54,10 @@ app.post('/admin/addteacher', multipartMiddleware, Home.signinRequired,Teacher.a
 app.post('/teacher/changeinfo',multipartMiddleware, Home.signinRequired,Teacher.changeinfo);
 app.post('/teacher/booklist', Home.signinRequired,Book.booklist);
 app.post('/teacher/bookdetail', Home.signinRequired,Book.bookdetail);
-app.post('/teacher/addbook', Home.signinRequired,Book.addbook);
+app.post('/teacher/addbook', multipartMiddleware,Home.signinRequired,Book.addbook);
 app.post('/teacher/lessondetail', Home.signinRequired,Lesson.lessondetail);
 app.post('/teacher/lessonlist', Home.signinRequired,Lesson.lessonlist);
-app.post('/teacher/addlesson', Home.signinRequired,Lesson.addlesson);
+app.post('/teacher/addlesson', multipartMiddleware,Home.signinRequired,Lesson.addlesson);
 app.post('/teacher/replylist', Home.signinRequired,Answer.replylist);
 //change method code
 app.post('/teacher/questionlist', Home.signinRequired,Question.questionlist);
@@ -66,17 +66,17 @@ app.post('/teacher/replycommit', Home.signinRequired,Answer.replycommit);
 app.post('/teacher/allquestionreply', Home.signinRequired,Answer.allquestionreply);
 app.post('/child/childinfo', Home.signinRequired,User.childinfo);
 // 根据某个题库名生成考题
-app.post('/survey/productSurvey', Home.signinRequired,Survey.productSurvey);// product question
+app.post('/survey/productSurvey', Survey.productSurvey);// product question
 //向某个题库中插入问题
 app.post('/survey/insertQuestion', Home.signinRequired,require('body-parser').json(), Survey.insertQuestion);// insert question
 //向某个题库中插入答案
-app.post('/survey/insertAnswer', Home.signinRequired,require('body-parser').json(), Survey.insertAnswer);// insert answer
+app.post('/survey/insertAnswer', require('body-parser').json(), Survey.insertAnswer);// insert answer
 //家长所填写的全部问卷的历史记录
-app.post('/survey/historyScore', Home.signinRequired,Survey.historyScore);
+app.post('/survey/historyScore', Survey.historyScore);
 //家长所填写的全部问卷的最新答案
-app.post('/survey/newestScore', Home.signinRequired,Survey.newestScore);
+app.post('/survey/newestScore', Survey.newestScore);
 //全部问卷
-app.post('/survey/allSurvey', Home.signinRequired,Survey.allSurvey);
+app.post('/survey/allSurvey', Survey.allSurvey);
 
 
 

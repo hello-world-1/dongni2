@@ -1,4 +1,4 @@
-## 后台接口
+## 后台接口  json中返回的所有parent对象添加一个username属性
 ### 用户使用账号登录
 > * /user/login
 
@@ -1474,6 +1474,7 @@ if status == "error" means error
 >> * relation:requested
 >> * parentTelephone:requested
 >> * parentCharacter:requested
+>> * parentUsername:requested
 >> * childAge:requested
 >> * childSex:requested
 >> * childGrade:requested
@@ -1588,7 +1589,7 @@ if status == "error" means error
 >> * parentID（用户id）
 >> * title（提问标题）
 >> * content（提问内容）
->> * openFlag（提问是否公开标志位）
+>> * openFlag（提问是否公开标志位）1表示公开,0表示不公开
 
 > * Successful Return
 >> * {status}

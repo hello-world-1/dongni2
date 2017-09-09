@@ -24,7 +24,7 @@ exports.signin = function(req, res) {
         username: username
     }, function(err, user) {
         if (err) {
-            console.log(err)
+            return res.json({status: 'error', 'errcode': 1});
         }
         if (user){
             // if admin contain this username,return username exist
@@ -62,7 +62,7 @@ exports.login = function(req, res) {
     }, function(err, user) {
 
         if (err) {
-            return res.json({status: 'error', 'errcode': 2});
+            return res.json({status: 'error', 'errcode': 1});
         }
 
         if (!user) {
@@ -72,20 +72,20 @@ exports.login = function(req, res) {
                 username: username
             }, function(err, user) {
                 if (err) {
-                    res.json({status: 'error', 'errcode': 2});
+                    res.json({status: 'error', 'errcode': 1});
                 }
                 if (!user){
                     // if admin not contain this username,return username not exist
-                    res.json({status: 'error', 'errcode': 1});
+                    res.json({status: 'error', 'errcode': 2});
                 }else{
                     user.comparePassword(password, function(err, isMatch) {
                         if (err) {
-                            return res.json({status: 'error', 'errcode': 2});
+                            return res.json({status: 'error', 'errcode': 1});
                         }
                         if (isMatch) {
                             // if admin match
                             req.session.user = user
-                            // req.session.type = 'admin'
+                            req.session.type = 'admin'
                             Teacher.fetch(function(err, teachers) {
                                 return res.json({
                                         "status": "success",
@@ -94,7 +94,7 @@ exports.login = function(req, res) {
                             })
 
                         } else {
-                            return res.json({status: 'error', 'errcode': 2});
+                            return res.json({status: 'error', 'errcode': 3});
                         }
                     })
                 }
@@ -103,18 +103,18 @@ exports.login = function(req, res) {
         }else{
             user.comparePassword(password, function(err, isMatch) {
                 if (err) {
-                    return res.json({status: 'error', 'errcode': 2});
+                    return res.json({status: 'error', 'errcode': 1});
                 }
 
                 if (isMatch) {
-                    // req.session.type = 'teacher'
+                    req.session.type = 'teacher'
                     req.session.user = user
                     return res.json({
                         "status": "success",
                         teacher:user
                     });
                 } else {
-                    return res.json({status: 'error', 'errcode': 2});
+                    return res.json({status: 'error', 'errcode': 3});
                 }
             })
         }
@@ -164,7 +164,7 @@ exports.childinfo = function(req, res) {
             Child.findOne({_id:parent.childID}).limit(1).exec(function (err, child) {
                 console.log("child:" + child)
                 if (err) {
-                    return res.json({status: 'error', 'errcode': 3});
+                    return res.json({status: 'error', 'errcode': 1});
                 }
                 if (!child) {
                     // return res.json({status: 'error', 'errcode': 4});
@@ -186,12 +186,13 @@ exports.childinfo = function(req, res) {
                     return res.json({status: 'error', 'errcode': 1});
                 }
                 if (surveyAnswers.length === 0) {
-                    return res.json({status: 'error', 'errcode': 2}); //not calculate survey
+                    resolve()
+                    // return res.json({status: 'error', 'errcode': 3}); //not calculate survey
                 }else{
                     async.map(surveyAnswers, function(surveyAnswer, callback) {
                         Survey.findOne({_id:surveyAnswer.surveyID}, function(err, survey) {
                             if (err) {
-                                return res.json({status:'error','errcode':2});
+                                return res.json({status:'error','errcode':1});
                             }
                             if(!survey){
                                 return res.json({status:'error','errcode':2});
@@ -251,7 +252,7 @@ exports.childinfo = function(req, res) {
         return new Promise((resolve,reject)=> {
             Question.find({}).exec(function (err, questions) {
                 if (err) {
-                    return res.json({status: 'error', 'errcode': 6});
+                    return res.json({status: 'error', 'errcode': 1});
                 }
                 if (questions.length === 0) {
                     resolve()
@@ -285,7 +286,7 @@ exports.childinfo = function(req, res) {
                                                 async.map(replys, function (reply, callback2) {
                                                     Teacher.findOne({_id: reply.teacherID}).exec(function (err, teacher) {
                                                         if (err) {
-                                                            return res.json({status: 'error', 'errcode': 4});
+                                                            return res.json({status: 'error', 'errcode': 1});
                                                         }
                                                         if (teacher) {
                                                             var tmp = {
@@ -297,7 +298,7 @@ exports.childinfo = function(req, res) {
                                                     })
                                                 }, function (err, results) {
                                                     if (err) {
-                                                        return res.json({status: 'error', 'errcode': 5});
+                                                        return res.json({status: 'error', 'errcode': 1});
                                                     }
                                                     var tmp1 = {
                                                         'question': {
@@ -317,11 +318,11 @@ exports.childinfo = function(req, res) {
                             callback1(null, questionreply_serialize)
                         }).catch(err => {
                             logger.error(err);
-                            return res.json({status: 'error', 'errcode': 7});
+                            return res.json({status: 'error', 'errcode': 1});
                         });
                     }, function (err, results) {
                         if (err) {
-                            return res.json({status: 'error', 'errcode': 8});
+                            return res.json({status: 'error', 'errcode': 1});
                         }
                         resolve(results)
                     })
@@ -340,7 +341,7 @@ exports.childinfo = function(req, res) {
         })
     }).catch(err => {
         logger.error(err);
-        return res.json({status: 'error', 'errcode': 9});
+        return res.json({status: 'error', 'errcode': 1});
     });
 
 

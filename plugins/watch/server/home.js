@@ -6,9 +6,11 @@ const randomstring = require('randomstring');
 const iHuyi = appRequire('plugins/watch/server/ihuyisdk');
 const bcrypt = require('bcryptjs');
 const User = appRequire('plugins/watch/db/user');
+const Child = appRequire('plugins/watch/db/child');
 const Message = appRequire('plugins/webgui/db/message');
 const push=appRequire('services/push')
 const async = require('async');
+const moment = require('moment');
 
 //用户注册
 exports.signup = (req, res) => {
@@ -346,6 +348,84 @@ exports.addPushID = (req, res) => {
 //         res.status(500).end();
 //     });
 // };
+
+
+//修改用户的个人信息
+exports.changeInfo = (req, res) => {
+    const user = req.body.user;
+
+    const parentAge = req.body.parentAge;
+    const parentSex = req.body.parentSex;
+    const relation = req.body.relation;
+    const parentTelephone = req.body.parentTelephone;
+    const parentCharacter = req.body.parentCharacter;
+    const username = req.body.parentUsername;
+
+    const childAge = req.body.childAge;
+    const childSexStr = req.body.childSexStr;
+    const childGrade = req.body.childGrade;
+    const childBirth = req.body.childBirth;
+    const childCharacter = req.body.childCharacter;
+    const chilPhone = req.body.chilPhone;
+
+    //用户第一次设置
+    if (!user.childID) {
+        let _child = new Child({
+            birthday: new Date(childBirth).getTime(),
+            sex: childSexStr,
+            age: childAge,
+            grade: childGrade,
+            character: childCharacter,
+            parentID: user._id
+        });
+        _child.save(function (err,child) {
+            if (err) {
+                return res.json({stauts: 'error', 'errcode': 4});   //数据库保存出错
+            }
+            user.childID = child._id;
+            user.age = parentAge;
+            user.sex = parentSex;
+            user.character = parentCharacter;
+            user.relationship = relation;
+            user.telephone = parentTelephone;
+            user.childrenTelephone = chilPhone;
+            user.username = username;
+            user.save(function (err) {
+                if (err) {
+                    return res.json({stauts: 'error', 'errcode': 5});   //数据库保存出错
+                }
+                res.json({statuts: 'success'});
+            })
+        })
+    }
+    //用户更新数据
+    else {
+        const momentBirthday = new Date(childBirth).getTime();
+        Child.update({_id: user.childID}, {$set: {birthday: momentBirthday,
+            sex: childSexStr,
+            age: childAge,
+            grade: childGrade,
+            character: childCharacter
+        }},function (err, child) {
+            if (err) {
+                return res.json({status: 'error', 'errcode': 6});   //数据库更新出错
+            }
+            user.age = parentAge;
+            user.sex = parentSex;
+            user.character = parentCharacter;
+            user.relationship = relation;
+            user.telephone = parentTelephone;
+            user.childrenTelephone = chilPhone;
+            user.save(function (err) {
+                if (err) {
+                    return res.json({stauts: 'error', 'errcode': 7});   //数据库保存出错
+                }
+                res.json({statuts: 'success'});
+            })
+        })
+    }
+};
+
 
 
 
