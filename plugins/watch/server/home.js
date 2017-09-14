@@ -29,7 +29,6 @@ exports.signup = (req, res) => {
             res.json({status: 'error', 'errcode': 2}); //2:数据库查询失败
             return;
         }
-
         //用户已存在
         if (user) {
             res.json({status: 'error', 'errcode': 3}); //3:该手机号已注册

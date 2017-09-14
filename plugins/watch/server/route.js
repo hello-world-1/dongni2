@@ -126,7 +126,10 @@ app.post('/api/user/message/changeMessageStatus', home.signinRequired, message.c
 app.post('/api/user/message/viewAllMessage', home.signinRequired, message.viewAllMessage);
 //是否显示红点
 app.post('/api/user/message/redPoint', home.signinRequired, message.redPoint);
-
+//add Contact
+app.post('/api/user/addContact', home.signinRequired, user.addContact);
+//change Contact
+app.post('/api/user/changeContact', home.signinRequired, user.changeContact);
 //watch
 //获取手表信息
 app.post('/api/user/watch/detail', home.signinRequired, watch.detail);
