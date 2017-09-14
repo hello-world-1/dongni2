@@ -10,7 +10,7 @@ var User = require('./user');
 
 var AlertSchema = new Schema({
 
-    parentID: {type: Schema.Types.ObjectId, ref: 'User'},       //家长id
+    parentID: {type: Schema.Types.ObjectId, ref: 'User'},       //家长id,根据家长id能查出孩子id
     content: {type: String, default: ""},                       //警示内容
     viewedFlag: {type: String, default: "0"},                   //是否被查看标志位： 0：未被查看 1： 已查看
     date: {type: Date, default: Date.now},                      //预警发布的时间

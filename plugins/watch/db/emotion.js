@@ -7,6 +7,7 @@
 var mongoose = appRequire('init/mongoose'),
     Schema = mongoose.Schema;
 var User = require('./user');
+var Child = require('./child');
 
 var EmotionSchema = new Schema({
 
@@ -19,6 +20,7 @@ var EmotionSchema = new Schema({
     time: {type: Date, default: Date.now},                          //时间
     IMEI: {type: String, required: true},                           //手表IMEI号
     parentID: {type: Schema.Types.ObjectId, ref: 'User'},           //家长id
+    childID: {type: Schema.Types.ObjectId, ref: 'Child'},       //child id
     createAt: {type: Date}                       //该情绪数据的创建时间
 });
 

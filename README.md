@@ -1475,6 +1475,7 @@ if status == "error" means error
 >> * parentTelephone:requested
 >> * parentCharacter:requested
 >> * parentUsername:requested
+>> * profession:requested
 >> * childAge:requested
 >> * childSex:requested
 >> * childGrade:requested

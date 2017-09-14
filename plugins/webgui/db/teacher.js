@@ -121,7 +121,7 @@ TeacherSchema.statics = {
 	fetch: function(cb) {
 		return this
 			.find({})
-			.sort('meta.updateAt')
+			.sort({'meta.updateAt':-1})
 			.exec(cb)
 	}
 }

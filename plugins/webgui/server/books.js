@@ -15,6 +15,10 @@ const Parent = appRequire('plugins/watch/db/user');
 exports.bookdetail = function(req, res) {
 	const id = req.body.bookid
 
+    if(!id){
+        return res.json({"status":"error","errcode":2});
+    }
+
 	Book.findById(id, function(err, book) {
 		if(err){
 			return res.json({"status":"error","errcode":1});
@@ -66,7 +70,13 @@ exports.addbook = function(req, res) {
 		if (err) {
 			return res.json({"status":"error","errcode":1});
 		}
-        let parents = []
+        Book.findByTeacherId(teacherID, function(err, books) {
+            if (err) {
+                return res.json({"status":"error","errcode":1});
+            }
+            return res.json({"status":"success","books":books});
+        })
+        /*let parents = []
         let contain = false
 		// create a new message
         Reply.find({teacherID: teacherID}).exec(function (err, replys) {
@@ -119,7 +129,7 @@ exports.addbook = function(req, res) {
                     return res.json({"status":"success","books":books});
                 })
             });
-        })
+        })*/
 	})
 
 }
@@ -136,7 +146,9 @@ exports.booklist = function(req, res) {
             }
             return res.json({"status":"success","books":books});
 		})
-	}
+	} else{
+        return res.json({"status":"error","errcode":2});
+    }
 }
 
 // 跳转到更新书籍的界面

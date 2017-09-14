@@ -90,7 +90,7 @@ LessonSchema.statics = {
             .find({
                 teacherID: id
             })
-            .sort('createAt')
+            .sort({'createAt':-1})
             .exec(cb)
     },
     findById: function(id, cb) {

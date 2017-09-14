@@ -29,7 +29,7 @@ exports.latest = (req, res) => {
                 report: emotion.report
             };
 
-            res.json({status: 'success', emotion: _emotion})
+            return res.json({status: 'success', emotion: _emotion})
         }
     });
 

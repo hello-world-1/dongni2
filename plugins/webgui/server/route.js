@@ -46,9 +46,9 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-app.post('/user/signin', User.signin);
-app.post('/user/login', User.login);
-app.post('/user/logout', User.logout);
+app.post('/user/signin', User.signin);//管理员添加老师
+app.post('/user/login', User.login);//管理员或者老师登录
+app.post('/user/logout', Home.signinRequired,User.logout);//用户登出
 app.post('/teacher/changeavatar', multipartMiddleware, Home.signinRequired, Teacher.changeAvatar);
 app.post('/admin/addteacher', multipartMiddleware, Home.signinRequired,Teacher.addTeacher);
 app.post('/teacher/changeinfo',multipartMiddleware, Home.signinRequired,Teacher.changeinfo);
@@ -78,9 +78,6 @@ app.post('/survey/newestScore', Survey.newestScore);
 //全部问卷
 app.post('/survey/allSurvey', Survey.allSurvey);
 
-
-
-app.post('/api/home/login', home.login);
 app.post('/api/home/sendtcp',home.sendtcp);
 const version = appRequire('package').version;
 const homePage = (req, res) => res.render('index', { version });

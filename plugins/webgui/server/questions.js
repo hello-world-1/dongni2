@@ -8,7 +8,7 @@ const ObjectId = require('mongodb').ObjectId;
 const async = require('async');
 // 跳转到显示所有的问题列表
 exports.questionlist = function(req, res) {
-    Question.find({openFlag: 1}).sort({createAt:-1}).exec(function (err, questions) {
+    Question.find({}).sort({createAt:-1}).exec(function (err, questions) {
         if (err) {
             return res.json({status: 'error', 'errcode': 1});
         }

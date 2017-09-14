@@ -70,7 +70,7 @@ exports.addTeacher = function (req, res) {
     // 老师的介绍
     // 年龄
     if (req.session.type == 'teacher') {
-        return res.json({status: 'error', 'errcode': 3});
+        return res.json({status: 'error', 'errcode': 6});
     }
 
     const username = req.body.username;

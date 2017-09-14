@@ -64,6 +64,12 @@ app.post('/api/user/signin', home.signin);
 app.post('/api/user/logout', home.signinRequired, home.logout);
 //修改密码
 app.post('/api/user/resetPassword', home.signinRequired, home.resetPassword);
+//切换设备
+app.post('/api/user/switchDevice', home.signinRequired, home.switchDevice);
+
+
+//显示首页的数据
+app.post('/api/user/indexPage', home.signinRequired, home.indexPage);
 //添加pushID
 app.post('/api/user/addPushID', home.signinRequired, home.addPushID);
 //修改用户的个人信息
@@ -83,7 +89,7 @@ app.post('/api/user/question/replies', home.signinRequired, question.replies);
 //emotion
 //根据家长id获取最新情绪详情
 app.post('/api/user/emotion/latest', home.signinRequired, emotion.latest);
-// //根据I家长id获取情绪详情列表--成长
+//根据I家长id获取情绪详情列表--成长
 // app.post('/api/user/emotion/list', home.signinRequired, emotion.list);
 
 //lesson

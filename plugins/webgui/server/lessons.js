@@ -82,8 +82,13 @@ exports.addlesson = function(req, res) {
         if (err) {
             return res.json({"status":"error","errcode":1});
         }
-
-        let parents = []
+        Lesson.findByTeacherId(teacherID, function(err, lessons) {
+            if (err) {
+                return res.json({"status":"error","errcode":1});
+            }
+            return res.json({"status":"success","lessons":lessons});
+        })
+        /*let parents = []
         let contain = false
         // create a new message
         Reply.find({teacherID: teacherID}).exec(function (err, replys) {
@@ -136,7 +141,7 @@ exports.addlesson = function(req, res) {
                     return res.json({"status":"success","lessons":lessons});
                 })
             });
-        })
+        })*/
 	})
 }
 

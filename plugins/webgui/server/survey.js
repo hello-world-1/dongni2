@@ -17,7 +17,6 @@ exports.productSurvey = function(req, res) {
     const surveyName = req.body.surveyName
 
     console.log("surveyName:" + surveyName)
-    // Survey.findOne({surveyName:surveyName}).exec(function (err, survey) {
     Survey.findOne({surveyName:surveyName}).exec(function (err, survey) {
         if (err) {
             return res.json({status: 'error', 'errcode': 1});
@@ -38,7 +37,7 @@ exports.productSurvey = function(req, res) {
 // insert question
 exports.insertQuestion = function(req, res) {
     if(req.session.type == 'teacher'){
-        return res.json({status: 'error', 'errcode': 3});
+        return res.json({status: 'error', 'errcode': 6});
     }
 
     console.log(req.body)
@@ -80,7 +79,6 @@ exports.insertAnswer = function(req, res) {
 
     _surveyAnswer.score = score
 
-    console.log(score)
     _surveyAnswer.save(function (err,surveyAnswer) {
         if (err) {
             return res.json({stauts: 'error', 'errcode': 1});   //数据库保存出错
@@ -93,7 +91,7 @@ exports.insertAnswer = function(req, res) {
 
 //家长所填写的全部问卷的历史记录
 exports.historyScore = function(req, res) {
-    const parentID = req.body.parentID
+    const relationID = req.body.relationID
     let _parent
 
     Promise.resolve().then(() => {

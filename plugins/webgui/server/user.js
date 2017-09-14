@@ -15,6 +15,11 @@ const moment = require('moment');
 const ObjectId = require('mongodb').ObjectId;
 const async = require('async');
 
+/**
+ * 管理员添加老师
+ * @param req
+ * @param res
+ */
 exports.signin = function(req, res) {
 
     const username = req.body.username
@@ -47,7 +52,6 @@ exports.signin = function(req, res) {
     })
 }
 
-// 
 exports.login = function(req, res) {
     // >> * username:requested
     // >> * password:requested

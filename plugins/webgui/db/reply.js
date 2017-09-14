@@ -9,22 +9,19 @@ var User = appRequire('plugins/watch/db/user');
 
 var ReplySchema = new Schema({
 
-	teacherID: {
-		type: Schema.Types.ObjectId,
-		ref: 'Teacher'
-	}, //老师id
 	questionID: {
 		type: Schema.Types.ObjectId,
 		ref: 'Question'
 	}, //问题id
-    parentID: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }, //问题id
+    contentType:{
+        type: String,
+        default: "0"   //0表示回复的是文本内容,1表示回复的是图片内容
+    },
 	content: {
 		type: String,
 		default: ""
 	}, //回复内容
+    replyType:{},
 	createAt: {
 		type: Date,
 		default: Date.now
