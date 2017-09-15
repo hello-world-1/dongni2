@@ -1,4 +1,9 @@
-## 后台接口  json中返回的所有parent对象添加一个username属性
+## 推送接口 使用推送服务之前必须先使用/api/user/addPushID路由注册pushID
+### 用户强制下线推送
+> * 推送数据格式为"forceoffline token"
+> *客户端判断此推送是否包含forceoffline,如果包含则以空格分割,判断安卓端本地存储的token与传入的token是否一致,如果一致则强制下线
+
+## 后台接口
 ### 用户使用账号登录
 > * /user/login
 
@@ -6,18 +11,14 @@
 >> * username:requested
 >> * password:requested
 
-> * Successful Return
->> * {如果为管理员登录跳转到管理员后台界面,如果为老师登录跳转到老师后台界面)
-
 > * Error Return
->> * errcode = 1: 数据库查询出错
->> * errcode = 2: 用户名不存在
->> * errcode = 2: 密码不正确
+>> * errcode = 1: 数据库出错
+>> * errcode = 2: 账号不存在
+>> * errcode = 3: 密码不正确
 
 > * example
-
 ```
-如果为管理员跳转传送的数据为:
+管理员登录返回的数据为:
 {
   "status": "success",
   "teachers": [
@@ -38,7 +39,7 @@
     },......
   ]
 }
-如果为老师登录跳转传送的数据为:
+老师登录返回的数据为:
 {
   "status": "success",
   "teacher": {
@@ -64,25 +65,22 @@
 > * Input Parameters
 >> * username:requested
 >> * password:requested
->> * file:requested
+>> * file:requested  --file为文件类型
 >> * introduction:requested
 >> * name:requested
 >> * age:requested
 >> * sex:requested
 
-> * Successful Return
->> * {跳转到管理员首页)
-
 > * Error Return
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
 >> * errcode = 2: 用户名已存在
->> * errcode = 3: 当前用户无权限
->> * errcode = 5: 用户登录信息错误
+>> * errcode = 5: 用户未登录
+>> * errcode = 6: 操作未授权
 
 > * example
 
 ```
-跳转到管理员首页传送的数据为:
+返回的数据格式:按老师的最后更新内容时间排序
 {
   "status": "success",
   "teachers": [
@@ -103,19 +101,14 @@
     },......
   ]
 }
-跳转到重新添加老师界面传送的数据为:
-{status:'error','errcode':1}
 ```
 ### 注销登录
 > * /user/logout
 
 > * Input Parameters
 
-> * Successful Return
-跳转到登录界面
-
 > * Error Return
->> * errcode = 5: 用户登录信息错误
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
@@ -125,19 +118,18 @@
 > * /teacher/changeavatar
 
 > * Input Parameters
->> * file:requested
+>> * file:requested  --file为文件类型
 
 > * Successful Return
 跳转到老师个人信息界面
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 2: 服务器内部错误
-
+>> * errcode = 1: 数据库出错
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到老师个人信息界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "teacher": {
@@ -156,7 +148,6 @@
     "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   }
 }
-{status:'error','errcode':1}
 ```
 ### 修改老师个人信息:只有登录的老师自己可以修改
 > * /teacher/changeinfo
@@ -168,18 +159,15 @@
 >> * introduction:requested
 >> * name:requested
 >> * age:requested
->> * file:requested
-
-> * Successful Return
-跳转到老师个人信息界面
+>> * file:requested  --file为文件类型
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到老师个人信息界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "teacher": {
@@ -199,22 +187,20 @@
   }
 }
 ```
-
 ### 当前老师添加过的所有图书
 > * /teacher/booklist
 
 > * Input Parameters
-
-> * Successful Return
-跳转到老师添加过的所有图书界面
+>> * 无
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 2: 系统内部错误
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到老师添加过的所有图书界面传送的数据为:
+返回的数据格式:按书籍的添加时间逆序排序
 {
   "status": "success",
   "books": [
@@ -228,7 +214,7 @@
       "publishHouse": "publishHouse",
       "author": "author",
       "title": "title",
-      "avatar":""
+	  "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
     },......
   ]
 }
@@ -237,17 +223,16 @@
 > * /teacher/bookdetail
 
 > * Input Parameters
-
-> * Successful Return
-跳转到图书的详细信息界面
+>> * bookid:requested
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 2: bookid为空
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到图书的详细信息界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "book": {
@@ -260,7 +245,7 @@
     "publishHouse": "publishHouse",
     "author": "author",
     "title": "title",
-    "avatar": ""
+	"avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   },
   "teacher": {
     "_id": "59955d2bbc44c410ea320be2",
@@ -283,23 +268,20 @@
 > * /teacher/addbook
 
 > * Input Parameters
->> * teacherID:requested
 >> * title:requested
+>> * author:requested
 >> * publishHouse:requested
 >> * introduction:requested
 >> * purchaseLink:requested
->> * file:requested
-
-> * Successful Return
-跳转老师添加过的所有图书界面
+>> * file:requested  --file为文件类型
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到老师添加过的所有图书界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "books": [
@@ -313,7 +295,7 @@
       "publishHouse": "publishHouse",
       "author": "author",
       "title": "title",
-      "avatar": ""
+	  "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
     },......
   ]
 }
@@ -322,17 +304,15 @@
 > * /teacher/lessonlist
 
 > * Input Parameters
-
-> * Successful Return
-跳转到老师添加过的所有课程界面
+> >> * 无
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到老师添加过的所有课程界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "lessons": [{
@@ -350,7 +330,7 @@
     "price": "课程价格",
     "enrollNum": "已报名人数",
     "state": "课程状态",
-    "avatar": ""
+	"avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   },......]
 }
 ```
@@ -358,18 +338,15 @@
 > * /teacher/lessondetail
 
 > * Input Parameters
->> * _id:requested
-
-> * Successful Return
-跳转到课程的详细信息界面
+>> * lessonid:requested
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到课程的详细信息界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "lesson": {
@@ -387,7 +364,7 @@
 	  "price": "课程价格",
 	  "enrollNum": "已报名人数",
 	  "state": "课程状态",
-	  "avatar":""
+	  "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   },
   "teacher": {
     "_id": "fsde4fe203775a8f0fd14323",
@@ -409,23 +386,20 @@
 >> * startDate:requested
 >> * endDate:requested
 >> * classTime:requested
->> * enrolldeadline:requested
+>> * enrolldeadline:requested  --日期参数的格式为2017-01-19 13:00:00
 >> * studentsLimit:requested
 >> * classHours:requested
 >> * telephone:requested
 >> * price:requested
->> * file:requested
-
-> * Successful Return
-跳转老师添加过的所有课程界面
+>> * file:requested  --file为文件类型
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
+>> * errcode = 5: 用户未登录
 
 > * example
 ```
-跳转到老师添加过的所有图书界面传送的数据为:
+返回的数据格式:
 {
   "status": "success",
   "lessons": [{
@@ -433,7 +407,7 @@
 	  "teacherID": "fsde4fe203775a8f0fd14323",
       "description": "课程描述",
       "teacherName": "开课老师",
-      "startDate": "课程开始时间",
+      "startDate": "课程开始时间", --日期参数的格式为2017-01-19 13:00:00
       "endDate": "课程结束时间",
       "classTime": "上课时间",
 	  "enrolldeadline": "报名截止日期",
@@ -443,7 +417,7 @@
 	  "price": "课程价格",
 	  "enrollNum": "已报名人数",
 	  "state": "课程状态",
-	  "avatar": ""
+	  "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
   },......]
 }
 ```
@@ -456,8 +430,8 @@
 跳转老师所有回复过的问题界面
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
 >> * errcode = 3: 该老师没有回复
 
 > * example
@@ -521,8 +495,8 @@
 跳转所有问题的列表界面
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部异常
 >> * errcode = 3: 没有公开的提问
 
 > * example
@@ -598,9 +572,8 @@
 跳转到回复问题显示界面
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
->> * errcode = 3: 没有回复
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -664,9 +637,8 @@
 > * Successful Return
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
->> * errcode = 3: 没有公开的问题
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -703,7 +675,6 @@
       },
       "replys": [
         {
-
           "teacher": {
             "_id": "59955d2bbc44c410ea320be2",
             "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
@@ -768,8 +739,8 @@
 跳转到当前问题的详细回复信息界面
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
@@ -853,16 +824,19 @@
 跳转到孩子的详细信息界面
 
 > * Error Return
->> * errcode = 5: 用户登录信息错误
->> * errcode = 1: 数据库查询出错
->> * errcode = 2: 该用户不存在
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
 
 > * example
 ```
 跳转到孩子的详细信息界面传送的数据为:
 {
   "status": "success",
-  "parent": {
+  "
+  "child": {
+    "_id": "599c8996712784694ddef8fe",
+    "nickname": "hello",
+    "pparent": {
     "_id": "59965ba9e1097e36ab8fdb47",
     "telephone": "15387561723",
     "childID": "599c8996712784694ddef8fe",
@@ -876,11 +850,184 @@
     "character": "ufdahappy",
     "sex": "male",
     "age": "23"
+  },parentID": "59965ba9e1097e36ab8fdb47",
+    "meta": {
+      "updateAT": "2017-08-22T21:01:18.391Z",
+      "createAt": "2017-08-22T21:01:18.391Z"
+    },
+    "birthday": "2017-08-22T20:14:21.159Z",
+    "sex": "male",
+    "age": 12,
+    "character": "ufdahappy",
+    "grade": "2"
   },
+  "emotion": {
+    "_id": "599c909d712784694ddef902",
+    "parentID": "59965ba9e1097e36ab8fdb47",
+    "createAt": "2017-08-22T20:14:21.159Z",
+    "time": "2017-08-22T21:07:22.442Z",
+    "report": "",
+    "sad": 0,
+    "angry": 0,
+    "happy": 0,
+    "calm": 0,
+    "value": 60
+  },
+  "averageEmotion": 60,
+  "survey": [
+      {
+        "surveyName": "surveyName",
+        "score":"1",
+        "answer": [
+          {
+            "topicName": "topicName",
+            "answer": "answer1",
+            "answerIndex": 1,
+            "_id": "599dfce41c017634ea7c1cf1"
+          },
+          {
+            "topicName": "topicName2",
+            "answer": "answer1",
+            "answerIndex": 0,
+            "_id": "599dfce41c017634ea7c1cf0"
+          }
+        ]
+      }
+  ],
+  "questions": [
+    {
+      "question": {
+        "parent": {
+          "_id": "59965ba9e1097e36ab8fdb47",
+          "telephone": "15387561723",
+          "childID": "599c8996712784694ddef8fe",
+          "meta": {
+            "updateAT": "2017-08-22T21:01:18.391Z",
+            "createAt": "2017-08-22T21:01:18.391Z"
+          },
+          "childrenTelephone": "",
+          "relationship": "father",
+          "avatar": "",
+          "character": "ufdahappy",
+          "sex": "male",
+          "age": "23"
+        },
+        "question": {
+          "_id": "599666e3e1097e36ab8fdb4b",
+          "parentID": "59965ba9e1097e36ab8fdb47",
+          "conten": "content",
+          "createAt": "2017-08-22T21:07:22.446Z",
+          "replyFlag": "0",
+          "openFlag": "1",
+          "content": "",
+          "title": "question"
+        }
+      },
+      "replys": [
+        {
+          "teacher": {
+            "_id": "59955d2bbc44c410ea320be2",
+            "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+            "username": "teacher5",
+            "__v": 0,
+            "meta": {
+              "updateAt": "2017-08-17T09:08:59.296Z",
+              "createAt": "2017-08-17T09:08:59.296Z"
+            },
+            "age": 30,
+            "introduction": "nihao",
+            "sex": "male",
+            "name": "lisi",
+            "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+          },
+          "content": "health"
+        },
+        {
+          "teacher": {
+            "_id": "59955d2bbc44c410ea320be2",
+            "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
+            "username": "teacher5",
+            "__v": 0,
+            "meta": {
+              "updateAt": "2017-08-17T09:08:59.296Z",
+              "createAt": "2017-08-17T09:08:59.296Z"
+            },
+            "age": 30,
+            "introduction": "nihao",
+            "sex": "male",
+            "name": "lisi",
+            "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
+          },
+          "content": "health"
+        }
+      ]
+    },
+    {
+      "question": {
+        "parent": {
+          "_id": "59965ba9e1097e36ab8fdb47",
+          "telephone": "15387561723",
+          "childID": "599c8996712784694ddef8fe",
+          "meta": {
+            "updateAT": "2017-08-22T21:01:18.391Z",
+            "createAt": "2017-08-22T21:01:18.391Z"
+          },
+          "childrenTelephone": "",
+          "relationship": "father",
+          "avatar": "",
+          "character": "ufdahappy",
+          "sex": "male",
+          "age": "23"
+        },
+        "question": {
+          "_id": "599c6c58712784694ddef8fb",
+          "parentID": "59965ba9e1097e36ab8fdb47",
+          "conten": "content2",
+          "createAt": "2017-08-22T21:07:22.446Z",
+          "replyFlag": "0",
+          "openFlag": "1",
+          "content": "",
+          "title": "question2"
+        }
+      }
+    }
+  ]
+}
+```
+### 家长和孩子的信息
+> * /teacher/parentChildInfo
+
+> * Input Parameters
+>> * relationID:requested
+
+> * Error Return
+>> * errcode = 1: 用户登录信息错误
+>> * errcode = 2: 服务器内部错误
+
+> * example
+```
+跳转到孩子的详细信息界面传送的数据为:
+{
+  "status": "success",
+  "
   "child": {
     "_id": "599c8996712784694ddef8fe",
     "nickname": "hello",
-    "parentID": "59965ba9e1097e36ab8fdb47",
+    "pparent": {
+    "_id": "59965ba9e1097e36ab8fdb47",
+    "telephone": "15387561723",
+    "childID": "599c8996712784694ddef8fe",
+    "meta": {
+      "updateAT": "2017-08-22T21:01:18.391Z",
+      "createAt": "2017-08-22T21:01:18.391Z"
+    },
+    "childrenTelephone": "",
+    "relationship": "father",
+    "avatar": "",
+    "character": "ufdahappy",
+    "sex": "male",
+    "age": "23"
+  },parentID": "59965ba9e1097e36ab8fdb47",
     "meta": {
       "updateAT": "2017-08-22T21:01:18.391Z",
       "createAt": "2017-08-22T21:01:18.391Z"
@@ -1029,60 +1176,32 @@
 
 > * Input Parameters
 ```
-{
-    "surveyName":"phq98",
-    "topic":[{
-        "topicName":"topicName",
-        "answer1":"topic1answer1",
-        "answer2":"topic1answer2",
-        "answer3":"topic1answer3",
-        "answer4":"topic1answer4"
-    },
-    {
-        "topicName":"topicName2",
-        "answer1":"topic2answer1",
-        "answer2":"topic2answer2",
-        "answer3":"topic2answer3",
-        "answer4":"topic2answer4"
-    }]
-}
+{ surveyName: 'surveyName',
+  topic:
+   [ { topicName: 'topicName',
+       answer1: 'topic1answer1',
+       answer2: 'topic1answer2',
+       answer3: 'topic1answer3',
+       answer4: 'topic1answer4' },
+     { topicName: 'topicName2',
+       answer1: 'topic2answer1',
+       answer2: 'topic2answer2',
+       answer3: 'topic2answer3',
+       answer4: 'topic2answer4' } ] }
+```
 > * Successful Return
 {status,"success"}
 
 > * Error Return
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
 >> * errcode = 2: 题库名已存在
->> * errcode = 5: 用户登录信息错误
->> * errcode = 3: 当前用户无权限
+>> * errcode = 5: 用户未登录
+>> * errcode = 6: 操作未授权
 
 > * example
 ```
 {
-  "stauts": "success",
-  "survey": {
-    "__v": 0,
-    "surveyName": "phq98",
-    "_id": "59b1be428ae6e856e7275496",
-    "createAt": "2017-09-07T21:46:43.014Z",
-    "topic": [
-      {
-        "topicName": "topicName",
-        "answer1": "topic1answer1",
-        "answer2": "topic1answer2",
-        "answer3": "topic1answer3",
-        "answer4": "topic1answer4",
-        "_id": "59b1be438ae6e856e7275498"
-      },
-      {
-        "topicName": "topicName2",
-        "answer1": "topic2answer1",
-        "answer2": "topic2answer2",
-        "answer3": "topic2answer3",
-        "answer4": "topic2answer4",
-        "_id": "59b1be438ae6e856e7275497"
-      }
-    ]
-  }
+  "status": "success"
 }
 ```
 ### 根据某个题库名生成考题
@@ -1091,18 +1210,15 @@
 > * Input Parameters
 >> * surveyName:requested
 
-> * Successful Return
-{status,"success","survey":[]}
-
 > * Error Return
->> * errcode = 1: 数据库查询出错
+>> * errcode = 1: 数据库出错
 >> * errcode = 2: 题库名不存在
 
 > * example
 ```
 {
   "status": "success",
-  "survey":
+  "survey": [
     {
       "_id": "599cca01fd107b43cad62217",
       "surveyName": "surveyName",
@@ -1127,7 +1243,7 @@
         }
       ]
     }
-
+  ]
 }
 ```
 ### 插入答案
@@ -1137,7 +1253,7 @@
 ```
 {
     "surveyID":"599cca01fd107b43cad62217",
-    "userID":"59965ba9e1097e36ab8fdb47",
+    "relationID":"59965ba9e1097e36ab8fdb47",
     "answer":[{
         "topicName":"topicName",
         "answer":"answer1",
@@ -1150,8 +1266,6 @@
     }]
 }
 ```
-> * Successful Return
-{status,"success"}
 
 > * Error Return
 >> * errcode = 1: 数据库保存出错
@@ -1166,15 +1280,13 @@
 > * /survey/historyScore
 
 > * Input Parameters
->> * parentID:requested
+>> * relationID:requested
 
 > * Successful Return
 {status,"success","parent":{},surveyAnswer:[]}
 
 > * Error Return
->> * errcode = 1: 数据库查询出错
->> * errcode = 2: 用户登录信息错误
->> * errcode = 3: 没有提交过问卷
+>> * errcode = 1: 查询数据库错误
 
 > * example
 ```
@@ -1198,7 +1310,6 @@
   "surveyAnswer": [
     {
       "surveyName": "surveyName",
-      "surveyTime": "2017-08-23T21:26:14.276Z",
       "answer": [
         {
           "topicName": "topicName",
@@ -1227,10 +1338,7 @@
 {status,"success","parent":{},surveyAnswer:[]}
 
 > * Error Return
->> * errcode = 1: 数据库查询出错
->> * errcode = 2: 用户登录信息错误
->> * errcode = 3: 没有提交过问卷
->> * errcode = 4: 服务器内部错误
+>> * errcode = 1: 查询数据库错误
 
 > * example
 ```
@@ -1254,7 +1362,6 @@
   "surveyAnswer": [
     {
       "surveyName": "surveyName",
-      "surveyTime": "2017-08-23T21:26:14.276Z",
       "answer": [
         {
           "topicName": "topicName",
@@ -1282,8 +1389,8 @@
 {status,"success","surveys":[]}
 
 > * Error Return
->> * errcode = 1: 数据库查询出错
->> * errcode = 2: 系统无问卷
+>> * errcode = 1: 查询数据库错误
+>> * errcode = 2: 题库名已存在
 
 > * example
 ```
@@ -1368,7 +1475,7 @@ if status == "error" means error
 >> * password:requested
 
 > * Successful Return
->> * {status, user:{userID}}
+>> * {status}
 
 > * Error Return
 >> * errcode = 1: 手机号或密码为空
@@ -1379,7 +1486,7 @@ if status == "error" means error
 > * example
 
 ```
-{"status":"success", "user":{"userID":"58184fe203775a8f0fd1b096"}}
+{"status":"success"}
 ```
 
 ### 用户使用手机账户登陆
@@ -1388,9 +1495,6 @@ if status == "error" means error
 > * Input Parameters
 >> * telephone:requested
 >> * password:requested
-
-> * Successful Return
->> * {user:{userID,token},status}
 
 > * Error Return
 >> * errcode = 1: 手机号码或密码为空
@@ -1401,14 +1505,13 @@ if status == "error" means error
 >> * errcode = 6: 密码不正确
 
 > * example
-
+>> * 如果绑定过设备isBind返回true否则返回false
 ```
 {
   "status": "success",
-  "user": {
-    "userID": "58184fe203775a8f0fd1b096",
-    "token": "0f33f7ea745a0535329455301cc4ee41e782037f00e7ac81de10a89c6ef736661dc1b26f3a2132d2397fec1010fda4bcfbba279adff52654dc05c1979a86b3b5",
-  }
+  "userID": "599f6efca30d594d4df0fad3",
+  "token": "bfd42c9e9d1f9650e189f15971a83b811ed8654a6438dcf28faf3ce6a5c3159aefdbeb766302fe49b0dc577bd64fae1ec6c6a8cfb82d32fb6ad957906e1794d5",
+  "isBind": false
 }
 ```
 
@@ -1420,7 +1523,7 @@ if status == "error" means error
 >> * token:requested
 
 > * Successful Return
->> * {status,user:{userID，token}}
+>> * {status}
 
 > * Error Return
 >> * errcode = 0: userID或token为空
@@ -1431,7 +1534,7 @@ if status == "error" means error
 > * example
 
 ```
-{"status":"success","user":{"userID":"58184fe203775a8f0fd1b096","token":"e59cc2dfab213b4cd1d3b562bdc22e56ad26556034539e01742a5c81396af613abd2f7ce75577e724b15e46af0ce6894c4dff0f2ca4c24bf6bd636290d161499"}}
+{"status":"success"}
 ```
 
 ### 用户修改密码
@@ -1445,7 +1548,7 @@ if status == "error" means error
 >> * token:requested
 
 > * Successful Return
->> * {status,user:{userID}}
+>> * {status}
 
 > * Error Return
 >> * errcode = 0: userID或token为空
@@ -1460,46 +1563,185 @@ if status == "error" means error
 > * example
 
 ```
-{"status":"success","user":{"userID":"1001"}}
+{"status":"success"}
 ```
-
-### 用户修改个人信息
-> * /api/user/information/changeInfo
+### 切换设备
+> * /api/user/switchDevice
 
 > * Input Parameters
+>> * userID:requested  --切换后的userID
 >> * token:requested
->> * userID:requested
->> * parentAge:requested
->> * parentSex:requested
->> * relation:requested
->> * parentTelephone:requested
->> * parentCharacter:requested
->> * parentUsername:requested
->> * profession:requested
->> * childAge:requested
->> * childSex:requested
->> * childGrade:requested
->> * childBirth:requested
->> * childCharacter:requested
->> * chilPhone:requested
 
 > * Successful Return
 >> * {status}
 
 > * Error Return
->> * errcode = 1: 手机号码或密码为空
->> * errcode = 2: 数据库查询错误
->> * errcode = 3: 该用户未注册
->> * errcode = 5: 保存失败
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 5: 更新数据库出错
+> * example
+
+```
+{"status":"success"}
+```
+### 设置个人与孩子的信息
+> * /api/user/information/changeInfo
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * parentAge:requested
+>> * parentSex:requested
+>> * relation:requested
+>> * parentTelephone:requested
+>> * username:requested
+>> * profession:requested
+>> * childAge:requested
+>> * token:requested
+>> * childNickname:requested
+>> * childSexStr:requested
+>> * childGrade:requested
+>> * childBirth:requested
+>> * childCharacter:requested
+>> * chilPhone:requested
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 5: 更新数据库出错
+
+> * example
+```
+返回的数据格式:
+{
+  "status": "success"
+}
+```
+### 首页展示的数据,只有安卓端判断用户绑定设备以后才发送此请求
+> * /api/user/indexPage
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 用户未添加过设备
+>> * errcode = 4: 密码匹配错误
+>> * errcode = 5: 原密码不正确
+>> * errcode = 6: 两次输入的密码不匹配
+>> * errcode = 7: 新密码保存错误
+
+> * example
+
+```
+{"status": "success",
+ "userID": "dsaffffffffffdsfsafdfdfaf",
+ "nickname": "son",
+ "device":[
+	{
+		"parentID": "fsafhjksdhfkhasdfjkhdjksah",
+        IMEI: "12897381273817297",
+        nickname: "son",
+        relation: "parent"
+    },.....
+
+ ],
+ "emotion": {
+        "value": 99,
+        "calm": 60,
+        "happy": 80,
+        "angry": 30,
+        "sad": 30,
+        "report": "This is a test3 report"
+ },
+ "averageEmotion":50,
+ "childPhone":"15111115525"
+}
+```
+### 添加联系人
+> * /api/user/addContact
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * contactName:requested
+>> * contactPhone:requested
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询错误
+>> * errcode = 4: 已添加过该手机号
+>> * errcode = 5: 数据库保存错误
 
 > * example
 
 ```
 {
-  "status": "success"
+    "status": "success"
 }
 ```
+### 修改联系人
+> * /api/user/changeContact
 
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * contactName:requested
+>> * contactPhone:requested
+>> * oldContactName:requested
+>> * oldContactPhone:requested
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询错误
+>> * errcode = 4: 未添加过该手机号
+>> * errcode = 5: 数据库保存错误
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 查询联系人
+> * /api/user/findContact
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 数据库查询错误
+>> * errcode = 4: 没有添加过联系人
+>> * errcode = 5: 数据库保存错误
+
+> * example
+
+```
+{
+    "status": "success",
+	"contacts":[{
+		"contactName":"father",
+		"contactPhone":"15376767623"
+	},{
+		"contactName":"father",
+		"contactPhone":"15376767623"
+	},.....]
+}
+```
 ## 提问接口
 ### 获取相关提问列表(一期为获取全部提问)
 > * /api/user/question/similar
@@ -1528,14 +1770,12 @@ if status == "error" means error
         {
             "questionID": "598c37e349f5412215bdc42d",
             "title": "Test2",
-            "content": "This is a test",
-            "createAt": "2017-08-10T10:39:31.582Z"
+            "content": "This is a test"
         },
         {
             "questionID": "598c379949f5412215bdc42c",
             "title": "Test1",
-            "content": "This is a test",
-            "createAt": "2017-08-10T10:39:31.582Z"
+            "content": "This is a test"
         }
     ]
 }
@@ -1566,13 +1806,11 @@ if status == "error" means error
     "status": "success",
     "questions": [
         {
-            "id":"598c37e349f5412215bdc42d",
             "title": "Test2",
             "content": "This is a test",
             "createAt": "2017-08-10T10:39:31.582Z"
         },
         {
-            "id":"598c37e349f5412215bdc42d",
             "title": "Test1",
             "content": "This is a test",
             "createAt": "2017-08-10T10:38:17.713Z"
@@ -1590,7 +1828,7 @@ if status == "error" means error
 >> * parentID（用户id）
 >> * title（提问标题）
 >> * content（提问内容）
->> * openFlag（提问是否公开标志位）1表示公开,0表示不公开
+>> * openFlag（提问是否公开标志位）
 
 > * Successful Return
 >> * {status}
@@ -1604,7 +1842,7 @@ if status == "error" means error
 > * example
 
 ```
-{"status": "success","questionID","598c37e349f5412215bdc42d"}
+{"status": "success"}
 ```
 
 ### 根据提问id获取提问详情
@@ -1638,154 +1876,25 @@ if status == "error" means error
     },
     "replys": [
         {
-            "teacher": {
-                "_id": "59955d2bbc44c410ea320be2",
-                "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
-                "username": "teacher5",
-                "__v": 0,
-                "meta": {
-                  "updateAt": "2017-08-17T09:08:59.296Z",
-                  "createAt": "2017-08-17T09:08:59.296Z"
-                },
-                "age": 30,
-                "introduction": "nihao",
-                "sex": "male",
-                "name": "lisi",
-                "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
-            },
+            "teacherID": "598d194a416bfc9331706117",
             "content": "This is a test2 reply"
         },
         {
-            "teacher": {
-                "_id": "59955d2bbc44c410ea320be2",
-                "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
-                "username": "teacher5",
-                "__v": 0,
-                "meta": {
-                  "updateAt": "2017-08-17T09:08:59.296Z",
-                  "createAt": "2017-08-17T09:08:59.296Z"
-                },
-                "age": 30,
-                "introduction": "nihao",
-                "sex": "male",
-                "name": "lisi",
-                "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
-            },
+            "teacherID": "598d194a416bfc9331706117",
             "content": "This is a test2 reply"
         }
     ]
 }
 ```
-### 所有问题的所有回复
-> * /api/user/question/replies
-
-> * Input Parameters
->> * userID:requested
->> * token:requested
-
-> * Successful Return
-
-> * Error Return
->> * errcode = 0: userID或token为空
->> * errcode = 1: 数据库查询失败
->> * errcode = 2: 该用户不存在
->> * errcode = 3: 数据库查询错误
->> * errcode = 4: 未查询问题
-
-> * example
-
-```
-{
-  "all": [
-    {
-      "question": {
-        "parent": {
-          "_id": "59965ba9e1097e36ab8fdb47",
-          "telephone": "15387561723",
-          "childID": "599c8996712784694ddef8fe",
-          "meta": {
-            "updateAT": "2017-08-22T20:54:40.614Z",
-            "createAt": "2017-08-22T20:54:40.614Z"
-          },
-          "childrenTelephone": "",
-          "relationship": "father",
-          "avatar": "",
-          "character": "ufdahappy",
-          "sex": "male",
-          "age": "23"
-        },
-        "question": {
-          "_id": "599666e3e1097e36ab8fdb4b",
-          "parentID": "59965ba9e1097e36ab8fdb47",
-          "conten": "content",
-          "createAt": "2017-08-22T20:55:44.460Z",
-          "replyFlag": "0",
-          "openFlag": "1",
-          "content": "",
-          "title": "question"
-        }
-      },
-      "replys": [
-        {
-          "teacher": {
-            "_id": "59955d2bbc44c410ea320be2",
-            "password": "$2a$10$OacVap5CB6mugFnYzVSkUu97eqLAk0JpzGqqNFpmi9n5UP8jgh7XW",
-            "username": "teacher5",
-            "__v": 0,
-            "meta": {
-              "updateAt": "2017-08-17T09:08:59.296Z",
-              "createAt": "2017-08-17T09:08:59.296Z"
-            },
-            "age": 30,
-            "introduction": "nihao",
-            "sex": "male",
-            "name": "lisi",
-            "avatar": "/images/avatars/d65fbb80-832b-11e7-995f-3173094ec89b.jpg"
-          },
-          "content": "health"
-        }
-      ]
-    },
-    {
-      "question": {
-        "parent": {
-          "_id": "59965ba9e1097e36ab8fdb47",
-          "telephone": "15387561723",
-          "childID": "599c8996712784694ddef8fe",
-          "meta": {
-            "updateAT": "2017-08-22T20:54:40.614Z",
-            "createAt": "2017-08-22T20:54:40.614Z"
-          },
-          "childrenTelephone": "",
-          "relationship": "father",
-          "avatar": "",
-          "character": "ufdahappy",
-          "sex": "male",
-          "age": "23"
-        },
-        "question": {
-          "_id": "599c6c58712784694ddef8fb",
-          "parentID": "59965ba9e1097e36ab8fdb47",
-          "conten": "content2",
-          "createAt": "2017-08-22T20:55:44.466Z",
-          "replyFlag": "0",
-          "openFlag": "1",
-          "content": "",
-          "title": "question2"
-        }
-      }
-    }
-  ]
-}
-```
 
 ## 情绪接口
-### 查询最新的情绪
-> * /api/user/emotion/latest
+### 根据课程id查看课程详情
+> * /api/user/lesson/detail
 
 > * Input Parameters
 >> * userID:requested
 >> * token:requested
+>> * lessonID: requested
 
 > * Successful Return
 >> * {status,emotion:{value,calm,happy,angry,sad,report}}
@@ -1816,12 +1925,11 @@ if status == "error" means error
 
 ## 课程接口
 ### 根据课程id查看课程详情
-> * /api/user/lesson/detail
+> * /api/user/emotion/latest
 
 > * Input Parameters
 >> * userID:requested
 >> * token:requested
->> * lessonID:requested
 
 > * Successful Return
 >> * {status,lesson:{teacherID,teacherName,description,teacherName,startDate,endDate,classTime,enrolldeadline,studentsLimit,classHours,telephone,price,enrollNum,state},enroll}
@@ -1881,6 +1989,30 @@ if status == "error" means error
 >> * errcode = 2: 该用户不存在
 >> * errcode = 3: 订单保存错误
 >> * errcode = 4: 课程更新数据错误
+
+> * example
+
+```
+{
+    "status": "success"
+}
+```
+### 添加pushID
+> * /api/user/addPushID
+
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * pushID:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 保存错误
 
 > * example
 
@@ -1961,8 +2093,7 @@ if status == "error" means error
         "introduction": "this is a test book",
         "publishHouse": "people education publishHouse",
         "author": "amsfe",
-        "title": "test book",
-        "avatar": ""
+        "title": "test book"
     }
 }
 ```
@@ -2073,8 +2204,6 @@ if status == "error" means error
 > * Input Parameters
 >> * userID:requested
 >> * token:requested
->> * file
-:requested
 
 > * Successful Return
 >> * {status,user:{userID,avatar}}
@@ -2175,7 +2304,7 @@ if status == "error" means error
 >> * token:requested
 >> * IMEI:requested
 >> * watchTelephone:requested
->> * controlTelephone:requested
+>> * nickname:requested
 
 > * Successful Return
 >> * {status}
@@ -2189,6 +2318,7 @@ if status == "error" means error
 >> * errcode = 5: 数据库更新错误
 >> * errcode = 6: 数据库保存出错
 >> * errcode = 7: 给手表发送命令失败
+>> * errcode = 8: 设备已被绑定过
 
 > * example
 
@@ -2197,7 +2327,37 @@ if status == "error" means error
     "stauts": "success"
 }
 ```
+### 用户修改绑定设备的信息
+> * /api/user/watch/changeBind
 
+> * Input Parameters
+>> * userID:requested
+>> * token:requested
+>> * IMEI:requested
+>> * watchTelephone:requested
+>> * nickname:requested
+
+> * Successful Return
+>> * {status}
+
+> * Error Return
+>> * errcode = 0: userID或token为空
+>> * errcode = 1: 数据库查询失败
+>> * errcode = 2: 该用户不存在
+>> * errcode = 3: 有空值
+>> * errcode = 4: 数据库查询错误
+>> * errcode = 5: 数据库更新错误
+>> * errcode = 6: 数据库保存出错
+>> * errcode = 7: 给手表发送命令失败
+>> * errcode = 8: 设备未被绑定过
+
+> * example
+
+```
+{
+    "stauts": "success"
+}
+```
 ### 为手表添加联系人
 > * /api/user/watch/contact/add
 
